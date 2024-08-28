@@ -12,10 +12,10 @@ export class TripComponent {
 
   // Lista de imágenes correspondientes por índice
   imagenesPorIndice = [
-    '/assets/images/ejemplo1.jpg',
-    '/assets/images/ejemplo2.jpg',
-    '/assets/images/ejemplo3.jpg',
-    '/assets/images/ejemplo4.jpg'
+    '/assets/images/prueba2.png',
+    '/assets/images/prueba1.png',
+    '/assets/images/prueba3.png',
+    '/assets/images/prueba4.png'
     // Añade más imágenes si es necesario
   ];
 

@@ -147,7 +147,7 @@
 }
 
 .reservas-table thead th {
-  background-color: rgb(209, 24, 255); /* Fondo fucsia solo para los títulos de esta tabla */
+  background-color: #9600b7; /* Fondo fucsia solo para los títulos de esta tabla */
   color: white;
   font-weight: bold;
 }
@@ -164,7 +164,7 @@ mat-expansion-panel-header:hover {
 
 mat-panel-title {
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  color: rgb(209, 24, 255)
+  color: rgb(150, 0, 150)
 }
 
 

@@ -72,7 +72,7 @@ table {
 }
 
 .ticket-container th {
-    background-color: #50005b; /* Color de fondo para los encabezados */
+    background-color: #9c00da; /* Color de fondo para los encabezados */
     color: #fdfdfd; /* Color del texto para los encabezados */
 }
 
@@ -82,7 +82,7 @@ table {
 }
 
 th, td {
-    border: 2px solid #760078;
+    border: 1px solid #000000;
     padding: 8px;
     text-align: left;
 }
@@ -100,7 +100,7 @@ th {
 }
 /* Botón para descargar PDF */
 button {
-    background-color: #00e04e; /* Color de fondo verde */
+    background-color: #be25ff; /* Color de fondo verde */
     color: white; /* Color del texto blanco */
     border: none;
     padding: 10px 20px;
@@ -114,5 +114,5 @@ button {
 }
 
 button:hover {
-    background-color: #e74bff; /* Color de fondo verde más oscuro al pasar el ratón */
+    background-color: #8d009d; /* Color de fondo verde más oscuro al pasar el ratón */
 }

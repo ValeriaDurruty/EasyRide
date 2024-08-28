@@ -1,24 +1,13 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg bg-primary fixed-top navbar-transparent" color-on-scroll="400">
   <div class="container">
-    <div class="dropdown button-dropdown" *ngIf="userRole === 3">
-      <a class="dropdown-toggle" id="navbarDropdown" data-toggle="dropdown">
-        <span class="button-bar"></span>
-        <span class="button-bar"></span>
-        <span class="button-bar"></span>
-      </a>
-      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <a class="dropdown-header">A dónde ir?</a>
-        <a class="dropdown-item" routerLink="/Vista-Trips" *ngIf="userRole === 3">Vista Viajes </a>
-        <a class="dropdown-item" routerLink="/">Menú</a>
-      </div>
-    </div>
     <div class="navbar-translate">
-      <a class="navbar-brand" routerLink="/" *ngIf="userRole === null || userRole === 3 || (userRole === 2 && userValidar === 0)">
-        EasyRide
-      </a>
+        <img src="assets/images/logo2.png" alt="Logo" style="height: 70px; margin-right: 10px;">
+        <a class="navbar-brand" routerLink="/" *ngIf="userRole === null || userRole === 3 || (userRole === 2 && userValidar === 0)">
+          EASYRIDE
+        </a>
       <a class="navbar-brand" *ngIf="userRole === 1 || (userRole === 2 && userValidar === 1)">
-        EasyRide
+        EASYRIDE
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-bar top-bar"></span>

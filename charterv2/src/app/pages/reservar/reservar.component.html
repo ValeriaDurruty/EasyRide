@@ -46,7 +46,9 @@
                     <p>Modelo:</p><input id="modelo_charter" formControlName="modelo_charter" class="form-control" type="text" placeholder="Charter" [readonly]="true" />
 
                     <!-- Botón reservar -->
-                    <button type="submit" class="btreservar gradient-button">Reservar</button>
+                    <button type="submit" class="btreservar gradient-button mr-3">Reservar</button>
+                    <button type="button" [routerLink]="['/']" class="btreservar gradient-button">Cancelar</button>
+
                 </form>
             </div>
         </div>
