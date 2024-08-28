@@ -1,0 +1,24 @@
+.container {
+    margin-top: 75px;
+    display: flex; /* Utiliza flexbox para centrar */
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: center; /* Centra verticalmente si es necesario */
+    height: auto; /* Ocupa toda la altura de la pantalla */
+    border: 1px solid #ffffff; /* Borde de 2px sólido */
+    border-radius: 10px;
+    padding: 20px; /* Añade espacio interno al contenedor */
+    box-sizing: border-box; /* Incluye el padding en el ancho y alto total */
+    width:350px
+}
+
+.container-details{
+        flex: 2; /* Ocupa dos tercios del espacio disponible en pantallas pequeñas */
+        text-align: center;
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan cuando no haya suficiente espacio */
+        justify-content: center; /* Centra los elementos horizontalmente */
+}
+
+.container-details h1{
+    color: rgb(255, 255, 255);
+    font-size: 35px;
+}

@@ -1,0 +1,44 @@
+<app-headers></app-headers>
+<div class="page-header clear-filter">
+  <div class="page-header-image" style="background-image:url(assets/images/charter-agregar.png)">
+  </div>
+  <div class="servicio-container">
+    <h2>Información de Charter</h2>
+    <!-- Comienza el form -->
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="addCharter()" #charterForm="ngForm">
+      <!-- Campo Patente -->
+      <p>
+        <strong>Patente</strong>
+        <input id="patente" type="text" class="form-control" placeholder="Patente" formControlName="patente">
+      </p>
+        <!--Desplegable Marca--> 
+      <p><strong>Marca</strong>
+        <select id="marca" class="form-control select-control" name="marca-desplegable" formControlName="marca">
+          <option *ngFor="let marca of marcas" [value]="marca.nombre">{{ marca.nombre }}</option>
+        </select>
+      </p>
+
+      <!--Desplegable Modelo-->   
+      <p><strong>Modelo</strong>
+        <select id="modelo" class="form-control select-control" name="modelo-desplegable" formControlName="modelo">
+          <option *ngFor="let modelo of modelos" [value]="modelo.PK_Modelo">{{ modelo.nombre }}</option>
+        </select>
+      </p>
+      <!-- Campo Año -->
+      <p>
+        <strong>Año</strong>
+        <input id="anio" class="form-control" type="number" placeholder="Año" formControlName="anio">
+      </p>
+      <!-- Campo Capacidad -->
+      <p>
+        <strong>Capacidad</strong>
+        <input id="capacidad" class="form-control" type="number" placeholder="Capacidad" formControlName="capacidad">
+      </p>
+      <!-- Botones guardar y cancelar -->
+       <div class="bt-container">
+      <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button>
+      <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

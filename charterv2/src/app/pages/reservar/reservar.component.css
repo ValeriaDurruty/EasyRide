@@ -1,0 +1,103 @@
+.reserva-container {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 800px; /* Cambiado a max-width para hacerlo responsive */
+    margin: 65px auto 0; /* Margen superior de 65px, centrado horizontalmente */
+    height: auto;
+    max-height: 600px; /* Ajusta el valor según la altura de tu encabezado o cualquier otra área fija */
+    overflow-y: auto;
+}
+
+.reserva-info {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan cuando no haya suficiente espacio */
+    justify-content: center; /* Centra los elementos horizontalmente */
+    align-items: center;
+}
+
+.reserva-image {
+    flex: 1; /* Ocupa todo el espacio disponible en pantallas pequeñas */
+    margin-bottom: 20px; /* Agregado margen inferior */
+}
+
+.reserva-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.reserva-details {
+    flex: 2; /* Ocupa dos tercios del espacio disponible en pantallas pequeñas */
+    text-align: center;
+}
+
+.form-control[readonly] {
+    color: black; /* Color del texto */
+    background-color: white; /* Color de fondo */
+    border: 1px solid #ccc; /* Opcional: estilo del borde */
+  }
+/* Estilo para los inputs dentro del formulario de reserva */
+.servicio-details .form-control {
+    color: black; /* Cambia el color del texto a negro */
+  }
+  
+
+.btreservar {
+    color: #ffffff;
+    font-size: 15px;
+    background-color: #7a22ff;
+    border-radius: 10px;
+    width: 125px;
+    height: 30px;
+    margin-top: 15px; /* Agregado margen superior */
+}
+
+.btreservar:hover {
+    background-color: #bb33ff;
+}
+
+.form-control[_ngcontent-ng-c3002617371]:focus {
+    border: rgb(160, 0, 165);
+    outline: none; /* Elimina el contorno predeterminado */
+    box-shadow: 0 0 5px rgba(255, 0, 221, 0.5);
+  }
+  
+  /* Cambiar color del borde y sombra al pasar el mouse */
+  .form-control:hover {
+    border-color: #ea00ff; /* Cambia el color del borde al pasar el mouse */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Añade una sombra al input al pasar el mouse */
+  }
+
+  .gradient-button {
+    background: linear-gradient(45deg, #ae06ba, #0f0021);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+  
+  }
+  
+  .gradient-button:hover {
+    background: linear-gradient(45deg, #9f0792, #ffede0);
+  }
+
+  label {
+    font-size: 20px; /* Ajusta el tamaño de la fuente según sea necesario */
+  }
+
+/* Estilos para pantallas pequeñas */
+@media screen and (max-width: 600px) {
+    .reserva-info {
+        flex-direction: column; /* Cambia la dirección a columnar en pantallas pequeñas */
+        align-items: flex-start; /* Alinea los elementos a la izquierda */
+    }
+
+    .reserva-image, .reserva-details {
+        width: 100%; /* Establece el ancho completo en pantallas pequeñas */
+    }
+}

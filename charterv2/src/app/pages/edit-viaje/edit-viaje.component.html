@@ -1,0 +1,54 @@
+<app-headers></app-headers>
+<div class="page-header clear-filter">
+  <div class="page-header-image" style="background-image:url(assets/images/viaje-edit.png)">
+  </div>
+  <div class="servicio-container">
+    <h2>Información de Viaje</h2>
+    <!-- Comienza el form -->
+    <form [formGroup]="form" class="servicio-details" (ngSubmit)="EditarViaje()">
+      <!-- Campo Horario de salida -->
+      <p><strong>Horario de salida:</strong></p>
+      <input id="horario_salida" type="time" formControlName="horario_salida" class="form-control">
+
+      <p><strong>Horario de llegada:</strong></p>
+      <input id="horario_llegada" type="time" formControlName="horario_llegada" class="form-control">
+
+      <p><strong>Día:</strong></p>
+      <input id="fecha" type="date" formControlName="fecha" class="form-control">
+
+      <p><strong>Precio:</strong></p>
+      <input id="precio" type="number" formControlName="precio" class="form-control" placeholder="Precio">
+
+      <p><strong>Paradas:</strong></p>
+        <div class="input-group">
+        <select class="form-control select-control" [formControl]="paradaSeleccionadaControl">
+          <option value="" disabled>Selecciona una parada</option>
+          <option *ngFor="let parada of paradas" [ngValue]="parada">
+            {{ parada.parada }}
+            </option>
+        </select>
+        </div>
+        <button class="bt-agregar-parada" (click)="agregarParada($event)">Agregar Parada</button>
+        <ul>
+          <li *ngFor="let parada of paradasSeleccionadas; let i = index">
+            {{ parada.parada }} <!-- Verifica que 'parada' es la propiedad correcta -->
+            <button (click)="eliminarParada(i)">
+              <i class="fas fa-trash-alt icon-trash"></i>
+            </button>
+          </li>
+        </ul>
+
+        <p><strong>Charter Asignado:</strong></p>
+      <select id="desplegable-charter" formControlName="FK_Charter" (change)="onCharterChange($event)">
+        <option value="" disabled>Selecciona un charter</option>
+        <option *ngFor="let charter of charters" [value]="charter.PK_Charter">
+          {{ charter.marca }} - {{ charter.modelo }} - {{ charter.patente }}
+        </option>
+      </select>
+      <div class="bt-container">
+        <button type="submit" class="bt-a-servicio">Guardar</button>
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

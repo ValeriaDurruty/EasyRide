@@ -1,0 +1,117 @@
+<app-headers></app-headers>
+
+<div class="wrapper">
+  <div class="page-header clear-filter page-header-small" filter-color="orange">
+    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.jpg');">
+    </div>
+    <div class="container">
+      <div class="photo-container">
+        <img src="../assets/images/user.png" alt="">
+      </div>
+      <div *ngIf="user">
+        <h3>{{ user.nombre }} {{ user.apellido }}</h3>
+        <!-- Otros detalles del perfil del usuario -->
+      </div>
+      <div *ngIf="user">{{ user.email}}</div>
+    </div>
+  </div>
+ 
+  <!-- Barra de navegación con 3 opciones -->
+  <ul class="nav nav-tabs justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" [ngClass]="{'active': currentTab === 'tab1'}" (click)="showTab('tab1')">Reservas</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#tab2" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Historial reservas</a>
+      </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/V-empresa']" [ngClass]="{'active': currentTab === 'tab3'}">Panel Principal</a>
+      </li>
+  </ul>
+  <!-- Reservas -->
+  <div class="tab-content">
+    <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab1'}" id="tab1">
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="text-secondary">
+            <tr *ngFor="let reserva of listReservasFut">
+              <th>Viaje N° {{ reserva.PK_Viaje }}</th>
+              <th>Fecha: {{ reserva.fecha }}</th>
+              <th>Hs. Salida: {{ reserva.horario_salida }}</th>
+              <th>Hs. Llegada: {{ reserva.horario_llegada }}</th>
+              <th>Precio: {{ reserva.precio | currency }}</th>
+              <th>Patente: {{ reserva.patente }}</th>
+              <th>{{ reserva.modelo }} - {{ reserva.marca }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Datos de las paradas y Reservas -->
+            <tr *ngIf="listReservasFut.length">
+              <th><strong>Paradas:</strong>
+                <ul *ngFor="let reservaEmpresa of listReservasFut">
+                    <div *ngFor="let parada of reservaEmpresa.paradas">
+                      <li>
+                        Orden: {{ parada.orden }} - Parada: {{ parada.parada }}
+                      </li>
+                    </div>
+                </ul>
+              </th>
+              <!-- Reservas -->
+              <th><strong>Reservas:</strong>
+                <ul *ngFor="let reservaEmpresa of listReservasFut">
+                    <div *ngFor="let reserva of reservaEmpresa.reservas">
+                      <li>
+                        N° Reserva {{reserva.PK_Reserva}} <br> {{ reserva.apellido }}, {{ reserva.nombre }} <br> Creación de Reserva: {{ formatFecha(reserva.fecha_creacion) }} <br> Estado: {{ reserva.estado_reserva }}
+                      </li>
+                    </div>
+                </ul>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>>
+  </div>
+      <!-- Historial de reservas -->
+      <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab2'}" id="tab2">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="text-secondary">
+              <tr *ngFor="let reserva of listReservasPas">
+                <th>Viaje N° {{ reserva.PK_Viaje }}</th>
+                <th>Fecha: {{ reserva.fecha }}</th>
+                <th>Hs. Salida: {{ reserva.horario_salida }}</th>
+                <th>Hs. Llegada: {{ reserva.horario_llegada }}</th>
+                <th>Precio: {{ reserva.precio | currency }}</th>
+                <th>Patente: {{ reserva.patente }}</th>
+                <th>{{ reserva.modelo }} - {{ reserva.marca }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Datos de las paradas y Reservas -->
+              <tr *ngIf="listReservasPas.length">
+                <th><strong>Paradas:</strong>
+                  <ul *ngFor="let reservaEmpresa of listReservasPas">
+                      <div *ngFor="let parada of reservaEmpresa.paradas">
+                        <li>
+                          Orden: {{ parada.orden }} - Parada: {{ parada.parada }}
+                        </li>
+                      </div>
+                  </ul>
+                </th>
+                <!-- Reservas -->
+                <th><strong>Reservas:</strong>
+                  <ul *ngFor="let reservaEmpresa of listReservasPas">
+                      <div *ngFor="let reserva of reservaEmpresa.reservas">
+                        <li>
+                          N° Reserva: {{reserva.PK_Reserva}} <br> {{ reserva.apellido }}, {{ reserva.nombre }} <br> Creación de Reserva: {{ formatFecha(reserva.fecha_creacion) }} <br> Estado: {{ reserva.estado_reserva }}
+                        </li>
+                      </div>
+                  </ul>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </div>
+

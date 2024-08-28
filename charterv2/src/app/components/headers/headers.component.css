@@ -1,0 +1,90 @@
+.header-bar {
+    background-color:#5D2898;
+    color: white; /* Cambiar el color del texto si es necesario */
+    height: 40px;
+    width: 100vw;
+    position: fixed;
+    top: 0; /* Coloca el elemento en la parte superior de la ventana del navegador */
+    left: 0; /* Asegura que el elemento esté alineado a la izquierda */
+    right: 0;
+    padding: 2.5px 1px;
+    display: flex; /* Utilizamos flexbox para alinear los elementos */
+    align-items: center; /* Centramos verticalmente los elementos */
+    justify-content: space-between;
+    z-index: 100;
+  }
+
+  .izq{
+  /* Alinear los elementos verticalmente */
+  display: flex;
+  align-items: center;
+  }
+  .icono {
+    width: 65px; /* Ancho del icono */
+    height: 45px; /* Altura del icono */
+  
+  }
+
+  .tittle{
+      color: black;
+      text-align: left;
+      margin: 0;
+  }
+
+  .appname{
+    /* Alinear los elementos verticalmente */
+  display: flex;
+  text-align: center;
+  }
+  
+.name{
+  color: white;
+  text-align: center;
+  margin: 0;
+  font-size: 25px;
+}
+
+.hiconscontainer{
+  display: flex;
+  gap: 10px;
+
+}
+.bt{
+  background-color: #ffffff;
+  line-height: 5 rem;
+  min-width: 0;
+  width: 40px;
+  height: 30px;
+  border-radius: 50%;
+}
+.iconLogin {
+color: #9a03ff;
+cursor: pointer;
+}
+
+.bt:hover{
+  background-color: #e7c4ff;
+  cursor: pointer;
+}
+
+/* Reglas de media query para dispositivos pequeños */
+@media screen and (max-width: 100px) {
+  .header-bar {
+      height: 60px; /* Ajusta la altura para dispositivos pequeños */
+  }
+
+  .icono {
+      width: 40px; /* Reducir el tamaño del icono para dispositivos pequeños */
+      height: 30px; /* Reducir el tamaño del icono para dispositivos pequeños */
+  }
+
+  .name {
+      font-size: 20px; /* Reducir el tamaño del nombre para dispositivos pequeños */
+  }
+
+  .bt {
+      width: 30px; /* Reducir el tamaño de los botones para dispositivos pequeños */
+      height: 25px; /* Reducir el tamaño de los botones para dispositivos pequeños */
+  }
+}
+  

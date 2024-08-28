@@ -1,0 +1,43 @@
+<!-- Modal para mostrar reservas -->
+<div class="modal" *ngIf="reservaData && selectedReservaData.length > 0">
+    <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+
+        <div class="ticket-container">
+            <div class="header-container">
+                <img src="/assets/images/logo2.png" alt="Logo" class="logo">
+                <div class="text-container">
+                    <h1>EasyRide</h1>
+                    <div class="details">
+                        <h2>Viaje N°: {{ reservaData[0]?.PK_Viaje }}</h2>
+                        <h2>Fecha: {{ reservaData[0]?.fecha}}</h2>
+                        <h2>Horario: {{ reservaData[0]?.horario_salida }} - {{ reservaData[0]?.horario_llegada }}</h2>
+                        <h2>Patente: {{ reservaData[0]?.patente }}</h2>
+                        <h2>{{ reservaData[0]?.paradas[0]?.parada }} -- {{ reservaData[0]?.paradas[reservaData[0]?.paradas.length - 1]?.parada }}</h2>
+                    </div>
+                </div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N° Reserva</th>
+                        <th>Creación</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of selectedReservaData">
+                            <td>{{ item.PK_Reserva }}</td>
+                            <td>{{ item.fecha_creacion }}</td>
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.apellido }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="button-container">
+            <button (click)="downloadPDF()">Descargar PDF</button>
+        </div>
+    </div>
+</div>

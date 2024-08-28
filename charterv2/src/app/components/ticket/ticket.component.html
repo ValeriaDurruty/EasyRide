@@ -1,0 +1,57 @@
+<div class="modal" *ngIf="reserva">
+    <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+        
+        <!-- Contenedor del ticket -->
+        <div class="ticket-container">
+            
+            <!-- Encabezado del ticket -->
+            <div class="ticket-header">
+                <div class="photo-container">
+                    <img src="/assets/images/logo2.png" alt="Logo" class="logo">
+                </div>
+                <div class="ticket-info">
+                    <h1>Número de Reserva: #{{ reserva.PK_Reserva }}</h1>
+                </div>
+            </div>
+            
+            <!-- Cuerpo del ticket -->
+            <div class="ticket-body">
+                <div class="info-container">
+                    <div class="line"></div>
+                    
+                    <!-- Información del nombre y la imagen del ticket -->
+                    <div class="name-info">
+                            <div class="text-info">
+                                <h2>{{ usuario?.nombre }}, {{ usuario?.apellido }}</h2>
+                                <h3 *ngIf="reserva && reserva.paradas && reserva.paradas.length > 0">
+                                    {{ getFormattedParadas() }}
+                                </h3>
+                            </div>
+                            <div class="icon-ticket">
+                                <img src="/assets/images/iconticket.png" alt="Icono de Ticket" />
+                                <p class="company-name">Empresa: {{ reserva.empresa }}</p>
+                            </div>
+                    </div>
+                    <!-- Información de fecha y horario de salida -->
+                    <div class="date-time">
+                        <h3>Fecha: {{ reserva.fecha_creacion | date:'dd/MM/yyyy' }}</h3>
+                        <h3>Horario de Salida:{{reserva.horario_salida}}</h3>
+                        <h3>Charter:{{reserva.patente}}</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Pie del ticket -->
+            <div class="ticket-footer">
+                <p>Gracias por su reserva</p>
+                <p>¡Disfrute su viaje!</p>
+            </div>
+        </div>
+        
+        <!-- Botón para descargar el PDF -->
+        <div class="container-bt">
+            <button class="bt-pdf" (click)="downloadPDF()">Descargar PDF</button>
+        </div>
+    </div>
+</div>

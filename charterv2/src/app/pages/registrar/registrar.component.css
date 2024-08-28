@@ -1,0 +1,155 @@
+.search-container {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    width: 500px;
+    margin: auto;
+    margin-top: 95px;
+}
+
+.search-box {
+    margin-bottom: 10px;
+}
+
+.titulo1 {
+    color: rgb(255, 255, 255);
+    font-size: 45px;
+    margin-bottom: 5px;
+}
+
+.search-box label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.search-box input[type="text"],
+.search-box input[type="number"],
+.search-box input[type="date"],
+.search-box input[type ="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border: 1px solid #910fab;
+    border-radius: 5px;
+}
+
+.search-container button {
+    padding: 10px 20px;
+    background-color: #6b2fb0;
+    color: white;
+    border: none;
+    width: 300px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #9a03ff;
+}
+
+.password-container {
+    position: relative;
+    width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+}
+
+.field-icon {
+    cursor: pointer;
+    position: absolute;
+    right: 20px; 
+    top: 70%;
+    transform: translateY(-50%);
+    color: rgb(99, 0, 110);
+}
+
+.toggle-icon {
+    font-size: 18px;
+}
+
+.toggle-btn{
+background-color: #ae06ba;
+}
+.gradient-button {
+    background: linear-gradient(45deg, #ae06ba, #3d0780);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+  
+  }
+  
+  .gradient-button:hover {
+    background: linear-gradient(45deg, #9f0792, #dd7d39);
+  }
+
+  .gradient-button2 {
+    background: linear-gradient(45deg, #ae06ba, #7cfffd);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+  
+  }
+  
+  .gradient-button2:hover {
+    background: linear-gradient(45deg, #9f0792, #419dff);
+  }
+
+  .select-container {
+    position: relative;
+    display: inline-block;
+    width: 100%; /* Ajusta el ancho según sea necesario */
+  }
+  
+  .custom-select {
+    appearance: none; /* Oculta la flecha predeterminada del navegador */
+    -webkit-appearance: none; /* Para Safari */
+    -moz-appearance: none; /* Para Firefox */
+    background: #f9f9f9;
+    background-color: #f9f9f9; /* Color de fondo */
+    border: 1px solid #ddd; /* Borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 30px 10px 10px; /* Padding ajustado para dejar espacio para la flecha */
+    width: 95%; /* Ajusta el ancho */
+    font-size: 16px; /* Tamaño de fuente */
+    color: #333; /* Color del texto */
+  }
+  
+  .custom-select:focus {
+    border-color: #8a2be2;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
+  }
+  
+  .custom-arrow {
+    position: absolute;
+    top: 50%;
+    right: 20px; /* Ajusta la posición horizontal de la flecha */
+    transform: translateY(-50%);
+    color: #8a2be2; /* Color de la flecha */
+    font-size: 16px; /* Tamaño de la flecha */
+    pointer-events: none; /* Asegura que la flecha no interfiera con el clic en el select */
+  }
+
+
+
+/* Estilos para pantallas pequeñas */
+@media screen and (max-width: 600px) {
+    .search-container {
+        width: 90%; /* Utilizamos un ancho relativo para que se adapte mejor a pantallas pequeñas */
+    }
+    
+    .titulo1 {
+        font-size: 30px; /* Reducimos el tamaño del título para pantallas pequeñas */
+    }
+
+    .search-box input[type="text"],
+    .search-box input[type="date"] {
+        width: calc(100% - 10px); /* Reducimos el ancho de los campos de entrada para darles más espacio */
+    }
+}

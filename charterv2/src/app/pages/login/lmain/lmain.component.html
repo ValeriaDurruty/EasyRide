@@ -1,0 +1,45 @@
+<div class="page-header clear-filter" filter-color="blue">
+  <div class="page-header-image" style="background-image:url(assets/images/fondo2.jpg)">
+  </div>
+<div class="container">
+<div class="main-container">
+    <div class="image-container">
+    <img src="/assets/images/logo2.png" alt="Logo empresa">
+    </div>
+    <form (ngSubmit)="login()"> <!--Comienzo de form -->
+      <div class="form-css">
+        <!-- Iconos de angular material -->
+        <label for="email" class="input-label">
+          <i class="material-icons">email</i>
+          Correo electrónico:
+        </label>
+       <!-- Input para Correo electronico -->
+        <input type="email" id="email-usuario" #emailUsuario name="email" placeholder="Ingresa tu correo electrónico">
+      </div>
+      <div class="form-css">
+        <!-- Iconos de angular material -->
+        <label for="password" class="input-label">
+          <i class="material-icons">lock</i>  
+           Contraseña:
+        </label>
+       <!-- Input para Contraseña -->
+        <div class="password-container">
+          <input [type]="passwordVisible ? 'text' : 'password'" id="contraseña-usuario" #contraseñaLoginUsuario name="password"  placeholder="Ingresa tu contraseña">
+          <!-- Ojito para hacer visible o no contraseña-->
+          <span toggle="#contraseña-usuario" class="field-icon toggle-password"(click)="togglePasswordVisibility()">
+              <i class="fa fa-fw fa-eye toggle-icon" [ngClass]="{'fa-eye': passwordVisible, 'fa-eye-slash': !passwordVisible}"></i>
+          </span>
+      </div>
+      </div>
+      <!-- Boton Iniciar sesion -->
+      <button id="bt-iniciar-sesion" type="submit" class="button gradient-button">Iniciar sesión</button>
+    </form>    
+    <!-- Link a vista registrarse -->
+      <div class="registrar">
+        <p><a class="enlace-registro" [routerLink]="['/Registrar']">Todavia no te registraste? Registrarse ahora</a></p>
+        <p>Olvidaste tu contraseña?</p>
+    </div>
+</div>
+</div>
+
+

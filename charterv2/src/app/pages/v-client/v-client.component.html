@@ -1,0 +1,118 @@
+<app-headers></app-headers>
+
+<div class="wrapper">
+  <div class="page-header clear-filter page-header-small" filter-color="orange">
+    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.jpg');">
+    </div>
+    <div class="container">
+      <div class="photo-container">
+        <img src="../assets/images/user.png" alt="">
+      </div>
+      <div *ngIf="user">
+        <h3>{{ user.nombre }} {{ user.apellido }}</h3>
+        <!-- Otros detalles del perfil del usuario -->
+      </div>
+      <div *ngIf="user">{{ user.email}}</div>
+    </div>
+  </div>
+ 
+  <!-- Barra de navegación con 3 opciones -->
+  <ul class="nav nav-tabs justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#tab1" [ngClass]="{'active': currentTab === 'tab1'}" (click)="showTab('tab1')">Viajes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#tab2" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Historial viajes</a>
+      </li>
+  </ul>
+  <!-- Contenido de las pestañas -->
+  <div class="tab-content">
+    <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab1'}" id="tab1">
+      <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="text-secondary">
+            <th>Reserva N°</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Horarios</th>
+            <th>Precio</th>
+            <th>Empresa</th>
+            <th>Vehículo</th>
+            <th>Paradas</th>
+            <th>Opciones</th>
+          </thead>
+          <tbody>
+            <tr *ngFor="let reserva of listReservasFuturas">
+                <!-- Campos -->
+              <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
+              <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
+              <td id="fecha">{{ reserva.fecha }}</td>
+              <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
+              <td id="precio">$ {{ reserva.precio }}</td>
+              <td id="empresa">{{ reserva.empresa }}</td>
+              <td id="vehiculo">{{ reserva.patente }} <br> {{ reserva.modelo }} {{ reserva.marca }}</td>
+              <td id="paradas">
+                <div *ngFor="let parada of reserva.paradas">
+                  <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
+                </div>
+              </td>
+              <td>
+                <!-- Iconos de opciones -->
+                <!-- Cruz para cancelar reserva, visible solo si estado_reserva no es "Cancelado" -->
+                <div class="action-container">
+                  <i *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="confirmCancelarReserva(reserva.PK_Reserva ?? 0)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="red" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
+                      </svg>
+                  </i>
+                  <span style="margin-right: 5px;"></span>
+                  <!-- Ver más info del viaje -->
+                  <a (click)="mostrarTicket(reserva.PK_Reserva ?? 0)" class="ticket-link">
+                      <i class="fas fa-ticket-alt"></i>
+                  </a>
+                </div>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+      <!-- Historial reservas -->
+      <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab2'}" id="tab2">
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="text-secondary">
+              <th>Reserva N°</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th>Horarios</th>
+              <th>Precio</th>
+              <th>Empresa</th>
+              <th>Vehículo</th>
+              <th>Paradas</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reserva of listReservasPasadas">
+                  <!-- Campos -->
+                <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
+                <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
+                <td id="fecha">{{ reserva.fecha }}</td>
+                <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
+                <td id="precio">$ {{ reserva.precio }}</td>
+                <td id="empresa">{{ reserva.empresa }}</td>
+                <td id="vehiculo">{{ reserva.patente }} <br> {{ reserva.modelo }} {{ reserva.marca }}</td>
+                <td id="paradas">
+                  <div *ngFor="let parada of reserva.paradas">
+                    <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <app-ticket *ngIf="showModal" [reserva]="selectedTicketData" [usuario]="user"  (close)="handleClose()"></app-ticket>
+    </div>
+

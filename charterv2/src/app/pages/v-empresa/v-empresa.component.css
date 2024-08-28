@@ -1,0 +1,177 @@
+.tabla-style{
+  color: rgb(209, 24, 255);
+}
+  .bt-agregar{
+    background: rgb(141, 0, 141);
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    font-size: 15px;
+    height: 35px;
+  }
+
+  .bt-agregar:hover{
+    background: linear-gradient(45deg,  rgb(171, 41, 203), rgb(239, 99, 255));
+  }
+
+
+  .bt-listado{
+    background: rgb(141, 0, 141);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    font-size: 15px;
+    height: 45px;
+    /* darle margen a la derecha del botón*/
+    margin-right: 15px;
+  }
+
+  .bt-listado:hover{
+    background: linear-gradient(45deg,  rgb(171, 41, 203), rgb(239, 99, 255));
+  }
+  
+  .bt-g-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .bt-guardar{
+    background-color: rgb(93, 0, 255);
+    color: rgb(255, 255, 255);
+    border-radius: 15px;
+  }
+  .btguardar:hover {
+    background-color:#f714ff;
+  }
+  .photo-container {
+      width: 123px;
+      height: 123px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.3);
+    }
+    
+  .title {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+   .description,
+   .category {
+      text-align: center;
+    }
+    
+   h5.description {
+      max-width: 700px;
+      margin: 20px auto 75px;
+    }
+    
+  .nav-align-center {
+      margin-top: 30px;
+    }
+    
+   .content {
+      max-width: 450px;
+      margin: 0 auto;
+    }
+    
+   .social-description {
+      display: inline-block;
+      max-width: 150px;
+      width: 145px;
+      text-align: center;
+      margin: 15px 0 0px;
+    }
+    
+   .social-description h2 {
+      margin-bottom: 15px;
+    }
+    
+   .button-container {
+      text-align: center;
+      margin-top: -106px;
+    }
+    
+   .collections img {
+      margin-bottom: 30px;
+    }
+    
+    
+  .icon-pencil {
+    color: #d95aff; /* Color para el ícono de lápiz */
+    font-size: 15px;
+  }
+  
+.icon-background {
+  margin-top: 2px;
+  background-color: #ffffff; /* Color de fondo del recuadro */
+  border-radius: 5px; /* Bordes redondeados para el recuadro */
+  padding: 10px; /* Espacio alrededor del ícono */
+  display: inline-block; /* Asegura que el fondo envuelva solo al ícono */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra opcional para darle un efecto de elevación */
+}
+
+.icon-background:hover {
+  background-color: #ddddddc1; /* Color de fondo cuando el ícono es hoverado */
+}
+
+.icon-trash {
+  color: rgb(255, 0, 0); /* Color para el ícono de basura */
+ font-size: 15px;
+}
+
+.text-secondary th{
+  color: rgb(150, 0, 150);
+}
+
+.trip-info {
+  color:rgb(150, 0, 150); /* Color de texto oscuro */
+}
+
+.trip-info td {
+  padding: 10px; /* Espaciado dentro de las celdas */
+}
+
+
+
+/* ------------------------------------------------------------------------------------------------------ */
+/* Estilos para la tabla de reservas */
+.reservas-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.reservas-table th, .reservas-table td {
+  border: 2px solid #000000; /* Bordes de la tabla solo para esta clase */
+  padding: 8px;
+}
+
+.reservas-table thead th {
+  background-color: rgb(209, 24, 255); /* Fondo fucsia solo para los títulos de esta tabla */
+  color: white;
+  font-weight: bold;
+}
+
+/* Acordeón */
+mat-expansion-panel-header {
+  background-color: white;
+  color: rgb(150, 0, 150);
+}
+
+mat-expansion-panel-header:hover {
+  background-color: rgb(140, 69, 140);
+}
+
+mat-panel-title {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  color: rgb(209, 24, 255)
+}
+
+
+.estado-verde {
+  background-color: green; /* Verde claro para reservado */
+}
+
+.estado-rojo {
+  background-color: red; /* Rojo claro para cancelado */
+}

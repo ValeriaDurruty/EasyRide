@@ -1,0 +1,35 @@
+<app-headers></app-headers>
+<div class="page-header clear-filter" filter-color="orange">
+  <div class="page-header-image" style="background-image:url(assets/images/fondo-registrar2.jpg)">
+  </div>
+  <div class="servicio-container">
+    <h2>Información de Empresa</h2>
+    <!-- Comienza el form -->
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="updateEmpresa()">
+      <!-- Campo Razon Social -->
+      <p>
+        <strong>Razon social</strong>
+        <input id="razon_social" type="text" class="form-control" placeholder="Razon social" formControlName="razon_social">
+      </p>
+      <!-- Campo Cuil -->
+      <p>
+        <strong>Cuil</strong>
+        <input id="cuil" type="number" class="form-control" placeholder="Cuil" formControlName="cuil">
+      </p>
+      <!-- Campo Telefono -->
+      <p>
+        <strong>Telefono</strong>
+        <input id="telefono" class="form-control" type="number" placeholder="Telefono" formControlName="telefono">
+      </p>
+      <p>
+        <strong>Correo electrónico</strong>
+        <input id="email" class="form-control" type="text" placeholder="Correo electrónico" formControlName="email">
+      </p>
+      <!-- Botones guardar y cancelar -->
+      <div class="botones">
+        <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button>
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-admin']">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

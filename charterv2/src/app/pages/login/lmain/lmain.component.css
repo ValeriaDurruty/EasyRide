@@ -1,0 +1,154 @@
+.main-container {
+    justify-content: center; 
+    align-items: center; 
+    height: 450px; 
+    display: flex;
+    flex-direction: column;
+}
+  .form-css {
+    margin-bottom: 15px;
+    width: auto;
+  }
+  
+  form {
+    text-align: left; 
+  }
+  
+  /* Estilos para los campos de entrada de tipo email y password */
+  input[type="email"],
+  input[type="password"],
+  button {
+    display: block;
+    width: 80%; 
+    max-width: 300px; 
+    padding: 10px; 
+    margin: 10px auto; 
+    color: #000000;
+    background-color: #fff;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+  
+  width: 100%; 
+  max-width: 300px; 
+  padding: 10px; 
+  margin: 10px auto; 
+  border: 1px solid #a700c9; 
+  border-radius: 15px; 
+  box-sizing: border-box; 
+  }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+    border-color: #910098; 
+    outline: none; 
+    }
+
+    .input-label {
+      display: flex;
+      align-items: center; /* Alinea verticalmente el contenido */
+    }
+    
+    .input-label i {
+      margin-right: 10px; /* Espacio entre el icono y el texto */
+    }
+
+
+    .password-container {
+      position: relative;
+      width: 100%; /* Asegura que ocupe todo el ancho del contenedor */
+  }
+  
+  .field-icon {
+      cursor: pointer;
+      position: absolute;
+      right: 10px; /* Ajusta el espacio a la derecha del campo de contraseña */
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgb(85, 0, 134);
+  }
+
+  .toggle-icon {
+      font-size: 18px;
+  }
+
+  /* Estilo para el ícono cuando el input de contraseña está enfocado */
+  #contraseña-usuario:focus + .field-icon {
+    color: black; 
+  }
+
+
+/* Boton Iniciar sesion */
+  button {
+    background-color: #5e017b;
+    color: #fff; 
+    border: none; 
+    border-radius: 15px; 
+    width: 100%;
+    cursor: pointer; 
+  }
+  
+  button:hover {
+    background-color: #680af6; /* Cambia el color de fondo del botón al pasar el cursor */
+  }
+
+
+  .gradient-button {
+    background: linear-gradient(45deg, #ae06ba, #3d0780);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+  
+  }
+  
+  .gradient-button:hover {
+    background: linear-gradient(45deg, #9f0792, #dd7d39);
+  }
+  
+  /* Estilos para parrafo y enlaces */
+p{
+    font-size: 15px;
+    text-align: center;
+    color: #fff;
+}
+
+p:hover {
+  cursor: pointer; 
+  color: #faaeff; 
+}
+
+.enlace-registro{
+    color: #fff;
+}
+
+.enlace-registro:hover{
+  color: #faaeff;;
+}
+
+
+  /* Estilos para el contenedor de la imagen */
+  .image-container {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+    display: flex;
+    width:auto;
+    height:auto;
+    
+  }
+  
+  img {
+    width: 200px; 
+    height: auto; 
+    border-radius: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+  }
+
+
+

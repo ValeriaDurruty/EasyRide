@@ -1,0 +1,114 @@
+/* Estilo del contenedor de servicio */
+.servicio-container {
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  max-width: 700px; /* Cambiado a max-width para hacerlo responsive */
+  margin: auto;
+  margin-top: 80px;
+  width: auto;
+}
+
+/* Estilo para los detalles del servicio */
+.servicio-details {
+  text-align: center;
+}
+
+/* Estilo para los botones de servicio */
+.bt-a-servicio {
+  color: #ffffff;
+  font-size: 16px;
+  background-color: #c511fc;
+  border-radius: 5px;
+  width: 155px;
+  margin-top: 20px;
+  height: 45px;
+  border: none; /* Elimina el borde del botón */
+}
+
+.bt-a-servicio:hover {
+  background-color: #0617b8;
+}
+
+/* Estilo para los inputs y selects con clase .form-control */
+.form-control {
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+}
+
+input[type="time"].form-control, 
+input[type="date"].form-control,
+input[type="number"].form-control,
+input[type="text"].form-control {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #a100db;
+  }
+
+  .select-control {
+    background-color: #ffffff !important; /* Color de fondo gris claro */
+    color: #000000; /* Color de texto negro */
+    border: 1px solid #a100db !important; /* Borde gris claro */
+    padding: 8px;
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+    .select-control option {
+      background-color: #ffffff; /* Color de fondo blanco para las opciones */
+      color: #000000; /* Color de texto negro */
+      border-radius: 5px;
+      border: 1px solid #a100db;
+    }
+
+.form-control:focus {
+  border: 1px solid #b325ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 0, 221, 0.5);
+}
+
+.form-control:hover {
+  border-color: #bd43ff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.bt-container {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los botones se muevan a la siguiente línea si no hay suficiente espacio */
+  gap: 11px; /* Espacio entre los botones */
+  justify-content: center; /* Centra los botones horizontalmente */
+}
+
+.bt-a-servicio {
+  color: #ffffff;
+  font-size: 16px;
+  background-color: #c511fc;
+  border-radius: 5px;
+  width: 155px;
+  margin-top: 20px; /* Agregado margen superior */
+  margin-left: 50px;
+  height: 45px;
+}
+
+.bt-a-servicio:hover {
+  background-color:#000000;
+}
+
+  /*Mensaje de exito*/
+
+  .custom-snackbar {
+    background-color: #000000; /* Color de fondo */
+    color: white;              /* Color del texto */
+    font-size: 16px;           /* Tamaño de la fuente */
+    text-align: center;        /* Alineación del texto */
+  }
+
+  /*Cerrar del Mensaje de exito*/
+  .custom-snackbar .mat-button-wrapper {
+    color: rgb(255, 22, 255);              /* Color del texto del botón */
+  }

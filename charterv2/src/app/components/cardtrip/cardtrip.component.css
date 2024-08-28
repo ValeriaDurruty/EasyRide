@@ -1,0 +1,27 @@
+.container-trips{
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.titulo {
+  margin-bottom: 50px; 
+}
+
+.h1{
+  text-align: center;
+  color: white;
+  font-size: 15px;
+}
+
+.card-text , .card-title, .list-group-item{
+  color: black;
+}
+.card-link{
+  color: blueviolet;
+}
+
+.card-link:hover{
+  color: rgb(132, 0, 255);
+}

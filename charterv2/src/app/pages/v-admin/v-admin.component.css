@@ -1,0 +1,121 @@
+.text-purple{
+    color:rgb(150, 0, 150);
+}
+
+.photo-container {
+    width: 123px;
+    height: 123px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+    box-shadow: 0px 10px 25px 0px rgba(0, 0, 0, 0.3);
+  }
+  
+.title {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+
+/* Ocultar el checkbox estándar */
+input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo personalizado para el checkbox */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-container label {
+    position: relative;
+    cursor: pointer;
+    padding-left: 30px;
+    margin-right: 5px;
+    font-size: 20px;
+    user-select: none;
+    margin-bottom: 0; /* Asegurarse de que el margen inferior sea cero */
+}
+
+.checkbox-container label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-radius: 4px;
+    background: white;
+}
+
+input[type="checkbox"]:checked + label::before {
+    background: #8a2be2; /* Violeta */
+}
+
+input[type="checkbox"]:checked + label::after {
+    content: '\f00c'; 
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 16px;
+}
+
+/* Estilo adicional para alinear el ícono */
+.icono {
+    margin-left: 10px; /* Ajustar según sea necesario */
+    font-size: 20px; /* Asegurar que el tamaño del ícono sea apropiado */
+}
+
+.bt-add {
+    color: white;
+    background: linear-gradient(45deg,  rgb(171, 41, 203), rgb(34, 0, 40));
+    border-radius: 5px;
+}
+
+.bt-add:hover {
+    background: linear-gradient(45deg, rgb(231, 137, 255), rgb(57, 1, 71));
+} 
+
+.icon-check {
+    color: rgb(0, 192, 32); /* Color para el ícono de check */
+}
+
+.icon-trash {
+    color: rgb(255, 0, 0); /* Color para el ícono de basura */
+}
+
+.icon-pencil {
+    color: rgb(217, 90, 255); /* Color para el ícono de lápiz */
+}
+
+.icon-background {
+    height: 40px; /* Ajusta según tus necesidades */
+    width: 40px;  /* Ajusta según tus necesidades */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff; /* Color de fondo del recuadro */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px; /* Espacio alrededor del ícono */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Sombra opcional */
+}
+
+.icon-background:hover {
+    background-color: #ddddddc1; /* Color de fondo cuando el ícono es hoverado */
+}
+
+.icono {
+    font-size: 20px; /* Tamaño uniforme para todos los íconos */
+}
+
+.d-flex {
+    display: flex;
+    align-items: center; /* Alinea verticalmente */
+}

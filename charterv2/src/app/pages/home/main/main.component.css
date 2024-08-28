@@ -1,0 +1,55 @@
+.fondo-div {
+    margin-top: 5px;
+    text-align: center;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    width: auto;
+}
+
+.fondo-div p {
+    color: #ffffff;
+    font-size: 20px;
+    margin-top: 10px; 
+    font-style: italic;}
+
+h1 {
+    color: #ffffff;
+    margin-top: 50px;
+    font-size: 45px;
+}
+
+/* Button  */
+.btcontainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; /* Aumentamos el margen superior para separar el botón */
+}
+
+#btbuscar{
+    color: rgb(255, 255, 255);
+    width: 300px;
+    height: 45px;
+    text-align: center;
+    border-radius: 10px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.gradient-button {
+    background: linear-gradient(45deg, #ae06ba, #3d0780);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+
+  }
+  
+  .gradient-button:hover {
+    background: linear-gradient(45deg, #9f0792, #dd7d39);
+  }

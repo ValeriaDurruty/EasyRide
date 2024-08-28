@@ -1,0 +1,106 @@
+<div class="page-header clear-filter" filter-color="blue">
+    <div class="page-header-image" style="background-image:url(assets/images/fondo-registrar2.jpg)">
+    </div>
+<app-headers></app-headers>
+
+<div class="search-container">
+    <div class="titulo1">Elegi usuario</div>
+    <!-- Segun eleccion de usuario -->
+    <div class="toggle-buttons">
+      <button class="toggle-btn mb-2 gradient-button" (click)="mostrarUsuario()">Usuario</button>
+      <button class="toggle-btn gradient-button2" (click)="mostrarEmpresa()">Empleado</button>
+    </div>
+    <!-- Muestra el formulario segun el usuario que se eligio -->
+  <div *ngIf="mostrarFormulario">
+  <div *ngIf="esUsuario"> <!-- Comprobacion de usuario -->
+    <div class="titulo1">Ingresa tus datos</div>
+      <form (ngSubmit)="registrar()"> <!-- Comienza el form -->
+      <div class="search-box">
+        <!-- Input Nombre -->
+        <label for="origin">Nombre:</label>
+        <input type="text" id="nombre" #nombreUsuario name="nombre" placeholder="Nombre" required>
+      </div>
+      <div class="search-box">
+        <!-- Input Apellido -->
+        <label for="destination">Apellido</label>
+        <input type="text" id="apellido" #apellidoUsuario name="apellido" placeholder="Apellido" required>
+      </div>
+      <div class="search-box">
+        <!-- Input DNI -->
+          <label for="destination">DNI</label>
+          <input type="number" id="nro_documento" #dniUsuario name="dni" placeholder="DNI" required>
+        </div>
+      <div class="search-box">
+        <!-- Input correo electronico -->
+          <label for="destination">Correo Electronico</label>
+          <input type="text" id="email" #correoUsuario name="correo" placeholder="Correo Electronico" required>
+        </div>
+        <!-- Input contraseña -->
+      <div class="search-box">
+        <div class="password-container">
+        <label for="contraseña-usuario">Contraseña</label>
+        <input type="password" id="contrasenia" #contraseñaUsuario name="password" placeholder="Ingresa tu contraseña" required>
+        <!-- Ojito para ver y no ver contraseña -->
+        <span toggle="#contraseña-usuario" class="field-icon toggle-password"(click)="togglePasswordVisibility()">
+            <i class="fa fa-fw fa-eye toggle-icon" [ngClass]="{'fa-eye': passwordVisible, 'fa-eye-slash': !passwordVisible}"></i>
+        </span>
+      </div>
+  </div>
+  <button id="bt-registrar" class="gradient-button">Registrarme</button>
+  </form> <!-- Fin form para usuario normal -->
+    </div>
+  </div>
+<!-- Formulario para usuario empleado de la empresa -->
+<div *ngIf="!esUsuario">
+      <div class="titulo1">Ingresa tus datos</div>
+      <form (ngSubmit)="registrar()"> <!-- Comienza el form -->
+        <div class="search-box">
+          <!-- Input Nombre -->
+          <label for="origin">Nombre:</label>
+          <input type="text" id="nombre" #nombreUsuario name="nombre" placeholder="Nombre" required>
+        </div>
+        <div class="search-box">
+          <!-- Input Apellido -->
+          <label for="destination">Apellido</label>
+          <input type="text" id="apellido" #apellidoUsuario name="apellido" placeholder="Apellido" required>
+        </div>
+        <div class="search-box">
+          <!-- Input DNI -->
+            <label for="destination">DNI</label>
+            <input type="number" id="nro_documento" #dniUsuario name="dni" placeholder="DNI" required>
+          </div>
+          <div class="search-box">
+            <!-- Select para la empresa que pertenece -->
+            <label for="empresa">Empresa</label>
+            <div class="select-container">
+              <select #empresaUsuario id="empresa" name="empresa" class="custom-select" required>
+                <option value="" disabled selected>Seleccione una empresa</option>
+                <!-- Habría que traer los nombres de las empresas -->
+                <option *ngFor="let empresa of empresas" [value]="empresa.PK_Empresa">{{ empresa.razon_social }}</option>
+              </select>
+              <i class="fa fa-chevron-down custom-arrow"></i> <!-- Flecha personalizada -->
+            </div>
+          </div>
+
+        <div class="search-box">
+          <!-- Input correo electronico -->
+            <label for="destination">Correo Electronico</label>
+            <input type="text" id="email" #correoUsuario name="correo" placeholder="Correo Electronico" required>
+          </div>
+          <!-- Input contraseña -->
+        <div class="search-box">
+          <div class="password-container">
+          <label for="contraseña-usuario">Contraseña</label>
+          <input type="password" id="contrasenia" #contraseñaUsuario name="password" placeholder="Ingresa tu contraseña" required>
+          <!-- Ojito para ver y no ver contraseña -->
+          <span toggle="#contraseña-usuario" class="field-icon toggle-password"(click)="togglePasswordVisibility()">
+              <i class="fa fa-fw fa-eye toggle-icon" [ngClass]="{'fa-eye': passwordVisible, 'fa-eye-slash': !passwordVisible}"></i>
+          </span>
+        </div>
+    </div>
+      <!-- Boton registrar -->
+    <button id="bt-registrar" class="gradient-button">Registrarme</button>
+    </form> <!-- Fin form para empleado de la empresa -->
+    </div>
+  </div>
+</div>

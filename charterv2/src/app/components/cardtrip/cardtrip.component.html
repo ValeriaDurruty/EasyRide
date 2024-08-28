@@ -1,0 +1,18 @@
+<div class="container-trips">
+  <div *ngFor="let viaje of viajes" class="card" style="width: 15rem;">
+    <div class="card-body">
+      <h5 id="viaje-titulo" class="card-title">Empresa: {{ viaje.empresa }}</h5>
+      <p id="viaje-descripcion" class="card-text">Fecha: {{ viaje.fecha }}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <!-- Lista del card --> 
+      <li id="viaje-origen" class="list-group-item">Horario Salida: {{ viaje.horario_salida}}</li>
+      <li id="viaje-destino" class="list-group-item">Horario Llegada: {{ viaje.horario_llegada }}</li>
+      <li id="viaje-precio" class="list-group-item">Precio: {{ viaje.precio | currency }}</li>
+      <li id="viaje-cupo" class="list-group-item">Cupo: {{ viaje.cupo }}</li>
+    </ul>
+    <div class="card-body">
+      <a [routerLink]="['/Reservar',viaje.PK_Viaje]" class="card-link">Reservar</a>
+    </div>
+  </div>
+</div>

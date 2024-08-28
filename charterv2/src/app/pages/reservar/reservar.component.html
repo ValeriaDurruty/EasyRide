@@ -1,0 +1,54 @@
+<app-headers></app-headers>
+<div class="page-header clear-filter">
+    <div class="page-header-image" style="background-image:url(assets/images/reserva-fondo2.png)">
+    </div>
+    <div class="reserva-container">
+        <h2>Información de Reserva</h2>
+        <div class="reserva-info">
+            <!-- Campos de reserva -->
+            <div class="reserva-details">
+                <form [formGroup]="form" class="servicio-details" (ngSubmit)="guardarReserva()">
+                    <!-- Campo Nombre de la Empresa -->
+                    <p><strong>Nombre de la empresa:</strong></p>
+                    <input id="viaje-empresa" type="text" class="form-control" placeholder="Nombre empresa" formControlName="empresa_nombre" [readonly]="true">
+
+                    <!-- Campo Horario de Salida -->
+                    <p><strong>Horario de salida:</strong></p>
+                    <input id="viaje-horario-salida" type="time" formControlName="horario_salida" class="form-control" [readonly]="true">
+
+                    <!-- Campo Horario de Llegada -->
+                    <p><strong>Horario de llegada:</strong></p>
+                    <input id="viaje-horario-llegada" type="time" formControlName="horario_llegada" class="form-control" [readonly]="true">
+
+                    <!-- Campo Día -->
+                    <p><strong>Día:</strong></p>
+                    <input id="fecha" type="date" formControlName="fecha" class="form-control"[readonly]="true">
+
+                    <!-- Campo Precio -->
+                    <p><strong>Precio:</strong></p>
+                    <input id="viaje-costo" type="number" formControlName="precio" class="form-control" placeholder="Costo"[readonly]="true">
+
+                    <!-- Campo Cupo -->
+                    <p><strong>Cupo:</strong></p>
+                    <input id="viaje-cupo" type="number" formControlName="cupo" class="form-control" placeholder="Cupo"[readonly]="true">
+
+                    <!-- Lista de Paradas -->
+                    <p><strong>Paradas:</strong></p>
+                    <ul id="viaje-lista-paradas">
+                        <li *ngFor="let parada of paradasSeleccionadas; let i = index">
+                            Orden: {{ parada.orden }} - {{ parada.parada }}
+                        </li>
+                    </ul>
+                    <!-- Información del Charter Asignado -->
+                    <label for="FK_Charter">Charter Asignado</label>
+                    <p>Patente:</p><input id="FK_Charter" formControlName="patente_charter" class="form-control" type="text" placeholder="Charter" [readonly]="true" />
+                    <p>Marca:</p><input id="patente_charter" formControlName="marca_charter" class="form-control" type="text" placeholder="Charter" [readonly]="true" />
+                    <p>Modelo:</p><input id="modelo_charter" formControlName="modelo_charter" class="form-control" type="text" placeholder="Charter" [readonly]="true" />
+
+                    <!-- Botón reservar -->
+                    <button type="submit" class="btreservar gradient-button">Reservar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

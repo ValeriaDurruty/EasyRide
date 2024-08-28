@@ -1,0 +1,39 @@
+.message {
+    border: 1px solid #a454ff; /* Borde alrededor del contenedor */
+    padding: 16px; /* Espacio interior */
+    background-color: #222222; /* Fondo blanco */
+    border-radius: 8px; /* Bordes redondeados */
+  }
+  
+  .message h1 {
+    margin-top: 0; /* Elimina el margen superior */
+    font-size: 24px; /* Tamaño de fuente del título */
+    color: #ffffff; /* Color del texto del título */
+  }
+  
+  .message mat-dialog-content {
+    margin: 16px 0; /* Espacio arriba y abajo del contenido */
+    justify-content: center;
+  }
+  
+  .message p {
+    font-size: 16px; /* Tamaño de fuente del párrafo */
+    font-family: 'Times New Roman', Times, serif;
+    color: #ffffff; /* Color del texto del párrafo */
+  }
+  
+  .message mat-dialog-actions {
+    display: flex; /* Muestra los botones en una fila */
+    justify-content: center; /* Alinea los botones a la derecha */
+  }
+  
+  .message button {
+    margin-left: 8px; /* Espacio entre los botones */
+    background-color: rgb(203, 52, 203);
+    border-radius: 5px;
+  }
+  
+  .message button:hover {
+    background-color: rgb(255, 28, 255);
+  }
+  

@@ -1,0 +1,9 @@
+<div class="trip-Icons">
+  <div *ngFor="let viaje of viajes; let i = index" class="image-container" (mousemove)="mostrarInfo(i)">
+    <img [src]="imagenesPorIndice[i % imagenesPorIndice.length]" class="TripIcon">
+    <div *ngIf="viaje.mostrar" class="info-trip">
+    <p>{{ getPrimeraYUltimaParada(viaje).primeraParada }}-{{ getPrimeraYUltimaParada(viaje).ultimaParada }}</p>
+      <button [routerLink]="['/Reservar',viaje.PK_Viaje]" class="gradient-button">Reservar</button>
+    </div>
+  </div>
+</div>

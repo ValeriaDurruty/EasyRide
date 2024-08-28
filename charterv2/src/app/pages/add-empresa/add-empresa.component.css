@@ -1,0 +1,94 @@
+.servicio-container {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 700px; /* Cambiado a max-width para hacerlo responsive */
+    margin: auto;
+    margin-top: 80px;
+    width: auto;
+}
+
+.servicio-details {
+    flex: 2; /* Ocupa dos tercios del espacio disponible en pantallas pequeñas */
+    text-align: center;
+}
+
+.botones{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap; 
+  justify-content: center; 
+  align-items: center; 
+  gap: 2px; 
+}
+
+.bt-a-servicio {
+    color: #ffffff;
+    font-size: 16px;
+    background-color: #c511fc;
+    border-radius: 5px;
+    width: 155px;
+    margin-top: 20px; /* Agregado margen superior */
+    margin-left: 50px;
+    height: 45px;
+}
+
+.bt-a-servicio:hover {
+    background-color:#0617b8;
+}
+
+#marca-charter{
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px; /* ajusta el ancho según sea necesario */
+  }
+  
+
+  #marca-charter:hover {
+    border-color: #0d0098; /* Cambia el color del borde al pasar el cursor */
+  }
+
+  #modelo-charter{
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px; /* ajusta el ancho según sea necesario */
+  }
+  
+  #modelo-charter option:hover {
+    padding: 8px;
+  }
+
+  #modelo-charter:hover {
+    border-color: #0d0098; /* Cambia el color del borde al pasar el cursor */
+  }
+
+  .form-control[_ngcontent-ng-c3002617371]:focus {
+    border: #b325ff;
+    outline: none; /* Elimina el contorno predeterminado */
+    box-shadow: 0 0 5px rgba(255, 0, 221, 0.5);
+  }
+  
+  /* Cambiar color del borde y sombra al pasar el mouse */
+  .form-control:hover {
+    border-color: #bd43ff; /* Cambia el color del borde al pasar el mouse */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Añade una sombra al input al pasar el mouse */
+  }
+
+  /*Mensaje de exito*/
+
+  .custom-snackbar {
+    background-color: #000000; /* Color de fondo */
+    color: white;              /* Color del texto */
+    font-size: 16px;           /* Tamaño de la fuente */
+    text-align: center;        /* Alineación del texto */
+  }
+
+  /*Cerrar del Mensaje de exito*/
+  .custom-snackbar .mat-button-wrapper {
+    color: rgb(255, 22, 255);              /* Color del texto del botón */
+  }

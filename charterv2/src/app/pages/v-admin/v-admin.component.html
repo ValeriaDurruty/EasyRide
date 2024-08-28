@@ -1,0 +1,148 @@
+<app-headers></app-headers>
+<div class="wrapper">
+      <div class="page-header clear-filter page-header-small" filter-color="orange">
+        <div class="page-header-image" style="background-image:url('../assets/images/fondo.jpg');">
+        </div>
+        <div class="container">
+          <div class="photo-container">
+            <img src="../assets/images/user.png" alt="">
+          </div>
+         <!-- Datos de usuario -->
+          <div> 
+            <h3 class="title"> Administrador </h3>
+          </div>
+          <div *ngIf="user">
+            <h3>{{ user.nombre }} {{ user.apellido }}</h3>
+            <!-- Otros detalles del perfil del usuario -->
+          </div>
+        </div>
+      </div>
+</div>
+
+
+  <!-- Barra de navegación con 3 opciones -->
+    <ul class="nav nav-tabs justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab1'}" (click)="showTab('tab1')">Cuentas pendientes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Cuentas validadas</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab3'}" (click)="showTab('tab3')">Empresas</a>
+      </li>
+    </ul>
+
+  <!-- Lista de usuarios a validar -->
+  <div class="tab-content">
+    <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab1'}" id="tab1">
+      <div class="table-responsive">
+        <table class="table">
+          <thead class="text-purple">
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Nro. Documento</th>
+              <th>Correo electrónico</th>
+              <th>Empresa</th>
+              <th>Opciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <!-- Campos de usuarios a validar -->
+              <tr *ngFor="let usuario of listUsuariosPendientes">
+                <td id="nombre">{{ usuario.nombre }}</td>
+                <td id="apellido">{{ usuario.apellido }}</td>
+                <td id="nro_documento">{{ usuario.nro_documento }}</td>
+                <td id="email">{{ usuario.email }}</td>
+                <td id="nombreEmpresa">{{ usuario.nombreEmpresa }}</td>
+              <td>
+                <div class="container">
+                  <div class="d-flex align-items-center">
+                      <!-- Icono para validar -->
+                      <i class="fas fa-check-circle icon-check icon-background" (click)="confirmValidarUsuario(usuario.PK_Usuario || 0)"></i>
+                      <!-- Icono para eliminar cuenta -->
+                      <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)"></i>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Listado de cuentas validadas -->
+    <div class="tab-content">
+      <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab2'}" id="tab2">
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="text-purple">
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Nro. Documento</th>
+                <th>Correo electrónico</th>
+                <th>Empresa</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let usuario of listUsuariosValidados">
+                <td id="nombre">{{ usuario.nombre }}</td>
+                <td id="apellidp">{{ usuario.apellido }}</td>
+                <td id="nro_documento">{{ usuario.nro_documento }}</td>
+                <td id="email">{{ usuario.email }}</td>
+                <td id="nombreEmpresa">{{ usuario.nombreEmpresa }}</td>
+                <td>
+                 <!-- Icono para eliminar cuenta -->
+                <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Listado de Empresas -->
+    <div class="tab-content">
+      <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab3'}" id="tab3">
+        <div class="d-flex justify-content-center">
+          <button type="button" class="bt-add btn " [routerLink]="['/Agregar-empresa']">Agregar empresa</button>
+        </div>
+        <div class="table-responsive">
+          <table class="table">
+            <thead class="text-purple">
+              <tr>
+                <th>Razon Social</th>
+                <th>CUIL</th>
+                <th>Correo electrónico</th>
+                <th>Teléfono</th>
+                <th>Opciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let empresa of listEmpresas">
+                <td id="razon_social">{{ empresa.razon_social }}</td>
+                <td id="cuil">{{ empresa.cuil }}</td>
+                <td id="email">{{ empresa.email }}</td>
+                <td id="telefono">{{ empresa.telefono }}</td>
+                <td>
+                  <div class="container">
+                    <div class="d-flex align-items-center">
+                        <!-- Icono de lápiz -->
+                        <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]"   class="mr-2">
+                          <i class="fas fa-pencil-alt icon-pencil icon-background" onclick=""></i></a>
+                        <!-- Icono para eliminar cuenta -->
+                        <i class="fas fa-trash-alt icono icon-trash icon-background mr-3" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)"></i>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
