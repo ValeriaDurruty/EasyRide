@@ -3,7 +3,8 @@
     <img [src]="imagenesPorIndice[i % imagenesPorIndice.length]" class="TripIcon">
     <div *ngIf="viaje.mostrar" class="info-trip">
     <p>{{ getPrimeraYUltimaParada(viaje).primeraParada }}-{{ getPrimeraYUltimaParada(viaje).ultimaParada }}</p>
-      <button [routerLink]="['/Reservar',viaje.PK_Viaje]" class="gradient-button">Reservar</button>
+      <!-- Deshabilitar el botón si no hay cupo -->
+      <button class="gradient-button" (click)="reservar(viaje.PK_Viaje || 0)">Reservar</button>
     </div>
   </div>
 </div>

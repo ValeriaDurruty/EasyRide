@@ -176,7 +176,7 @@ export class ReservarComponent implements OnInit{
   }
 
 //GUARDAR RESERVA 
-guardarReserva(): void {
+/*guardarReserva(): void {
   if (this.form.valid) {
     console.log('Formulario válido, obteniendo usuario actual...');
     
@@ -205,6 +205,52 @@ guardarReserva(): void {
       } else {
         console.error('Datos requeridos faltan: usuario o idViaje');
         this.mensajeError('Datos requeridos faltan: usuario o idViaje');
+      }
+    }, error => {
+      console.error('Error al obtener el usuario:', error);
+      this.mensajeError('Error al obtener el usuario');
+    });
+  } else {
+    console.error('Formulario inválido. Por favor, completa todos los campos obligatorios.');
+    this.mensajeError('Por favor, completa todos los campos obligatorios');
+  }
+}
+*/
+
+guardarReserva(): void {
+  if (this.form.valid) {
+    console.log('Formulario válido, obteniendo usuario actual...');
+    
+    this._userService.getCurrentUser().subscribe(usuario => {
+      console.log('Usuario obtenido:', usuario);
+      console.log('ID del usuario:', usuario ? usuario.PK_Usuario : 'Usuario no disponible');
+      
+      // Asegúrate de que el usuario y el idViaje no sean null o undefined
+      if (usuario && usuario.PK_Usuario && this.idViaje !== null) {
+        const reservaData = {
+          PK_Usuario: usuario.PK_Usuario, // Usa el ID del usuario
+          PK_Viaje: this.idViaje // ID del viaje
+        };
+
+        console.log('Datos de reserva a enviar:', reservaData);
+
+        this._reservaService.addReserva(reservaData).subscribe(
+          () => {
+            console.log('Reserva guardada exitosamente.');
+            this.mensajeExito();
+            this._router.navigate(['/V-cliente']);
+          },
+          error => {
+            console.error('Error al guardar la reserva:', error);
+            this.mensajeError('Error al guardar la reserva');
+          }
+        );
+      } else {
+        console.error('Datos requeridos faltan: usuario o idViaje');
+        console.log('Datos de reserva:', {
+          usuario: usuario ? usuario.PK_Usuario : 'Usuario no disponible',
+          idViaje: this.idViaje
+        });
       }
     }, error => {
       console.error('Error al obtener el usuario:', error);

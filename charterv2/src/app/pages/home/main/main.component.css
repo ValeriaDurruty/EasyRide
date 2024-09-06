@@ -1,23 +1,40 @@
+.scrollable-container {
+  max-height: 100vh; /* Limita la altura al tamaño de la ventana del navegador */
+  overflow-y: auto; /* Permite scroll vertical cuando sea necesario */
+  padding: 20px; /* Añade relleno para evitar que el contenido se adhiera a los bordes */
+  box-sizing: border-box; /* Incluye el padding y el borde en el cálculo de la altura */
+}
 .fondo-div {
-    margin-top: 5px;
+    margin-top: 10px;
     text-align: center;
     margin-left: 0px;
     margin-right: 0px;
     margin-bottom: 0px;
     width: auto;
+    overflow: hidden;
 }
 
 .fondo-div p {
     color: #ffffff;
     font-size: 20px;
     margin-top: 10px; 
-    font-style: italic;}
-
-h1 {
-    color: #ffffff;
-    margin-top: 50px;
-    font-size: 45px;
-}
+    font-style: italic;
+    animation: barrido 2s linear infinite;}
+      
+      /* Definir la animación de aparición gradual */
+      @keyframes fadeInOut {
+        0% { opacity: 0; }
+        50% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+      
+      /* Aplicar las animaciones al <h1> */
+      h1 {
+        color: #ffffff;
+        margin-top: 60px;
+        font-size: 45px;
+        animation: fadeInOut 3s ease-in-out infinite; /* Se puede sacar */
+      }
 
 /* Button  */
 .btcontainer {
@@ -36,6 +53,7 @@ h1 {
     border-radius: 10px;
     margin-top: 30px;
     cursor: pointer;
+    animation: sacudida 5s infinite;
 }
 
 .gradient-button {
@@ -53,4 +71,51 @@ h1 {
 
   .gradient-button:hover {
     background: linear-gradient(45deg, #9f0792, #dd7d39);
+  }
+
+  @keyframes sacudida {
+    0% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(5px);
+    }
+    75% {
+      transform: translateX(-5px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes barrido {
+    0% {
+      background-position: -100%;
+    }
+    100% {
+      background-position: 100%;
+    }
+  }
+
+  .scrollable-container {
+    max-height: 100vh; /* Limita la altura máxima al tamaño de la ventana del navegador */
+    overflow-y: auto; /* Muestra la scrollbar vertical cuando sea necesario */
+  }
+
+  @media (max-width: 768px) {
+    .fondo-div h1 {
+      font-size: 30px;
+    }
+  
+    .fondo-div p {
+      font-size: 16px;
+    }
+  
+    #btbuscar {
+      width: 250px;
+      height: 40px;
+    }
   }

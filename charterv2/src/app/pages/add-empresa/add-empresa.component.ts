@@ -34,7 +34,7 @@ export class AddEmpresaComponent implements OnInit {
 
   addEmpresa(){
     if(this.form.invalid) {
-      this.mensajeError('Por favor, complete todos los campos');
+      this.mensaje('Por favor, corrige los errores en el formulario');
       return;
     }
 
@@ -50,36 +50,27 @@ export class AddEmpresaComponent implements OnInit {
       next: () => {
         console.log('Empresa agregada con éxito');
         this.Router.navigate(['/V-admin'], { queryParams: { tab: 'tab3' } });
-        this.mensajeExito('Empresa agregada con éxito');
+        this.mensaje('Empresa agregada con éxito');
     },
     error: (error) => {
       if (error.status === 400) {
         console.error('El CUIL ya está registrado');
-        this.mensajeError('El CUIL ya está registrado');
+        this.mensaje('El CUIL ya está registrado');
       } else {
         console.error('Error al agregar la empresa', error);
-        this.mensajeError('Error al agregar la empresa');
+        this.mensaje('Error al agregar la empresa');
       }
       this.form.controls['cuil'].reset();
     }
   });
 }
 
-mensajeExito(mensaje:string) {
+mensaje(mensaje:string) {
   this._snackBar.open(mensaje, 'Cerrar', {
     duration: 5000,
     horizontalPosition: 'center',
     verticalPosition: 'bottom',
     panelClass: ['custom-snackbar']  // Es para darle estilo
-  });
-}
-
-mensajeError(mensaje: string) {
-  this._snackBar.open(mensaje, 'Cerrar', {
-    duration: 5000,
-    horizontalPosition: 'center',
-    verticalPosition: 'bottom',
-    panelClass: ['error-snackbar']  // Es para darle estilo
   });
 }
 }

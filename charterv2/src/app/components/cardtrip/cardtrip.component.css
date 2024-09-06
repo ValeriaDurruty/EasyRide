@@ -18,10 +18,36 @@
 .card-text , .card-title, .list-group-item{
   color: black;
 }
-.card-link{
-  color: blueviolet;
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centra el botón dentro de su contenedor */
 }
 
-.card-link:hover{
-  color: rgb(132, 0, 255);
+.gradient-button {
+  background: linear-gradient(45deg, #ae06ba, #3d0780);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 2px 4px 8px rgba(255, 209, 25, 0.1); 
+  transition: background 0.3s ease;
+}
+
+.gradient-button:not(.disabled):hover {
+  background: linear-gradient(45deg, #9f0792, #dd7d39);
+}
+
+.no-place {
+  color: red; /* Cambia el color del texto a rojo */
+  font-weight: bold; /* Hace el texto en negrita */
+}
+
+.disabled {
+  background: gray; /* Cambia el fondo del botón a gris */
+  cursor: not-allowed; /* Muestra un cursor de "no permitido" */
+  color: white; /* Asegura que el texto siga siendo legible */
+  box-shadow: none; /* Quita la sombra para parecer deshabilitado */
 }

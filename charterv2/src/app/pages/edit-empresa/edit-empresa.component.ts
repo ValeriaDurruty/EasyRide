@@ -53,7 +53,7 @@ export class EditEmpresaComponent implements OnInit{
   updateEmpresa() {
     if (this.form.invalid) {
       console.log('Formulario inválido:', this.form.errors); 
-      this.mensaje('Por favor, complete todos los campos');
+      this.mensaje('Por favor, corrige los errores en el formulario');
       return;
     }
   

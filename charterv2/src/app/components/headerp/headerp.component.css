@@ -1,19 +1,66 @@
 .header-bar {
-    background-color:#5D2898;
-    color: white; /* Cambiar el color del texto si es necesario */
-    height: 40px;
-    width: 100vw;
-    position: fixed;
-    top: 0; /* Coloca el elemento en la parte superior de la ventana del navegador */
-    left: 0; /* Asegura que el elemento esté alineado a la izquierda */
-    right: 0;
-    padding: 2.5px 1px;
-    display: flex; /* Utilizamos flexbox para alinear los elementos */
-    align-items: center; /* Centramos verticalmente los elementos */
-    justify-content: space-between;
-    z-index: 100;
+  background-color: #5D2898;
+  color: white;
+  height: 60px; /* Ajusta la altura del header */
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+}
+
+.icono {
+  width: 50px;
+  height: 50px;
+  animation: enlarge 2s ease-out infinite;
+}
+
+@keyframes enlarge {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .header-bar {
+    height: 50px;
+    padding: 5px;
   }
 
+  .icono {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-bar {
+    height: 40px;
+    padding: 3px;
+  }
+
+  .icono {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.page-content {
+  padding-top: 60px !important; /* Ajusta esto según la altura de tu header */
+}
+  
   .izq{
   /* Alinear los elementos verticalmente */
   display: flex;
@@ -66,4 +113,67 @@ cursor: pointer;
   background-color: #e7c4ff;
   cursor: pointer;
 }
-  
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 70px; 
+  margin-right: 2px; 
+  animation: enlarge 2s ease-out;
+}
+
+@keyframes enlarge {
+  0% {
+    transform: scale(1); /* Tamaño original */
+  }
+  50% {
+    transform: scale(1.5); /* Tamaño agrandado */
+  }
+  100% {
+    transform: scale(1); /* Tamaño original */
+  }
+}
+
+/*EASYRIDE NOMBRE ANIMACION Y ESTILOS*/
+.brand-name {
+  font-size: 15px; 
+  color: #ffffff; 
+  margin-left: 5px; 
+  animation: cambioColor 3s ease-in-out;
+}
+
+@keyframes cambioColor {
+  0% {
+    color: #ffffff; /* Color inicial */
+  }
+  50% {
+    color: #ff41f9; /* Color intermedio */
+  }
+  100% {
+    color: #ffffff; /* Color final */
+  }
+}
+
+/*
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: violet;
+  padding: 20px;
+  color: white;
+}
+
+.contact-info {
+  font-size: 18px;
+}
+
+.social-media a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+}
+*/

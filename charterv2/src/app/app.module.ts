@@ -40,6 +40,7 @@ import { UnauthorizedComponent } from './components/unauthorized/unauthorized.co
 import { TicketComponent } from './components/ticket/ticket.component';
 import { ListadoReservasComponent } from './components/listado-reservas/listado-reservas.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros.component';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     ConfirmDialogComponent,
     UnauthorizedComponent,
     TicketComponent,
-    ListadoReservasComponent
+    ListadoReservasComponent,
+    SobrenosotrosComponent
   ],
   imports: [
     BrowserModule,

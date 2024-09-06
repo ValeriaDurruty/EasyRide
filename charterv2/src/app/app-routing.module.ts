@@ -19,6 +19,7 @@ import { AddEmpresaComponent } from './pages/add-empresa/add-empresa.component';
 import { EditEmpresaComponent } from './pages/edit-empresa/edit-empresa.component';
 import { RoleGuard } from './guards/admin.guard';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
+import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros.component';
 
 // RUTAS DE NAVEGACIÓN
 
@@ -26,10 +27,11 @@ const routes: Routes = [
   //Rutas principales
   {path:"",component:HomeComponent},
   {path: "LogIn",component: LoginComponent },
-  {path: "Search",component: SearchComponent,canActivate: [RoleGuard]},
+  {path: "Search",component: SearchComponent},
   {path:"Reservar/:id",component: ReservarComponent, canActivate: [RoleGuard]},
-  {path: "Vista-Trips",component: VistatripsComponent, canActivate: [RoleGuard]},
+  {path: "Vista-Trips",component: VistatripsComponent}, //Cualquier cosa le agregan el guard
   {path:"Registrar",component: RegistrarComponent},
+  {path:"Sobre-nosotros", component:SobrenosotrosComponent},
 
   //Vistas de usuario
   {path:"V-cliente",component:VClientComponent, canActivate: [RoleGuard]},

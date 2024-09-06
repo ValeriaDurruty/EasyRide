@@ -1,4 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { CharterService } from '../services/charter.service';
@@ -53,4 +53,27 @@ export function cuilAsyncValidator(empresaService: EmpresaService, currentEmpres
       })
     );
   };
+}
+
+// Validador personalizado para la fecha
+export function fechaNoPasada(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    const fecha = new Date(control.value);
+    const hoy = new Date();
+    if (fecha < hoy) {
+      return { fechaPasada: true };
+    }
+    return null;
+  };
+}
+
+// Validador personalizado para horarios iguales
+export function horariosDiferentes(control: AbstractControl): { [key: string]: any } | null {
+  const horarioSalida = control.get('horario_salida')?.value;
+  const horarioLlegada = control.get('horario_llegada')?.value;
+
+  if (horarioSalida && horarioLlegada && horarioSalida === horarioLlegada) {
+    return { horariosIguales: true };
+  }
+  return null;
 }

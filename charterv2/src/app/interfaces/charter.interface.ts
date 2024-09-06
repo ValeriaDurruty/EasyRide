@@ -6,6 +6,7 @@ export interface Charter {
   anio: number;
   FK_Empresa: number;
   FK_Modelo: number;
+  FK_Marca?: number;
   modelo?: string;
   marca?: string;
 };

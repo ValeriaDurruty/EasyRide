@@ -1,8 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
 import { Usuario } from '../../../interfaces/user.interface';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UserDataService } from '../../../shared/user-data.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -17,17 +17,23 @@ export class LmainComponent {
   passwordVisible: boolean = false;
   passwordTextColor: string = '#fff'; // Color de texto predeterminado
   user$: Observable<Usuario> | undefined;
+  returnUrl: string = '';
 
   @ViewChild('emailUsuario') emailUsuarioRef!: ElementRef;
   @ViewChild('contraseñaLoginUsuario') contraseñaLoginUsuarioRef!: ElementRef;
 
-  constructor(private userService: UserService, private router: Router, private userDataService: UserDataService, private _snackBar: MatSnackBar) {}
+  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private userDataService: UserDataService, private _snackBar: MatSnackBar, private ngZone: NgZone) {}
 
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
     const passwordField = this.contraseñaLoginUsuarioRef.nativeElement as HTMLInputElement;
     passwordField.type = this.passwordVisible ? 'text' : 'password';
     this.passwordTextColor = this.passwordVisible ? '#000' : '#333'; // Cambia el color del texto
+  }
+
+  ngOnInit(): void {
+    // Captura el parámetro de retorno de la URL
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   async login() {
@@ -47,26 +53,39 @@ export class LmainComponent {
           console.log('Datos del usuario:', userData);
           this.userDataService.setUser(userData); // Guardar datos del usuario en el servicio compartido
           
-          // Redirigir a la página correspondiente según el rol del
-          if (userData.FK_Rol == 1) {
-            this.router.navigate(['/V-admin']);
-          }
-          else if (userData.FK_Rol == 2) {
-            if (userData.validar == 0) {
-              //borrar datos del usuario
-              this.userService.logoutUsuario().then(() => {
-                this.router.navigate(['/LogIn']);
-                this.mensaje('Usuario no validado, por favor comuniquese con el administrador.');
-              }).catch(error => {
-                console.error('Error:', error);
-              });
-            } else {
-            this.router.navigate(['/V-empresa']);
+          // Redirigir a la página correspondiente según el rol del usuario
+          this.ngZone.run(() => {
+            if (userData.FK_Rol == 1) {
+              if (this.returnUrl && this.returnUrl !== '/') {
+                this.mensaje('No puedes reservar un viaje siendo un administrador.');
+                this.router.navigateByUrl(this.returnUrl);
+              } else {
+                this.router.navigate(['/V-admin']);
+              }
+            } else if (userData.FK_Rol == 2) {
+              if (userData.validar == 0) {
+                this.userService.logoutUsuario().then(() => {
+                  this.router.navigate(['/LogIn']);
+                  this.mensaje('Usuario no validado, por favor comuníquese con el administrador.');
+                }).catch(error => {
+                  console.error('Error:', error);
+                });
+              } else {
+                if (this.returnUrl && this.returnUrl !== '/') {
+                  this.mensaje('No puedes reservar un viaje siendo un empleado de una empresa.');
+                  this.router.navigateByUrl(this.returnUrl);
+                } else {
+                  this.router.navigate(['/V-empresa']);
+                }
+              }
+            } else if (userData.FK_Rol == 3) {
+              if (this.returnUrl && this.returnUrl !== '/') {
+                this.router.navigateByUrl(this.returnUrl);
+              } else {
+                this.router.navigate(['/V-cliente']);
+              }
             }
-          }
-          else if (userData.FK_Rol == 3) {
-            this.router.navigate(['/V-cliente']);
-          }
+          });
         });
       }
     } catch (error) {

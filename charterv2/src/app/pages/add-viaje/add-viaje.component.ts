@@ -3,12 +3,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViajeService } from '../../services/viaje.service';
 import { ParadaService } from '../../services/parada.service';
 import { CharterService } from '../../services/charter.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { Viaje } from '../../interfaces/viaje.interface';
 import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa.service';
+import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
 
 @Component({
   selector: 'app-add-viaje',
@@ -38,11 +39,11 @@ export class AddViajeComponent implements OnInit {
     this.form = this.fb.group({
       horario_salida: [''],
       horario_llegada: [''],
-      fecha: [''],
-      precio: [''],
-      cupo: [''],
-      FK_Charter: [''],
-    });
+      fecha: ['', [fechaNoPasada()]],
+      precio: ['', [Validators.required, Validators.min(1)]],
+      cupo: ['', [Validators.min(1)]],
+      FK_Charter: ['', [Validators.required]]
+    }, { validators: horariosDiferentes });
   }
 
   ngOnInit(): void {
@@ -89,58 +90,14 @@ export class AddViajeComponent implements OnInit {
       }))
   };
 
-    // Validación de horarios
-    if (!viaje.horario_salida || !viaje.horario_llegada) {
-      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de fecha
-    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
-      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de precios
-    if (isNaN(viaje.precio) || viaje.precio <= 0) {
-      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
+    if (this.form.invalid) {
+      this.mensaje('Por favor, corrige los errores en el formulario');
       return;
     }
 
     // Validación de número de paradas
     if (this.paradasSeleccionadas.length < 2) {
-      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-  
-    // Validación de charter
-    if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`
-      this._snackBar.open('Por favor, selecciona un charter', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
+      this.mensaje('El viaje debe tener al menos dos paradas');
       return;
     }
   
@@ -150,7 +107,7 @@ export class AddViajeComponent implements OnInit {
     this._viajeService.addViaje(viaje).subscribe(
       response => {
         console.log('Respuesta del servidor:', response);
-        this.mensajeExito();
+        this.mensaje('Viaje agregado con éxito');
         this._router.navigate(['/V-empresa'], { queryParams: { tab: 'tab1' } })
       },
       error => {
@@ -179,13 +136,12 @@ export class AddViajeComponent implements OnInit {
     this.paradasSeleccionadas.splice(index, 1);
   }
 
-  
-  mensajeExito() {
-    this._snackBar.open('El viaje fue agregado con éxito', 'Cerrar', {
+  mensaje(mensaje:string) {
+    this._snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
-      panelClass: ['custom-snackbar']
+      panelClass: ['custom-snackbar']  // Es para darle estilo
     });
   }
 }

@@ -22,7 +22,7 @@ export class RoleGuard implements CanActivate {
         console.log('Ruta actual:', currentUrl);
 
         // Permitir acceso a rutas públicas
-        if (currentUrl === '/login' || currentUrl === '/unauthorized') {
+        if (currentUrl === '/login' ||  currentUrl === '/vista-trips' || currentUrl === '/search' || currentUrl === '/unauthorized') {
           console.log('Ruta pública. Acceso permitido.');
           return true;
         }
@@ -53,7 +53,7 @@ export class RoleGuard implements CanActivate {
     const roleRoutes: { [key: number]: string[] } = {
       1: ['/v-admin', '/Agregar-empresa', '/Editar-empresa/:id'],                // Admin
       2: ['/v-empresa', '/agregar-charter', '/editar-charter/:id', '/editar-viaje/:id', '/agregar-viaje', '/listado-viaje', '/reservas-empresa'],  // Empresa
-      3: ['/v-cliente', '/vista-trips', '/search', '/Reservar/:id']       // Cliente
+      3: ['/v-cliente', '/Reservar/:id']       // Cliente
     };
 
     const allowedRoutes = roleRoutes[role] || [];

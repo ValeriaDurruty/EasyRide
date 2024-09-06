@@ -21,4 +21,8 @@ export class ModeloService {
       return this.http.get<Modelo[]>(this.myAppUrl + this.myApiUrl);
     }
 
+    getModelosXMarca(fkMarca: number): Observable<Modelo[]> {
+      return this.http.get<Modelo[]>(`${this.myAppUrl}${this.myApiUrl}marca/${fkMarca}`);
+    }
+
 }

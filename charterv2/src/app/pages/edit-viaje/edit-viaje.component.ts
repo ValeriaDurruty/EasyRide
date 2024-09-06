@@ -3,13 +3,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViajeService } from '../../services/viaje.service';
 import { ParadaService } from '../../services/parada.service';
 import { CharterService } from '../../services/charter.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Viaje } from '../../interfaces/viaje.interface';
 import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Charter } from '../../interfaces/charter.interface';
 import { EmpresaService } from '../../services/empresa.service';
+import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
 
 @Component({
   selector: 'app-edit-viaje',
@@ -44,11 +45,11 @@ export class EditViajeComponent implements OnInit {
     this.form = this.fb.group({
       horario_salida: [''],
       horario_llegada: [''],
-      fecha: [''],
-      precio: [''],
-      cupo: [''],
-      FK_Charter: [''],
-    });
+      fecha: ['', [fechaNoPasada()]],
+      precio: ['', [Validators.required, Validators.min(1)]],
+      cupo: ['', [Validators.min(1)]],
+      FK_Charter: ['', [Validators.required]]
+    }, { validators: horariosDiferentes });
   }
 
   //NO ME CAMBIEN EL ORDEN DE COMO SE CARGA
@@ -57,7 +58,7 @@ export class EditViajeComponent implements OnInit {
   
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
-      this.mensajeError('Error: FK_empresa no está disponible');
+      this.mensaje('Error: FK_empresa no está disponible');
       return; // Salir del método si FK_empresa no está disponible
     }
   
@@ -73,7 +74,7 @@ export class EditViajeComponent implements OnInit {
       })
       .catch(error => {
         console.error('Error al cargar los charters:', error);
-        this.mensajeError('Error al cargar los charters');
+        this.mensaje('Error al cargar los charters');
       });
   }
   
@@ -87,7 +88,7 @@ export class EditViajeComponent implements OnInit {
       },
       (error) => {
         console.error('Error al cargar las paradas:', error);
-        this.mensajeError('Error al cargar las paradas'); // Muestra un mensaje de error
+        this.mensaje('Error al cargar las paradas'); // Muestra un mensaje de error
       }
     );
   }
@@ -102,7 +103,7 @@ export class EditViajeComponent implements OnInit {
         },
         (error) => {
           console.error('Error al cargar los charters:', error);
-          this.mensajeError('Error al cargar los charters');
+          this.mensaje('Error al cargar los charters');
           reject(error);
         }
       );
@@ -161,7 +162,7 @@ export class EditViajeComponent implements OnInit {
       error => {
         //this.loading = false; // Desactiva el estado de carga en caso de error
         console.error('Error al obtener el viaje:', error);
-        this.mensajeError('Error al obtener el viaje'); // Muestra un mensaje de error
+        this.mensaje('Error al obtener el viaje'); // Muestra un mensaje de error
       }
     );
   }
@@ -187,58 +188,14 @@ export class EditViajeComponent implements OnInit {
         }))
       };
 
-    // Validación de horarios
-    if (!viaje.horario_salida || !viaje.horario_llegada) {
-      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de fecha
-    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
-      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de precios
-    if (isNaN(viaje.precio) || viaje.precio <= 0) {
-      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
+    if (this.form.invalid) {
+      this.mensaje('Por favor, corrige los errores en el formulario');
       return;
     }
 
     // Validación de número de paradas
     if (this.paradasSeleccionadas.length < 2) {
-      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-  
-    // Validación de charter
-    if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`
-      this._snackBar.open('Por favor, selecciona un charter', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
+      this.mensaje('El viaje debe tener al menos dos paradas');
       return;
     }
   
@@ -247,7 +204,7 @@ export class EditViajeComponent implements OnInit {
       this._viajeService.updateViaje(this.idViaje, viaje).subscribe(
         response => {
           console.log('Respuesta del servidor:', response);
-          this.mensajeExito();
+          this.mensaje('El viaje fue actualizado con éxito');
           this._router.navigate(['/V-empresa'], { queryParams: { tab: 'tab1' } });
         },
         error => {
@@ -283,7 +240,7 @@ export class EditViajeComponent implements OnInit {
         // Limpia la selección después de agregar
         this.paradaSeleccionadaControl.setValue(null);
       } else {
-        this.mensajeError('La parada ya está en la lista');
+        this.mensaje('La parada ya está en la lista');
       }
     }
   }
@@ -356,7 +313,7 @@ export class EditViajeComponent implements OnInit {
     });
   }
 
-  mensajeError(mensaje: string) {
+  mensaje(mensaje: string) {
     this._snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
       horizontalPosition: 'center',

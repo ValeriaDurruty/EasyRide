@@ -2,13 +2,14 @@
     scroll-behavior: smooth;
 }
 
-.container-fondo {
+/*.container-fondo {
     margin:0 ;
     width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: auto; 
 }
 
 
@@ -33,14 +34,13 @@
 
 @media screen and (min-width: 1200px) {
     .container-fondo {
-        /* Estilos para dispositivos grandes */
-        font-size: 20px; /* Tamaño de fuente más grande */
+        font-size: 20px; 
     }
-}
+}/*
 @media screen and (max-width: 400px) {
     .home-fondo {
         background-size: cover;
         height: auto;
         background-attachment: fixed;
     }
-}
+}*/

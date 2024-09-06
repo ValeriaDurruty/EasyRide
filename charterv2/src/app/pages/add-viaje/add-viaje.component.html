@@ -9,14 +9,36 @@
       <!-- Campo Horario de salida--> 
       <p><strong>Horario de salida:</strong></p>
       <input id="horario_salida" type="time" formControlName="horario_salida" class="form-control">
+      <small class="text-danger" *ngIf="form.get('horario_salida')?.hasError('required') && form.get('horario_salida')?.touched">
+        El horario de salida es obligatorio.
+      </small>
     
       <p><strong>Horario de llegada:</strong></p>
       <input id="horario_llegada" type="time" formControlName="horario_llegada" class="form-control">
+      <small class="text-danger" *ngIf="form.get('horario_llegada')?.hasError('required') && form.get('horario_llegada')?.touched">
+        El horario de llegada es obligatorio.
+      </small>
+      <small class="text-danger" *ngIf="form.hasError('horariosIguales') && form.get('horario_salida')?.touched && form.get('horario_llegada')?.touched">
+        Los horarios de salida y llegada no pueden ser iguales.
+      </small>
     
-      <p><strong>Día:</strong></p>
-      <input id="fecha" type="date" formControlName="fecha" class="form-control">    
+      <p><strong>Fecha:</strong></p>
+      <input id="fecha" type="date" formControlName="fecha" class="form-control">
+      <small class="text-danger" *ngIf="form.get('fecha')?.hasError('required') && form.get('fecha')?.touched">
+        La fecha es obligatoria.
+      </small>
+      <small class="text-danger" *ngIf="form.get('fecha')?.hasError('fechaPasada') && form.get('fecha')?.touched">
+        La fecha no puede ser pasada.
+      </small>
+
       <p><strong>Precio:</strong></p>
       <input id="precio" type="number" formControlName="precio" class="form-control" placeholder="Precio">
+      <small class="text-danger" *ngIf="form.get('precio')?.hasError('required') && form.get('precio')?.touched">
+        El precio es obligatorio.
+      </small>
+      <small class="text-danger" *ngIf="form.get('precio')?.hasError('min') && form.get('precio')?.touched">
+        El precio debe ser igual o mayor a 1.
+      </small>
     
       <p><strong>Paradas:</strong></p>
       <div class="input-group">
@@ -43,6 +65,9 @@
           {{ charter.marca }} - {{ charter.modelo }} - {{ charter.patente }}
         </option>
       </select>
+      <small class="text-danger" *ngIf="form.get('FK_Charter')?.hasError('required') && form.get('FK_Charter')?.touched">
+        Debes seleccionar un charter.
+      </small>
     
       <div class="bt-container">
         <button type="submit" class="bt-a-servicio">Guardar</button>

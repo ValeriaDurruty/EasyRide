@@ -80,4 +80,17 @@ export class UserService {
       return () => unsubscribe(); // Limpiar la suscripción cuando el observable se complete
     });
   }
+
+  //Lo nuevo
+  private redirectUrl: string | null = null;
+
+  setRedirectUrl(url: string) {
+    this.redirectUrl = url;
+  }
+
+  getRedirectUrl(): string | null {
+    const url = this.redirectUrl;
+    this.redirectUrl = null; // Limpiar después de usar
+    return url;
+  }
 }

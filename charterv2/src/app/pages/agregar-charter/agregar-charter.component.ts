@@ -36,9 +36,14 @@ export class AgregarCharterComponent implements OnInit {
     this.form = this.fb.group({
 
       //[patenteAsyncValidator(this._charterService)] iria en patente si queres el validador
-      patente: ['', [Validators.required, Validators.maxLength(7)]],     
+      patente: ['', [
+        Validators.required, 
+        Validators.minLength(6), 
+        Validators.maxLength(7),
+        Validators.pattern('^[A-Z]{3}[0-9]{3}$|^[A-Z]{2}[0-9]{3}[A-Z]{2}$')
+      ]],
       capacidad: [null, [Validators.required, Validators.min(1), Validators.max(25)]],
-      anio: [null, [Validators.required, Validators.min(2010), Validators.max(this.maxYear)]],
+      anio: [null, [Validators.required, Validators.min(this.maxYear-10), Validators.max(this.maxYear)]],
       modelo: ['', Validators.required],
       marca: ['', Validators.required]
     });
@@ -54,22 +59,39 @@ export class AgregarCharterComponent implements OnInit {
       this.mensaje('No se pudo obtener el ID de la empresa.'); // Mensaje de error al usuario
       return; // Salir del método si no hay un ID válido
     }
-  
-    this._modeloService.getModelos().subscribe(data => {
-      this.modelos = data;
-    });
 
     this._marcaService.getMarcas().subscribe(data => {
       this.marcas = data;
     });
+
+    // Detectar cambios en la selección de marca
+    this.form.get('marca')?.valueChanges.subscribe((marcaId: number) => {
+      this.cargarModelosPorMarca(marcaId);
+    });
+  }
+
+  // Método para convertir el texto de patente a mayúsculas automáticamente
+  onInputChange(controlName: string): void {
+    const control = this.form.get(controlName);
+    if (control) {
+      control.setValue(control.value.toUpperCase(), { emitEvent: false }); // Convierte a mayúsculas
+    }
+  }
+
+  cargarModelosPorMarca(marcaId: number): void {
+    // Llamar al servicio para obtener modelos filtrados por marca
+    this._modeloService.getModelosXMarca(marcaId).subscribe(data => {
+      this.modelos = data;
+    }, error => {
+      console.error('Error al cargar los modelos', error);
+      this.mensaje('Error al cargar los modelos.');
+    });
   };
-
-
 
   addCharter() {
     if (this.form.invalid) {
       console.error('Formulario inválido');
-      this.mensaje('Por favor, ingrese todos los campos');
+      this.mensaje('Por favor, corrige los errores en el formulario');
       return;
     }
   
@@ -81,8 +103,6 @@ export class AgregarCharterComponent implements OnInit {
       FK_Empresa: this.FK_empresa,
       FK_Modelo: this.form.value.modelo,
     };
-  
-    console.log('Datos del charter a enviar:', charter);
   
     this._charterService.addCharter(charter).subscribe({
       next: () => {

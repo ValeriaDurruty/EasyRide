@@ -9,10 +9,22 @@
       <li id="viaje-origen" class="list-group-item">Horario Salida: {{ viaje.horario_salida}}</li>
       <li id="viaje-destino" class="list-group-item">Horario Llegada: {{ viaje.horario_llegada }}</li>
       <li id="viaje-precio" class="list-group-item">Precio: {{ viaje.precio | currency }}</li>
-      <li id="viaje-cupo" class="list-group-item">Cupo: {{ viaje.cupo }}</li>
+      <!-- Mostrar "No hay cupo" si el cupo es 0 -->
+      <li id="viaje-cupo" class="list-group-item">
+        <span *ngIf="viaje.cupo > 0">Cupo: {{ viaje.cupo }}</span>
+        <span class="no-place" *ngIf="viaje.cupo === 0">No hay cupo</span>
+      </li>
     </ul>
-    <div class="card-body">
-      <a [routerLink]="['/Reservar',viaje.PK_Viaje]" class="card-link">Reservar</a>
+    <div class="card-body button-container">
+      <!-- Deshabilitar el botón si no hay cupo -->
+      <button 
+        class="gradient-button" 
+        (click)="reservar(viaje.PK_Viaje || 0)"
+        [class.disabled]="viaje.cupo === 0" 
+        [disabled]="viaje.cupo === 0"
+      >
+        Reservar
+      </button>
     </div>
   </div>
 </div>

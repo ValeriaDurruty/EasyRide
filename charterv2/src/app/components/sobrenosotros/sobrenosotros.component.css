@@ -1,0 +1,59 @@
+.content {
+    padding: 20px;
+  }
+  
+  .image-title {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .image {
+    width: 600px;
+    height: auto;
+    margin-right: 20px;
+  }
+  
+  .text-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  
+  .title,
+  .subtitle {
+    font-size: 28px;
+    margin: 0 0 10px 0; /* Espaciado inferior para separar del siguiente párrafo */
+  }
+  
+  .paragraph {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0 0 20px 0; /* Espaciado inferior entre párrafos */
+  }
+
+  .contact-icons {
+    display: flex;
+    font-weight: 400;
+    justify-content: center; /* Centers the links horizontally */
+    align-items: center; /* Vertically centers the text and icons */
+    gap: 10px; /* Space between the links */
+  }
+  
+  .contact-icons a {
+    display: flex;
+    align-items: center; /* Centers text and icon vertically */
+    color: rgb(255, 156, 253);
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 40px; /* Space between links */
+  }
+  
+  .contact-icons i {
+    color: rgb(236, 0, 232);
+    font-size: 24px; /* Adjust the icon size as needed */
+  }
+  
+  .contact-icons a:hover {
+    text-decoration: underline; /* Underline only the text on hover */
+  }

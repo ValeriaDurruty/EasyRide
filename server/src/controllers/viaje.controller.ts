@@ -83,7 +83,7 @@ export const getViajes = (req: Request, res: Response) => {
                 INNER JOIN parada p ON vp.FK_Parada = p.PK_Parada
                 INNER JOIN localidad l ON p.FK_Localidad = l.PK_Localidad
                 INNER JOIN provincia pr ON l.FK_Provincia = pr.PK_Provincia
-                WHERE v.fecha >= CURDATE()
+                WHERE v.fecha >= CURDATE() AND v.cupo > 0
                 GROUP BY v.PK_Viaje, v.horario_salida, v.horario_llegada, v.cupo, v.precio, v.fecha, c.patente
                 ORDER BY v.PK_Viaje ASC;`;
 

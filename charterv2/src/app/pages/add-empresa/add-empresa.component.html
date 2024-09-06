@@ -1,6 +1,6 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter" filter-color="orange">
-  <div class="page-header-image" style="background-image:url(assets/images/fondo-registrar2.jpg)">
+  <div class="page-header-image" style="background-image:url(assets/images/fondo.jpg)">
   </div>
   <div class="servicio-container">
     <h2>Información de Empresa</h2>
@@ -10,21 +10,54 @@
       <p>
         <strong>Razon social</strong>
         <input id="razon_social" type="text" class="form-control" placeholder="Razon social" formControlName="razon_social">
+        <small class="text-danger" *ngIf="form.get('razon_social')?.hasError('required') && form.get('razon_social')?.touched">
+          La razón social es requerida.
+        </small>
+        <small class="text-danger" *ngIf="form.get('razon_social')?.hasError('maxlength') && form.get('razon_social')?.touched">
+          La razón social no puede exceder los 30 caracteres.
+        </small>
       </p>
       <!-- Campo Cuil -->
       <p>
         <strong>Cuil</strong>
         <input id="cuil" type="number" class="form-control" placeholder="Cuil" formControlName="cuil">
+        <small class="text-danger" *ngIf="form.get('cuil')?.hasError('required') && form.get('cuil')?.touched">
+          El CUIL es requerido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('cuil')?.hasError('min') && form.get('cuil')?.touched">
+          El CUIL debe ser un número válido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('cuil')?.hasError('max') && form.get('cuil')?.touched">
+          El CUIL debe ser un número válido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('cuil')?.hasError('cuilAsyncValidator') && form.get('cuil')?.touched">
+          El CUIL ya está registrado.
+        </small>
       </p>
       <!-- Campo Email -->
       <p>
         <strong>Correo electrónico</strong>
         <input id="email" class="form-control" type="email" placeholder="Correo electrónico" formControlName="email">
+        <small class="text-danger" *ngIf="form.get('email')?.hasError('required') && form.get('email')?.touched">
+          El correo electrónico es requerido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('email')?.hasError('email') && form.get('email')?.touched">
+          El correo electrónico no es válido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('email')?.hasError('maxlength') && form.get('email')?.touched">
+          El correo electrónico no puede exceder los 30 caracteres.
+        </small>
       </p>
       <!-- Campo Telefono -->
       <p>
         <strong>Telefono</strong>
         <input id="telefono" class="form-control" type="number" placeholder="Telefono" formControlName="telefono">
+        <small class="text-danger" *ngIf="form.get('telefono')?.hasError('required') && form.get('telefono')?.touched">
+          El teléfono es requerido.
+        </small>
+        <small class="text-danger" *ngIf="form.get('telefono')?.hasError('pattern') && form.get('telefono')?.touched">
+          El teléfono debe contener 9 dígitos.
+        </small>
       </p>
       <!-- Botones guardar y cancelar -->
        <div class="botones">
