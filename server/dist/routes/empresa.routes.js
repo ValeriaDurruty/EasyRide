@@ -13,6 +13,6 @@ router.delete('/:id', empresa_controller_1.deleteEmpresas);
 router.post('/', empresa_controller_1.postEmpresas);
 // Ruta para modificar una empresa en particular mediante una id
 router.put('/:id', empresa_controller_1.putEmpresas);
-// Ruta para verificar el CUIL de una empresa
-router.get('/checkcuil/:cuil', empresa_controller_1.checkCuilEmpresa);
+// Ruta para verificar el CUIT de una empresa
+router.get('/checkcuit/:cuit', empresa_controller_1.checkCuitEmpresa);
 exports.default = router;

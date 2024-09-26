@@ -8,29 +8,35 @@
     <form class="servicio-details" [formGroup]="form" (ngSubmit)="updateCharter()">            
       <!--Campo Patente--> 
       <p><strong>Patente</strong> 
-        <input id="patente" type="text" class="form-control" placeholder="Patente" formControlName="patente"
+       <input id="patente" type="text" class="form-control" placeholder="Ingrese Patente" formControlName="patente"
           (input)="onInputChange('patente')" style="text-transform: uppercase;">
-        <!-- Mensajes de error para el campo Patente -->
+       <!--Mensajes de error para el campo Patente -->
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('required') && form.get('patente')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente es obligatoria.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('minlength') && form.get('patente')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente debe tener al menos 6 caracteres.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('maxlength') && form.get('patente')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente no puede tener más de 7 caracteres.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('pattern') && form.get('patente')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente debe tener el formato "ABC123" o "AB123CD".
         </small>
       </p>
     <!--Desplegable Marca-->   
       <p><strong>Marca</strong>
         <select id="marca" class="form-control select-control" name="marca-desplegable" formControlName="marca">
-          <option *ngFor="let marca of marcas" [value]="marca.PK_Marca">{{ marca.nombre }}</option>
+        <option *ngFor="let marca of marcas" [value]="marca.PK_Marca">{{ marca.nombre }}</option>
         </select>
         <!-- Mensajes de error para el campo Marca -->
-        <small class="text-danger" *ngIf="form.get('marca')?.hasError('required') && form.get('marca')?.touched">La marca es obligatoria.</small>
+        <small class="text-danger" *ngIf="form.get('marca')?.hasError('required') && form.get('marca')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          La marca es obligatoria.</small>
       </p>
 
       <!--Desplegable Modelo-->   
@@ -39,30 +45,39 @@
           <option *ngFor="let modelo of modelos" [value]="modelo.PK_Modelo">{{ modelo.nombre }}</option>
         </select>
         <!-- Mensajes de error para el campo Modelo -->
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
         <small class="text-danger" *ngIf="form.get('modelo')?.hasError('required') && form.get('modelo')?.touched">El modelo es obligatorio.</small>
-      </p>
+      </p> 
 
       <!--Campo Año-->
       <p><strong>Año</strong> 
-        <input id="anio" class="form-control" type="number" formControlName="anio">
+        <input id="anio" class="form-control" type="number" formControlName="anio" placeholder="Ingrese Año">
         <!-- Mensajes de error para el campo Año -->
-        <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">El año es obligatorio.</small>
-        <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">El año debe ser mayor o igual a {{ maxYear - 10 }}.</small>
-        <small class="text-danger" *ngIf="form.get('anio')?.hasError('max') && form.get('anio')?.touched">El año no puede ser mayor al año actual.</small>
+        <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El año es obligatorio.</small>
+        <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El año debe ser mayor o igual a {{ maxYear - 10 }}.</small>
+        <small class="text-danger" *ngIf="form.get('anio')?.hasError('max') && form.get('anio')?.touched">    
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El año no puede ser mayor al año actual.</small>
       </p>
 
       <!--Campo Capacidad-->
       <p><strong>Capacidad</strong> 
-        <input id="capacidad" class="form-control" type="number" formControlName="capacidad">
-        <!-- Mensajes de error para el campo Capacidad -->
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">La capacidad es obligatoria.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">La capacidad debe ser al menos 1.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">La capacidad no puede exceder de 25.</small>
+        <input id="capacidad" class="form-control" type="number" formControlName="capacidad" placeholder="Ingrese Capacidad">
+      <!-- Mensajes de error para el campo Capacidad -->
+        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">  
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          La capacidad es obligatoria.</small>
+        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          La capacidad debe ser al menos 1.</small>
+        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          La capacidad no puede exceder de 25.</small>
       </p>
 
       <!--Botones guardar y cancelar-->
-      <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button> 
       <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
+      <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button> 
     </form>
   </div>
 </div>

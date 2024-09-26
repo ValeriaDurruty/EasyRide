@@ -22,16 +22,39 @@ export class ParadaService {
         catchError(this.handleError)
       );
     }
+    
+    getParadaById(paradaId: number): Observable<Parada> {
+      return this.http.get<Parada>(`${this.myAppUrl}${this.myApiUrl}${paradaId}`);
+    }
+
+    AddParada(parada: Parada): Observable<void> {
+      console.log('Objeto Parada en servicio:', parada);
+      return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}`,parada).pipe(
+        catchError(this.handleError)
+      );
+    }
     actualizarParadasViaje(viajeId: number, paradas: Parada[]): Observable<any> {
       return this.http.post(`${this.myAppUrl}api/viajes/${viajeId}/paradas`, { paradas }).pipe(
         catchError(this.handleError)
       );
     }
 
+    getParadasXEmpresa(fk_empresa: number): Observable<Parada[]> {
+      return this.http.get<Parada[]>(`${this.myAppUrl}${this.myApiUrl}/empresa/${fk_empresa}`);
+    }
+    
     eliminarParadaViaje(viajeId: number, paradaId: number): Observable<any> {
       return this.http.delete(`${this.myAppUrl}api/viajes/${viajeId}/paradas/${paradaId}`).pipe(
         catchError(this.handleError)
       );
+    }
+
+    updateParada(paradaId: number, parada: Parada): Observable<Parada> {
+      return this.http.put<Parada>(`${this.myAppUrl}${this.myApiUrl}${paradaId}`, parada);
+    }
+
+    deleteParada(id: number): Observable<void> {
+      return this.http.delete<void>(this.myAppUrl + this.myApiUrl + id);
     }
 
     private handleError(error: HttpErrorResponse) {

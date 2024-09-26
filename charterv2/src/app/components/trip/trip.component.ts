@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, NgZone } from '@angular/core';
+import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-trip',
@@ -16,23 +17,30 @@ export class TripComponent {
   userValidar: number | null = null
   userNombre: string | null = null;
   userApellido: string | null = null;
-  private isProcessing: boolean = false; // Flag para prevenir doble reserva
+  private userSubscription: Subscription | undefined; // Declara la propiedad
 
-  constructor(private router: Router, private userService: UserService, private _snackBar: MatSnackBar, private ngZone: NgZone) {}
+
+  constructor(private router: Router, private userService: UserService,
+     private _snackBar: MatSnackBar, private ngZone:NgZone) {}
 
   ngOnInit(): void {
-    this.userService.getCurrentUser().subscribe(user => {
-      if (user) {
-        this.userRole = user.FK_Rol; // Asigna el rol del usuario logeado
-        this.userValidar = user.validar; // Asigna el validar del usuario logeado
-        this.userNombre = user.nombre; // Asigna el nombre del usuario logeado
-        this.userApellido = user.apellido; // Asigna el apellido del usuario logeado
-        console.log('Usuario desde CardtripComponent:', user);
-      } else {
-        console.log('Usuario no encontrado.');
-        console.log('Usuario desde CardtripComponent:', user);
-      }
-    });
+    /*console.log('Verificando autenticación...');
+    if (this.userService.isAuthenticated()) {  // Verifica si el usuario está autenticado
+      console.log('Usuario está autenticado.');
+      this.userService.getCurrentUser().subscribe(user => {
+        if (user) {
+          this.userRole = user.FK_Rol; // Asigna el rol del usuario logeado
+          this.userValidar = user.validar; // Asigna el validar del usuario logeado
+          this.userNombre = user.nombre; // Asigna el nombre del usuario logeado
+          this.userApellido = user.apellido; // Asigna el apellido del usuario logeado
+          console.log('Usuario desde CardtripComponent:', user);
+        } else {
+          console.log('Usuario no encontrado.');
+        }
+      });
+    } else {
+      console.log('No hay usuario autenticado.');
+    }*/
   }
 
   // Lista de imágenes correspondientes por índice
@@ -89,28 +97,52 @@ export class TripComponent {
 
   //si user es null, cuando se presione el boton de reservar, se redirigira a la pagina de login y luego a la de reservar, únicamente si el usuario logueado es un cliente, o sea, si su rol es 3
   reservar(id: number): void {
-    // Verificar si ya se está procesando una reserva para prevenir ejecución doble
-    if (this.isProcessing) return;
-    
-    this.isProcessing = true; // Marcar como procesando
+    console.log('Iniciando reserva con ID:', id);
   
-    this.ngZone.run(() => {
-      if (this.userRole === null) {
-        // Usuario no logueado, redirigir a la página de login con el returnUrl
+    if (this.userService.isAuthenticated()) {  // Verifica si el usuario está autenticado
+      console.log('Usuario está autenticado.');
+  
+      this.userSubscription = this.userService.getCurrentUser().subscribe(user => {
+        if (user) {
+          // Asigna los datos del usuario logueado
+          this.userRole = user.FK_Rol;
+          console.log('Usuario desde CardtripComponent:', user);
+  
+          // Lógica para redireccionar según el rol del usuario
+          console.log('Rol del usuario:', this.userRole);
+          this.ngZone.run(() => {  // Ejecuta las actualizaciones en el contexto de Angular
+            switch (this.userRole) {
+              case 3: // Cliente
+                console.log('Rol de cliente, redirigiendo a /Reservar', id);
+                this.router.navigate(['/Reservar', id]);
+                break;
+              case 2: // Empleado
+                this.mensaje('No puedes reservar un viaje siendo un empleado de una empresa');
+                break;
+              case 1: // Administrador
+                this.mensaje('No puedes reservar un viaje siendo un administrador');
+                break;
+              default:
+                console.log('Rol de usuario no reconocido');
+            }
+          });
+        } else {
+          console.log('Usuario no encontrado.');
+        }
+      });
+    } else {
+      console.log('No hay usuario autenticado, redirigiendo a login');
+      this.ngZone.run(() => {  // Ejecuta la redirección en el contexto de Angular
         this.router.navigate(['/LogIn'], { queryParams: { returnUrl: `/Reservar/${id}` } });
-      } else if (this.userRole === 3) {
-        // Usuario cliente, permitir reservar
-        this.router.navigate(['/Reservar', id]);
-      } else if (this.userRole === 2) {
-        // Usuario empleado, mostrar mensaje
-        this.mensaje('No puedes reservar un viaje siendo un empleado de una empresa');
-      } else if (this.userRole === 1) {
-        // Usuario administrador, mostrar mensaje
-        this.mensaje('No puedes reservar un viaje siendo un administrador');
-      }
-      this.isProcessing = false; // Liberar flag de procesamiento
-    });
+      });
+    }
   }
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+  
 
   mensaje(mensaje:string) {
     this._snackBar.open(mensaje, 'Cerrar', {

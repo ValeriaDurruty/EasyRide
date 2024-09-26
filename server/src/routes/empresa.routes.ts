@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getEmpresas, getEmpresasXid, deleteEmpresas, postEmpresas, putEmpresas, checkCuilEmpresa } from '../controllers/empresa.controller';
+import { getEmpresas, getEmpresasXid, deleteEmpresas, postEmpresas, putEmpresas, checkCuitEmpresa } from '../controllers/empresa.controller';
 
 const router = Router();
 
@@ -18,8 +18,8 @@ router.post('/', postEmpresas);
 // Ruta para modificar una empresa en particular mediante una id
 router.put('/:id', putEmpresas);
 
-// Ruta para verificar el CUIL de una empresa
-router.get('/checkcuil/:cuil', checkCuilEmpresa);
+// Ruta para verificar el CUIT de una empresa
+router.get('/checkcuit/:cuit', checkCuitEmpresa);
 
 
 export default router;

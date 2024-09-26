@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCharter = exports.putCharters = exports.checkCharterPatente = exports.postCharters = exports.deleteCharters = exports.getCharters = exports.getChartersXEmpresa = void 0;
+exports.putCharters = exports.checkCharterPatente = exports.postCharters = exports.deleteCharters = exports.getCharters = exports.getChartersXEmpresa = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 //Listar todos los charters de una empresa
 const getChartersXEmpresa = (req, res) => {
@@ -29,7 +29,7 @@ exports.getChartersXEmpresa = getChartersXEmpresa;
 //Trae un charter en particular mediante una id
 const getCharters = (req, res) => {
     const { id } = req.params;
-    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, modelo.FK_Marca as FK_Marca, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
+    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al traer el charter:', err);
@@ -178,39 +178,3 @@ const putCharters = (req, res) => {
     });
 };
 exports.putCharters = putCharters;
-const getCharter = (req, res) => {
-    const { id } = req.params;
-    // Consulta SQL con el marcador de posición '?'
-    connection_1.default.query(`SELECT 
-            marca.nombre AS marca, 
-            modelo.nombre AS modelo, 
-            charter.anio AS anio, 
-            charter.capacidad AS capacidad
-         FROM 
-            charter
-         INNER JOIN 
-            modelo ON modelo.PK_Modelo = charter.FK_Modelo
-         INNER JOIN 
-            marca ON marca.PK_Marca = modelo.FK_Marca
-         WHERE 
-            charter.PK_Charter = ?;`, [id], // Se pasa el id como un array de parámetros para prevenir SQL Injection
-    (err, data) => {
-        if (err) {
-            // Registrar el error en la consola
-            console.error('Error al traer el charter:', err);
-            // Devolver un mensaje de error al cliente
-            return res.status(500).json({ error: 'Error al mostrar el charter' });
-        }
-        else {
-            if (data.length === 0) {
-                // Si no se encuentran datos, devolver un error 404
-                return res.status(404).json('No se ha encontrado el charter');
-            }
-            else {
-                // Devolver los datos del charter como JSON
-                res.json(data[0]);
-            }
-        }
-    });
-};
-exports.getCharter = getCharter;

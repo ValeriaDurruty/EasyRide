@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const charter_routes_1 = __importDefault(require("../routes/charter.routes"));
 const viaje_routes_1 = __importDefault(require("../routes/viaje.routes"));
+const provincia_routes_1 = __importDefault(require("../routes/provincia.routes"));
+const localidad_routes_1 = __importDefault(require("../routes/localidad.routes"));
 const reserva_routes_1 = __importDefault(require("../routes/reserva.routes"));
 const modelo_routes_1 = __importDefault(require("../routes/modelo.routes"));
 const marca_routes_1 = __importDefault(require("../routes/marca.routes"));
@@ -36,6 +38,8 @@ class Server {
     routes() {
         this.app.use('/api/charters', charter_routes_1.default);
         this.app.use('/api/viajes', viaje_routes_1.default);
+        this.app.use('/api/provincias', provincia_routes_1.default);
+        this.app.use('/api/localidades', localidad_routes_1.default);
         this.app.use('/api/reservas', reserva_routes_1.default);
         this.app.use('/api/modelos', modelo_routes_1.default);
         this.app.use('/api/marcas', marca_routes_1.default);

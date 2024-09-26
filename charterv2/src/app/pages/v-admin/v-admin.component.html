@@ -23,13 +23,13 @@
   <!-- Barra de navegación con 3 opciones -->
     <ul class="nav nav-tabs justify-content-center">
       <li class="nav-item">
-        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab1'}" (click)="showTab('tab1')">Cuentas pendientes</a>
+        <a class="nav-link" data-toggle="tab" href="#tab1" [ngClass]="{'active': currentTab === 'tab1'}" (click)="showTab('tab1')">Cuentas pendientes</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Cuentas validadas</a>
+        <a class="nav-link" data-toggle="tab" href="#tab2" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Cuentas validadas</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" [ngClass]="{'active': currentTab === 'tab3'}" (click)="showTab('tab3')">Empresas</a>
+        <a class="nav-link" data-toggle="tab" href="#tab3" [ngClass]="{'active': currentTab === 'tab3'}" (click)="showTab('tab3')">Empresas</a>
       </li>
     </ul>
 
@@ -108,14 +108,14 @@
     <div class="tab-content">
       <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab3'}" id="tab3">
         <div class="d-flex justify-content-center">
-          <button type="button" class="bt-add btn " [routerLink]="['/Agregar-empresa']">Agregar empresa</button>
+          <button type="button" class="bt-add  " [routerLink]="['/Agregar-empresa']">Agregar empresa</button>
         </div>
         <div class="table-responsive">
           <table class="table">
             <thead class="text-purple">
               <tr>
-                <th>Razon Social</th>
-                <th>CUIL</th>
+                <th>Razón Social</th>
+                <th>CUIT</th>
                 <th>Correo electrónico</th>
                 <th>Teléfono</th>
                 <th>Opciones</th>
@@ -124,17 +124,17 @@
             <tbody>
               <tr *ngFor="let empresa of listEmpresas">
                 <td id="razon_social">{{ empresa.razon_social }}</td>
-                <td id="cuil">{{ empresa.cuil }}</td>
+                <td id="cuit">{{ empresa.cuit }}</td>
                 <td id="email">{{ empresa.email }}</td>
                 <td id="telefono">{{ empresa.telefono }}</td>
                 <td>
                   <div class="container">
                     <div class="d-flex align-items-center">
                         <!-- Icono de lápiz -->
-                        <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]"   class="mr-2">
-                          <i class="fas fa-pencil-alt icon-pencil icon-background" onclick=""></i></a>
+                        <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]" class="mr-2">
+                          <i class="fas fa-pencil-alt icon-pencil icon-background"></i></a>
                         <!-- Icono para eliminar cuenta -->
-                        <i class="fas fa-trash-alt icono icon-trash icon-background mr-3" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)"></i>
+                        <i class="fas fa-trash-alt icono icon-trash icon-background mr-2" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)"></i>
                     </div>
                   </div>
                 </td>

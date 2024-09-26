@@ -19,6 +19,17 @@
   color: black;
 }
 
+.card-body a.card-link {
+  color: blueviolet;
+  font-weight: bold;
+}
+
+.card-body a.card-link:hover {
+  color: rgb(132, 0, 255);
+}
+
+
+/*Nuevo */
 .button-container {
   display: flex;
   justify-content: center; /* Centra el botón dentro de su contenedor */
@@ -43,6 +54,13 @@
 .no-place {
   color: red; /* Cambia el color del texto a rojo */
   font-weight: bold; /* Hace el texto en negrita */
+}
+
+.disabled {
+  background: gray; /* Cambia el fondo del botón a gris */
+  cursor: not-allowed; /* Muestra un cursor de "no permitido" */
+  color: white; /* Asegura que el texto siga siendo legible */
+  box-shadow: none; /* Quita la sombra para parecer deshabilitado */
 }
 
 .disabled {

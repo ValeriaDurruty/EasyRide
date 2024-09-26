@@ -117,7 +117,7 @@ export class EditCharterComponent implements OnInit{
     // Verifica si el formulario es válido
     if (this.form.invalid) {
       console.log('Formulario inválido:', this.form.errors);
-      this.mensaje('Por favor, complete todos los campos'); 
+      this.mensaje('Por favor, corrige los errores en el formulario'); 
       // Para depuración
       return;
     }
@@ -127,10 +127,10 @@ export class EditCharterComponent implements OnInit{
       patente: this.form.value.patente,     // Valor del campo patente
       capacidad: this.form.value.capacidad, // Valor del campo capacidad
       anio: this.form.value.anio,           // Valor del campo año
-      FK_Modelo: this.form.value.modelo,    // Valor del campo modelo (debe ser FK_Modelo en backend)
+      FK_Modelo: Number(this.form.value.modelo),
       FK_Empresa: this.FK_empresa                        // Asegúrate de incluir el ID correcto de la empresa
     };
-
+    console.log('Objeto charter a enviar:', charter);
     // Llama al servicio para actualizar el charter
     this._charterservice.editCharter(this.charterId!, charter).subscribe({
       next: () => {

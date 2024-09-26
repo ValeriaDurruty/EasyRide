@@ -27,8 +27,8 @@ export const postEmpresas = (req: Request, res: Response) => {
 
     const { body } = req;
 
-    //Chequear si el CUIL ya existe
-    connection.query('SELECT * FROM empresa WHERE cuil = ?;', body.cuil, (err, data) => {
+    //Chequear si el CUIT ya existe
+    connection.query('SELECT * FROM empresa WHERE cuit = ?;', body.cuit, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al agregar empresa:', err);
@@ -36,9 +36,9 @@ export const postEmpresas = (req: Request, res: Response) => {
             return res.status(500).json({ error: 'Error al agregar empresa' });
         } else {
             if (data.length > 0) {
-                return res.status(400).json({ message: 'El CUIL ya existe' });
+                return res.status(400).json({ message: 'El CUIT ya existe' });
             } else {
-                //Si el CUIL no existe, se procede a agregar la empresa
+                //Si el CUIT no existe, se procede a agregar la empresa
                 connection.query('INSERT INTO empresa SET ?;', [body], (err, data) => {
                     if(err) {
                         // Registrar el error en la consola
@@ -84,37 +84,56 @@ export const getEmpresasXid = (req: Request, res: Response) => {
 export const deleteEmpresas = (req: Request, res: Response) => {
     const { id } = req.params;
 
-    // Primero, verificar si la empresa tiene charters cargados
+    // Verificar si la empresa tiene charters cargados
     connection.query('SELECT COUNT(*) AS count FROM Charter WHERE FK_Empresa = ?', [id], (err, results) => {
         if (err) {
-            // Registrar el error en la consola
             console.error('Error al verificar los charters de la empresa:', err);
-            // Devolver un mensaje de error al cliente
             return res.status(500).json({ error: 'Error al verificar los charters de la empresa' });
         }
 
-        // Si hay charters asociados, devolver un mensaje de error
         if (results[0].count > 0) {
-            return res.status(400).json({ message: 'No se puede eliminar la empresa porque tiene charters cargados' });
+            return res.status(400).json({ message: 'No se puede eliminar la empresa porque tiene charters asociados' });
         }
 
-        // Si no hay charters asociados, proceder a eliminar la empresa
-        connection.query('DELETE FROM Empresa WHERE PK_Empresa = ?', [id], (err, data) => {
+        // Verificar si la empresa tiene usuarios asociados
+        connection.query('SELECT COUNT(*) AS count FROM Usuario WHERE FK_Empresa = ?', [id], (err, userResults) => {
             if (err) {
-                // Registrar el error en la consola
-                console.error('Error al eliminar la empresa:', err);
-                // Devolver un mensaje de error al cliente
-                return res.status(500).json({ error: 'Error al eliminar la empresa' });
-            } else {
-                if (data.affectedRows === 0) {
-                    return res.status(404).json({ message: 'No se ha encontrado la empresa a eliminar' });
-                } else {
-                    res.json('Empresa eliminada correctamente');
-                }
+                console.error('Error al verificar los empleados de la empresa:', err);
+                return res.status(500).json({ error: 'Error al verificar los empleados de la empresa' });
             }
+
+            if (userResults[0].count > 0) {
+                return res.status(400).json({ message: 'No se puede eliminar la empresa porque tiene empleados asociados' });
+            }
+
+            // Verificar si la empresa tiene paradas asociadas
+            connection.query('SELECT COUNT(*) AS count FROM Parada WHERE FK_Empresa = ?', [id], (err, paradaResults) => {
+                if (err) {
+                    console.error('Error al verificar las paradas de la empresa:', err);
+                    return res.status(500).json({ error: 'Error al verificar las paradas de la empresa' });
+                }
+
+                if (paradaResults[0].count > 0) {
+                    return res.status(400).json({ message: 'No se puede eliminar la empresa porque tiene paradas asociadas' });
+                }
+
+                // Si no hay charters, usuarios ni paradas asociados, proceder a eliminar la empresa
+                connection.query('DELETE FROM Empresa WHERE PK_Empresa = ?', [id], (err, data) => {
+                    if (err) {
+                        console.error('Error al eliminar la empresa:', err);
+                        return res.status(500).json({ error: 'Error al eliminar la empresa' });
+                    } else {
+                        if (data.affectedRows === 0) {
+                            return res.status(404).json({ message: 'No se ha encontrado la empresa a eliminar' });
+                        } else {
+                            res.json('Empresa eliminada correctamente');
+                        }
+                    }
+                });
+            });
         });
     });
-}
+};
 
 
 //Modificar una empresa en particular
@@ -122,19 +141,19 @@ export const putEmpresas = (req: Request, res: Response) => {
     const { body } = req;
     const { id } = req.params;
 
-    // Primero, verificamos si el CUIL ya está en uso por otra empresa
-    connection.query('SELECT * FROM empresa WHERE cuil = ? AND PK_Empresa <> ?;', [body.cuil, id], (err, data) => {
+    // Primero, verificamos si el CUIT ya está en uso por otra empresa
+    connection.query('SELECT * FROM empresa WHERE cuit = ? AND PK_Empresa <> ?;', [body.cuit, id], (err, data) => {
         if (err) {
             // Registrar el error en la consola
-            console.error('Error al verificar el CUIL:', err);
+            console.error('Error al verificar el CUIT', err);
             // Devolver un mensaje de error al cliente
-            return res.status(500).json({ error: 'Error al verificar el CUIL' });
+            return res.status(500).json({ error: 'Error al verificar el CUIT' });
         } else {
             if (data.length > 0) {
-                // El CUIL ya está registrado por otra empresa
-                return res.status(400).json({ message: 'El CUIL ya está registrado por otra empresa' });
+                // El CUI ya está registrado por otra empresa
+                return res.status(400).json({ message: 'El CUIT ya está registrado por otra empresa' });
             } else {
-                // Si el CUIL no está en uso, se procede a actualizar la empresa
+                // Si el CUIT no está en uso, se procede a actualizar la empresa
                 connection.query('UPDATE empresa SET ? WHERE PK_Empresa = ?;', [body, id], (err, data) => {
                     if (err) {
                         // Registrar el error en la consola
@@ -157,18 +176,18 @@ export const putEmpresas = (req: Request, res: Response) => {
 }
 
 
-//Chequear si el CUIL ya existe
-export const checkCuilEmpresa = (req: Request, res: Response) => {
-    const cuil = parseInt(req.params.cuil as string, 10);  // Leer el CUIL de los parámetros de consulta
-     console.log('CUIL:', cuil);
+//Chequear si el CUIT ya existe
+export const checkCuitEmpresa = (req: Request, res: Response) => {
+    const cuit = parseInt(req.params.cuit as string, 10);  // Leer el CUIT de los parámetros de consulta
+     console.log('CUIT:', cuit);
  
-     if (typeof cuil !== 'number') {
-         return res.status(400).json({ error: 'El CUIL debe ser un número' });
+     if (typeof cuit !== 'number') {
+         return res.status(400).json({ error: 'El CUIT debe ser un número' });
      }
  
-     connection.query('SELECT COUNT(*) AS count FROM empresa WHERE cuil = ?', [cuil], (err, data) => {
+     connection.query('SELECT COUNT(*) AS count FROM empresa WHERE cuit = ?', [cuit], (err, data) => {
          if (err) {
-             console.error('Error al verificar el CUIL:', err);
+             console.error('Error al verificar el CUIT:', err);
              return res.status(500).json({ error: 'Error interno del servidor' });
          }
  

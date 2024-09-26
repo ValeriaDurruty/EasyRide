@@ -41,6 +41,7 @@ import { TicketComponent } from './components/ticket/ticket.component';
 import { ListadoReservasComponent } from './components/listado-reservas/listado-reservas.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros.component';
+import { AddParadaComponent } from './pages/add-parada/add-parada.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros
     UnauthorizedComponent,
     TicketComponent,
     ListadoReservasComponent,
-    SobrenosotrosComponent
+    SobrenosotrosComponent,
+    AddParadaComponent
   ],
   imports: [
     BrowserModule,

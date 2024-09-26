@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, NgZone } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
 import { Usuario } from '../../../interfaces/user.interface';
@@ -22,7 +22,7 @@ export class LmainComponent {
   @ViewChild('emailUsuario') emailUsuarioRef!: ElementRef;
   @ViewChild('contraseñaLoginUsuario') contraseñaLoginUsuarioRef!: ElementRef;
 
-  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private userDataService: UserDataService, private _snackBar: MatSnackBar, private ngZone: NgZone) {}
+  constructor(private userService: UserService, private router: Router, private route: ActivatedRoute, private userDataService: UserDataService, private _snackBar: MatSnackBar) {}
 
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
@@ -53,39 +53,43 @@ export class LmainComponent {
           console.log('Datos del usuario:', userData);
           this.userDataService.setUser(userData); // Guardar datos del usuario en el servicio compartido
           
-          // Redirigir a la página correspondiente según el rol del usuario
-          this.ngZone.run(() => {
-            if (userData.FK_Rol == 1) {
+          // Redirigir a la página correspondiente según el rol del
+          if (userData.FK_Rol == 1) {
+            // Redirige al usuario a la URL original si `returnUrl` existe; de lo contrario, va a `/V-cliente`
+            if (this.returnUrl && this.returnUrl !== '/') {
+              this.mensaje('No puedes reservar un viaje siendo un administrador.');
+              this.router.navigateByUrl(this.returnUrl); // Redirige al usuario a la URL original
+            } else {
+              this.router.navigate(['/V-admin']);
+            }
+          }
+          else if (userData.FK_Rol == 2) {
+            if (userData.validar == 0) {
+              //borrar datos del usuario
+              this.userService.logoutUsuario().then(() => {
+                this.router.navigate(['/LogIn']);
+                this.mensaje('Usuario no validado, por favor comuniquese con el administrador.');
+              }).catch(error => {
+                console.error('Error:', error);
+              });
+            } else {
+              // Redirige al usuario a la URL original si `returnUrl` existe; de lo contrario, va a `/V-cliente`
               if (this.returnUrl && this.returnUrl !== '/') {
-                this.mensaje('No puedes reservar un viaje siendo un administrador.');
-                this.router.navigateByUrl(this.returnUrl);
+                this.mensaje('No puedes reservar un viaje siendo un empleado de una empresa.');
+                this.router.navigateByUrl(this.returnUrl); // Redirige al usuario a la URL original
               } else {
-                this.router.navigate(['/V-admin']);
-              }
-            } else if (userData.FK_Rol == 2) {
-              if (userData.validar == 0) {
-                this.userService.logoutUsuario().then(() => {
-                  this.router.navigate(['/LogIn']);
-                  this.mensaje('Usuario no validado, por favor comuníquese con el administrador.');
-                }).catch(error => {
-                  console.error('Error:', error);
-                });
-              } else {
-                if (this.returnUrl && this.returnUrl !== '/') {
-                  this.mensaje('No puedes reservar un viaje siendo un empleado de una empresa.');
-                  this.router.navigateByUrl(this.returnUrl);
-                } else {
-                  this.router.navigate(['/V-empresa']);
-                }
-              }
-            } else if (userData.FK_Rol == 3) {
-              if (this.returnUrl && this.returnUrl !== '/') {
-                this.router.navigateByUrl(this.returnUrl);
-              } else {
-                this.router.navigate(['/V-cliente']);
+                this.router.navigate(['/V-empresa']);
               }
             }
-          });
+          }
+          else if (userData.FK_Rol == 3) {
+            // Redirige al usuario a la URL original si `returnUrl` existe; de lo contrario, va a `/V-cliente`
+            if (this.returnUrl && this.returnUrl !== '/') {
+              this.router.navigateByUrl(this.returnUrl); // Redirige al usuario a la URL original
+            } else {
+              this.router.navigate(['/V-cliente']);
+            }
+          }
         });
       }
     } catch (error) {

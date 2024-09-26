@@ -144,6 +144,52 @@ cursor: pointer;
   margin-left: 5px; 
   animation: cambioColor 3s ease-in-out;
 }
+.navbar-toggler {
+  border: none;
+  background: transparent;
+  padding: 0; 
+  margin-left: auto; 
+}
+
+.navbar-toggler-bar {
+  display: block;
+  width: 25px; 
+  height: 2px; 
+  background-color: white; 
+  margin: 3px auto;
+  transition: all 0.3s ease-in-out; 
+}
+
+.navbar-toggler-bar.top-bar {
+  transform: translateY(-6px); 
+}
+
+.navbar-toggler-bar.middle-bar {
+  opacity: 1; 
+}
+
+.navbar-toggler-bar.bottom-bar {
+  transform: translateY(6px); 
+}
+
+.navbar .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-translate {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.back-navbar{
+  background: #b23fff;
+  border-radius: 5px;
+}
+
+
 
 @keyframes cambioColor {
   0% {
@@ -156,24 +202,19 @@ cursor: pointer;
     color: #ffffff; /* Color final */
   }
 }
+/* Estilo para pantallas con ancho máximo de 200px */
+@media (max-width: 200px) {
+  .navbar-brand .brand-name {
+    display: none; /* Oculta el texto 'EASYRIDE' */
+  }
 
-/*
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: violet;
-  padding: 20px;
-  color: white;
+  .navbar-toggler {
+    display: block; /* Asegura que el ícono del menú hamburguesa esté visible */
+  }
+
+  .navbar-brand .logo {
+    /* Ajusta el tamaño del logo si es necesario */
+    max-width: 100px; /* Ejemplo de tamaño, ajusta según necesites */
+  }
 }
 
-.contact-info {
-  font-size: 18px;
-}
-
-.social-media a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-*/

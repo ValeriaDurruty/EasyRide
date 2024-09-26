@@ -1,6 +1,8 @@
 import express from 'express';
 import routesCharters from '../routes/charter.routes';
 import routesViajes from '../routes/viaje.routes';
+import routesProvincias from '../routes/provincia.routes';
+import routesLocalidades from '../routes/localidad.routes';
 import routesReservas from '../routes/reserva.routes';
 import routesModelos from '../routes/modelo.routes';
 import routesMarcas from '../routes/marca.routes';
@@ -41,6 +43,8 @@ class Server {
     routes() {
         this.app.use('/api/charters', routesCharters);
         this.app.use('/api/viajes', routesViajes);
+        this.app.use('/api/provincias', routesProvincias);
+        this.app.use('/api/localidades', routesLocalidades);
         this.app.use('/api/reservas', routesReservas);
         this.app.use('/api/modelos', routesModelos);
         this.app.use('/api/marcas', routesMarcas);

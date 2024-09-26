@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { SessionService } from '../../services/session.service';
 
 @Component({
   selector: 'app-headers',
@@ -18,18 +19,26 @@ export class HeadersComponent implements OnInit {
   isVistatrips: boolean = false;
   isRegistrarse:boolean =false;
 
-  constructor(private location: Location, private router: Router, private userService: UserService) {}
+  constructor(private location: Location, private router: Router, 
+    private userService: UserService,
+    private _sessionService:SessionService ) {}
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe(user => {
       if (user) {
-        this.userRole = user.FK_Rol; // Asigna el rol del usuario logeado
-        this.userValidar = user.validar; // Asigna el validar del usuario logeado
-        this.userNombre = user.nombre; // Asigna el nombre del usuario logeado
-        this.userApellido = user.apellido; // Asigna el apellido del usuario logeado
+        this.userRole = user.FK_Rol;
+        this.userValidar = user.validar;
+        this.userNombre = user.nombre;
+        this.userApellido = user.apellido;
+      } else {
+        // Maneja el caso cuando no hay usuario
+        this.userRole = null;
+        this.userValidar = null;
+        this.userNombre = null;
+        this.userApellido = null;
       }
       this.isVistatrips = this.router.url.includes('/Vista-Trips');
-      this.isRegistrarse=this.router.url.includes('/Registrar');
+      this.isRegistrarse = this.router.url.includes('/Registrar');
     });
   }
 
@@ -37,14 +46,16 @@ export class HeadersComponent implements OnInit {
     this.location.back(); }  //Sigue todos los pasos q diste hacia adelante y vuelve atras en el mismo orden
 
 
-  onLogout() {
-    this.userService.logoutUsuario().then(() => {
-      this.router.navigate(['/']);
-      console.log('Sesión cerrada');
-    }).catch(error => {
-      console.error('Error al cerrar sesión:', error);
-    });
-  }
+    onLogout() {
+      localStorage.removeItem('token');
+      this.userService.logoutUsuario().then(() => {
+        this.router.navigate(['/']);
+        console.log('Sesión cerrada');
+      }).catch(error => {
+        console.error('Error al cerrar sesión:', error);
+      });
+    }
+  
 
   navegar(): void {
     this.userService.getCurrentUser().subscribe(user => {
@@ -68,7 +79,7 @@ export class HeadersComponent implements OnInit {
             break;
         }
       } else {
-        this.router.navigate(['/login']); // Redirige a login si no hay usuario
+        this.router.navigate(['/LogIn']); // Redirige a login si no hay usuario
       }
     });
   }

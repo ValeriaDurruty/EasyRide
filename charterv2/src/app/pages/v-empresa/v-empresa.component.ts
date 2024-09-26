@@ -17,6 +17,7 @@ import { ReservaEmpresa } from '../../interfaces/reservaEmpresa.interface';
 import { ReservaService } from '../../services/reserva.service';
 import { Reserva } from '../../interfaces/reserva.interface';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ParadaService } from '../../services/parada.service';
 
 @Component({
   selector: 'app-v-empresa',
@@ -59,7 +60,8 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
     private empresaService: EmpresaService,
     private _dialog: ConfirmationService,
     private _viajeService: ViajeService,
-    private _reservaService:ReservaService
+    private _reservaService:ReservaService,
+    private _paradaService :ParadaService
   ) {}
 
   ngOnInit(): void {
@@ -91,10 +93,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
     this.userSubscription = this.userDataService.currentUser$.subscribe(user => {
       this.user = user;
       if (this.user) {
-        console.log('Nombre de usuario:', this.user.nombre);
-        console.log('Apellido de usuario:', this.user.apellido);
-        console.log('Email de usuario:', this.user.email);
-        console.log('Rol de usuario:', this.user.FK_Rol);
+
         if (this.user.FK_Rol === 2) { // Verifica si el usuario es un empleado
           this.loadEmpresa(this.user.FK_Empresa);
           this.empresaService.setEmpresaId(this.user.FK_Empresa);
@@ -111,56 +110,94 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
         this.idEmpresa = fkEmpresa; // Guarda la fk_empresa
         this.obtenerCharters(fkEmpresa); // Cargar charters para la empresa
         this.obtenerViajesxEmpresa(fkEmpresa); // Cargar viajes para la empresa
-        console.log('Nombre empresa:', this.empresa.razon_social);
         this.obtenerReservasPasadas(fkEmpresa);
         this.obtenerReservasFuturas(fkEmpresa);
+        this.obtenerParadas(fkEmpresa);
       },
       error => {
         console.error('Error al cargar la empresa:', error);
-        this.mensajeError('Error al cargar la empresa');
+        this.mensaje('Error al cargar la empresa');
       }
     );
   }
   
-  obtenerCharters(fkEmpresa: number): void {
-    console.log('ID de empresa pasado a obtenerCharters:', fkEmpresa); // Agregado para depuración
+  obtenerParadas(fkEmpresa: number): void {
     this.loading = true;
-    this._charterService.getChartersXEmpresa(fkEmpresa).subscribe(
+    this._paradaService.getParadasXEmpresa(fkEmpresa).subscribe(
       data => {
-        this.listCharters = data;
-        this.loading = false;
-      },
-      error => {
-        this.loading = false;
-        console.error('Error al obtener los charters:', error);
-        this.mensajeError('Error al obtener los charters');
-      }
-    );
-  }
-
-  obtenerViajesxEmpresa(fkEmpresa: number): void {
-    this.loading = true;
-    this._viajeService.getViajesXEmpresa(fkEmpresa).subscribe(
-      data => {
-        console.log('Datos recibidos:', data);
-        // Verifica que `data` sea un array
+        // Verifica el tipo de datos recibido
         if (Array.isArray(data)) {
-          this.listViajesParadas = data.map(viaje => ({
-            ...viaje,
-            paradas: typeof viaje.paradas === 'string' ? this.parseParadas(viaje.paradas) : []
-          }));
+          this.listParadas = data;
+        } else if (typeof data === 'string') {
+          this.listParadas = []; // Asigna un array vacío si es un string
         } else {
-          console.error('La respuesta no es un array:', data);
+          // Maneja el caso en que el tipo de datos no es ni array ni string
+          console.error('Tipo de dato inesperado:', data);
+          this.listParadas = []; // Asegura que listParadas siempre sea un array
         }
         this.loading = false;
       },
       error => {
         this.loading = false;
-        console.error('Error al obtener los viajes:', error);
-        this.mensajeError('Error al obtener los viajes');
+        console.error('Error al obtener las paradas:', error);
+        this.mensaje('Error al obtener las paradas');
       }
     );
   }
+  
+
+  obtenerCharters(fkEmpresa: number): void {
+    console.log('ID de empresa pasado a obtenerCharters:', fkEmpresa); // Agregado para depuración
+    this.loading = true;
+    this._charterService.getChartersXEmpresa(fkEmpresa).subscribe(
+      data => {
+        // Verifica el tipo de datos recibido
+        if (Array.isArray(data)) {
+          this.listCharters = data;
+        } else if (typeof data === 'string') {
+          this.listCharters = []; // Asigna un array vacío si es un string
+        } else {
+          // Maneja el caso en que el tipo de datos no es ni array ni string
+          console.error('Tipo de dato inesperado:', data);
+          this.listCharters = []; // Asegura que listCharters siempre sea un array
+        }
+        this.loading = false;
+      },
+      error => {
+        this.loading = false;
+        console.error('Error al obtener los charters:', error);
+        this.mensaje('Error al obtener los charters');
+      }
+    );
+  }
+  
+
+  obtenerViajesxEmpresa(fkEmpresa: number): void {
+    this.loading = true;
+    this._viajeService.getViajesXEmpresa(fkEmpresa).subscribe(
+      data => {
+        this.loading = false; // Asegúrate de desactivar el indicador de carga aquí
+        if (Array.isArray(data)) {
+          this.listViajesParadas = data.map(viaje => ({
+            ...viaje,
+            paradas: typeof viaje.paradas === 'string' ? this.parseParadas(viaje.paradas) : []
+          }));
+        } else if (typeof data === 'string') {
+          this.listViajesParadas = []; // Asigna un array vacío si es un string
+        } else {
+          // Maneja el caso en que el tipo de datos no es ni array ni string
+          console.error('Tipo de dato inesperado:', data);
+          this.listViajesParadas = []; // Asegura que listViajesParadas siempre sea un array
+        }
+      },
+      error => {
+        this.loading = false;
+        console.error('Error al obtener los viajes:', error);
+        this.mensaje('Error al obtener los viajes');
+      }
+    );
+  }
+  
 
   //La podemos sacar,la otra anda para todo
   /*parseParadas(paradasStr: string): ViajeParada[] {
@@ -179,6 +216,9 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
   }*/
   
 
+
+
+
   confirmDelete(id: number): void {
     this._dialog.confirm('¿Seguro que quieres eliminar?').subscribe(result => {
       if (result) {
@@ -192,12 +232,12 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
     this._charterService.deleteCharter(id).subscribe(
       () => {
         this.obtenerCharters(this.idEmpresa);
-        this.mensajeExitoDelete('Charter eliminado con éxito');
+        this.mensaje('Charter eliminado con éxito');
       },
       error => {
         this.loading = false;
         console.error('Error al eliminar el charter:', error);
-        this.mensajeError('Error al eliminar el charter');
+        this.mensaje(error.error.message);
       }
     );
   }
@@ -215,23 +255,46 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
     this._viajeService.deleteViaje(id).subscribe(
       () => {
         this.obtenerViajesxEmpresa(this.idEmpresa);
-        this.mensajeExitoDelete('Viaje eliminado con éxito');
+        this.mensaje('Viaje eliminado con éxito');
       },
       error => {
         this.loading = false;
         console.error('Error al eliminar el viaje:', error);
-        this.mensajeError('Error al eliminar el viaje');
+        this.mensaje(error.error.message);
       }
     );
   }
+
+  confirmDeleteParada(id: number): void {
+    this._dialog.confirm('¿Seguro que quieres eliminar?').subscribe(result => {
+      if (result) {
+        this.deleteParada(id);
+      }
+    });
+  }
+
+  deleteParada(id: number): void {
+    this.loading = true;
+    this._paradaService.deleteParada(id).subscribe(
+      () => {
+        this.obtenerParadas(this.idEmpresa); // Cambiado de obtenerParadasXEmpresa a obtenerParadas
+        this.mensaje('Parada eliminada con éxito');
+      },
+      error => {
+        this.loading = false;
+        console.error('Error al eliminar el viaje:', error);
+        this.mensaje(error.error.message);
+      }
+    );
+  }
+  
 
   //RESERVAS TABS
   obtenerReservasPasadas(fkEmpresa: number): void {
     this.loading = true;
     this._reservaService.getReservasPasadasEmpresa(fkEmpresa).subscribe(
       data => {
-        console.log('Datos recibidos:', data);
-        
+        this.loading = false; // Asegúrate de desactivar el indicador de carga aquí
         if (Array.isArray(data)) {
           this.listReservasPas = data.map(reservaEmpresa => {
             // Agregar un console.log para el campo reservas
@@ -243,43 +306,52 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
               reservas: typeof reservaEmpresa.reservas === 'string' ? this.parseReservas(reservaEmpresa.reservas) : [],
             };
           });
+        } else if (typeof data === 'string') {
+          this.listReservasPas = []; // Asigna un array vacío si es un string
         } else {
-          console.error('La respuesta no es un array:', data);
+          // Maneja el caso en que el tipo de datos no es ni array ni string
+          console.error('Tipo de dato inesperado:', data);
+          this.listReservasPas = []; // Asegura que listReservasPas siempre sea un array
         }
-        this.loading = false;
       },
       error => {
         this.loading = false;
-        console.error('Error al obtener las reservas:', error);
-        this.mensajeError('Error al obtener las reservas');
+        console.error('Error al obtener las reservas pasadas:', error);
+        this.mensaje(error.error.message);
       }
     );
   }
+
+  
   // Método para obtener las reservas futuras
   obtenerReservasFuturas(fkEmpresa: number): void {
     this.loading = true;
     this._reservaService.getReservasFuturasEmpresa(fkEmpresa).subscribe(
       data => {
-        console.log('Datos recibidos:', data);
-        // Verifica que `data` sea un array
+        this.loading = false; // Asegúrate de desactivar el indicador de carga aquí
         if (Array.isArray(data)) {
           this.listReservasFut = data.map(reservaEmpresa => ({
             ...reservaEmpresa,
             paradas: typeof reservaEmpresa.paradas === 'string' ? this.parseParadas(reservaEmpresa.paradas) : [],
             reservas: typeof reservaEmpresa.reservas === 'string' ? this.parseReservas(reservaEmpresa.reservas) : [],
           }));
+        } else if (typeof data === 'string') {
+          this.listReservasFut = []; // Asigna un array vacío si es un string
         } else {
-          console.error('La respuesta no es un array:', data);
+          // Maneja el caso en que el tipo de datos no es ni array ni string
+          console.error('Tipo de dato inesperado:', data);
+          this.listReservasFut = []; // Asegura que listReservasFut siempre sea un array
         }
-        this.loading = false;
       },
       error => {
         this.loading = false;
-        console.error('Error al obtener las reservas:', error);
-        this.mensajeError('Error al obtener las reservas');
+        console.error('Error al obtener las reservas futuras:', error);
+        this.mensaje(error.error.message);
       }
     );
   }
+  
+
   parseReservas(reservasString: string): Reserva[] {
     return reservasString.split(';').map(reservaStr => {
       reservaStr = reservaStr.trim(); // Eliminar espacios en blanco al inicio y al final
@@ -372,20 +444,11 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
     this.showModal = false;
   }
 
-  //MENSAJES EXITO Y ERROR 
-  mensajeExitoDelete(mensaje: string): void {
-    this._snackBar.open(mensaje, 'Cerrar', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
-
-  mensajeError(mensaje: string): void {
-    this._snackBar.open(mensaje, 'Cerrar', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
+mensaje(mensaje: string): void {
+  this._snackBar.open(mensaje, 'Cerrar', {
+    duration: 5000,
+    horizontalPosition: 'center',
+    verticalPosition: 'bottom',
+  });
+}
 }

@@ -1,90 +1,139 @@
+/* Estilo para la barra de encabezado */
 .header-bar {
-    background-color:#5D2898;
-    color: white; /* Cambiar el color del texto si es necesario */
-    height: 40px;
-    width: 100vw;
-    position: fixed;
-    top: 0; /* Coloca el elemento en la parte superior de la ventana del navegador */
-    left: 0; /* Asegura que el elemento esté alineado a la izquierda */
-    right: 0;
-    padding: 2.5px 1px;
-    display: flex; /* Utilizamos flexbox para alinear los elementos */
-    align-items: center; /* Centramos verticalmente los elementos */
-    justify-content: space-between;
-    z-index: 100;
-  }
-
-  .izq{
-  /* Alinear los elementos verticalmente */
+  background-color: #5D2898;
+  color: white;
+  height: 40px;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5px 1px;
   display: flex;
   align-items: center;
-  }
-  .icono {
-    width: 65px; /* Ancho del icono */
-    height: 45px; /* Altura del icono */
-  
-  }
+  justify-content: space-between;
+  z-index: 100;
+}
 
-  .tittle{
-      color: black;
-      text-align: left;
-      margin: 0;
-  }
+/* Estilos para el icono */
+.icono {
+  width: 65px;
+  height: 45px;
+}
 
-  .appname{
-    /* Alinear los elementos verticalmente */
+/* Estilo para el título */
+.tittle {
+  color: black;
+  text-align: left;
+  margin: 0;
+}
+
+/* Estilo para el nombre de la aplicación */
+.appname {
   display: flex;
   text-align: center;
-  }
-  
-.name{
+}
+
+.name {
   color: white;
   text-align: center;
   margin: 0;
   font-size: 25px;
 }
 
-.hiconscontainer{
+/* Contenedor de íconos */
+.hiconscontainer {
   display: flex;
   gap: 10px;
-
 }
-.bt{
+
+/* Estilo para los botones */
+.bt {
   background-color: #ffffff;
-  line-height: 5 rem;
+  line-height: 5rem;
   min-width: 0;
   width: 40px;
   height: 30px;
   border-radius: 50%;
 }
-.iconLogin {
-color: #9a03ff;
-cursor: pointer;
-}
 
-.bt:hover{
+.bt:hover {
   background-color: #e7c4ff;
   cursor: pointer;
 }
 
-/* Reglas de media query para dispositivos pequeños */
-@media screen and (max-width: 100px) {
-  .header-bar {
-      height: 60px; /* Ajusta la altura para dispositivos pequeños */
-  }
+/* Estilo para la barra de navegación */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .icono {
-      width: 40px; /* Reducir el tamaño del icono para dispositivos pequeños */
-      height: 30px; /* Reducir el tamaño del icono para dispositivos pequeños */
-  }
+/* Alinea los elementos de la navbar-content en una fila */
+.navbar-translate {
+  display: flex;
+  align-items: center;
+}
 
-  .name {
-      font-size: 20px; /* Reducir el tamaño del nombre para dispositivos pequeños */
-  }
 
-  .bt {
-      width: 30px; /* Reducir el tamaño de los botones para dispositivos pequeños */
-      height: 25px; /* Reducir el tamaño de los botones para dispositivos pequeños */
+
+/* Opcional: Si también deseas agregar transiciones para un efecto suave */
+.navbar-collapse {
+  transition: background-color 0.3s ease; /* Transición suave para el cambio de color */
+}
+
+
+/* Estilo para el botón hamburguesa */
+.navbar-toggler-alt {
+  border: none;
+  background: violet; /* Fondo transparente para no interferir con otros estilos */
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Ajusta el tamaño según sea necesario */
+  height: 30px; /* Ajusta el tamaño según sea necesario */
+  cursor: pointer; /* Indica que el botón es clickeable */
+  z-index: 1050; /* Asegúrate de que esté sobre otros elementos */
+  border-color: violet;
+}
+
+/* Barras del botón hamburguesa */
+.navbar-toggler-bar-alt {
+  display: block;
+  width: 30px; /* Ajusta el ancho según sea necesario */
+  height: 3px; /* Ajusta la altura según sea necesario */
+  background-color: #d270ff; /* Cambia el color según el diseño */
+  margin: 5px auto; /* Espaciado entre las barras */
+  transition: all 0.3s ease-in-out; /* Transición suave para la animación */
+}
+
+/* Barras del botón hamburguesa en estado activo (cuando está abierto) */
+.navbar-toggler-alt.open .top-bar-alt {
+  transform: translateY(6px) rotate(45deg); /* Ajusta la posición y el ángulo */
+}
+
+.navbar-toggler-alt.open .middle-bar-alt {
+  opacity: 0; /* Oculta la barra del medio cuando está abierto */
+}
+
+.navbar-toggler-alt.open .bottom-bar-alt {
+  transform: translateY(-6px) rotate(-45deg); /* Ajusta la posición y el ángulo */
+}
+
+
+
+
+/* Estilo para el icono de cuenta */
+.nav-item .fa-user-circle {
+  color: white;
+  margin-right: 10px;
+}
+/* Ocultar el botón de hamburguesa en pantallas grandes */
+@media (min-width: 1000px) {
+  .navbar-toggler-alt {
+    display: none;
   }
 }
-  
+

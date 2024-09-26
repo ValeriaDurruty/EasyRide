@@ -7,8 +7,6 @@ const router = (0, express_1.Router)();
 router.get('/empresa/:FK_Empresa', charter_controller_1.getChartersXEmpresa);
 // Ruta para obtener un charter en particular mediante una id
 router.get('/:id', charter_controller_1.getCharters);
-// Ruta para obtener un charter en particular mediante una id
-router.get('/:id', charter_controller_1.getCharter);
 // Ruta para eliminar un charter en particular mediante una id
 router.delete('/:id', charter_controller_1.deleteCharters);
 // Ruta para agregar un charter

@@ -26,7 +26,7 @@ export const getChartersXEmpresa = (req: Request, res: Response) => {
 export const getCharters = (req: Request, res: Response) => {
     const { id } = req.params;
 
-    connection.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, modelo.FK_Marca as FK_Marca, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
+    connection.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al traer el charter:', err);
@@ -172,42 +172,3 @@ export const putCharters = (req: Request, res: Response) => {
         }
     });
 };
-
-
-export const getCharter = (req: Request, res: Response) => {
-    const { id } = req.params;
-
-    // Consulta SQL con el marcador de posición '?'
-    connection.query(
-        `SELECT 
-            marca.nombre AS marca, 
-            modelo.nombre AS modelo, 
-            charter.anio AS anio, 
-            charter.capacidad AS capacidad
-         FROM 
-            charter
-         INNER JOIN 
-            modelo ON modelo.PK_Modelo = charter.FK_Modelo
-         INNER JOIN 
-            marca ON marca.PK_Marca = modelo.FK_Marca
-         WHERE 
-            charter.PK_Charter = ?;`,
-        [id], // Se pasa el id como un array de parámetros para prevenir SQL Injection
-        (err, data) => {
-            if (err) {
-                // Registrar el error en la consola
-                console.error('Error al traer el charter:', err);
-                // Devolver un mensaje de error al cliente
-                return res.status(500).json({ error: 'Error al mostrar el charter' });
-            } else {
-                if (data.length === 0) {
-                    // Si no se encuentran datos, devolver un error 404
-                    return res.status(404).json('No se ha encontrado el charter');
-                } else {
-                    // Devolver los datos del charter como JSON
-                    res.json(data[0]);
-                }
-            }
-        }
-    );
-}

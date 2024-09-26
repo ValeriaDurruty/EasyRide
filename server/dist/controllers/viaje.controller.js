@@ -158,20 +158,21 @@ const getBusquedaViajes = (req, res) => {
                     FROM Viaje_Parada vp_origen 
                     INNER JOIN Parada p_origen ON vp_origen.FK_Parada = p_origen.PK_Parada 
                     WHERE vp_origen.FK_Viaje = v.PK_Viaje 
-                    AND vp_origen.orden = 1 
-                    AND p_origen.PK_Parada = ?
+                    AND p_origen.nombre = ?
                 ) 
                 AND EXISTS (
                     SELECT 1 
                     FROM Viaje_Parada vp_destino 
                     INNER JOIN Parada p_destino ON vp_destino.FK_Parada = p_destino.PK_Parada 
                     WHERE vp_destino.FK_Viaje = v.PK_Viaje 
-                    AND vp_destino.orden = (
-                        SELECT MAX(orden) 
-                        FROM Viaje_Parada 
-                        WHERE FK_Viaje = v.PK_Viaje
-                    ) 
-                    AND p_destino.PK_Parada = ?
+                    AND vp_destino.orden > (
+                        SELECT vp_origen.orden 
+                        FROM Viaje_Parada vp_origen 
+                        INNER JOIN Parada p_origen ON vp_origen.FK_Parada = p_origen.PK_Parada 
+                        WHERE vp_origen.FK_Viaje = v.PK_Viaje 
+                        AND p_origen.nombre = ?
+                    )
+                    AND p_destino.nombre = ?
                 ) 
             GROUP BY 
                 v.PK_Viaje, 
@@ -187,8 +188,9 @@ const getBusquedaViajes = (req, res) => {
                 ma.nombre 
             ORDER BY 
                 v.PK_Viaje, 
-                vp.orden;`;
-    connection_1.default.query(query, [body.fecha, body.origen, body.destino], (err, data) => {
+                vp.orden;
+                            `;
+    connection_1.default.query(query, [body.fecha, body.origen, body.origen, body.destino], (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al realizar la búsqueda:', err);
@@ -309,7 +311,7 @@ const deleteViajes = (req, res) => {
                 // Si hay reservas asociadas, rollback y respuesta de error
                 return connection_1.default.rollback(() => {
                     console.error('No se puede eliminar el viaje porque tiene reservas asociadas.');
-                    return res.status(400).json({ error: 'No se puede eliminar el viaje porque tiene reservas asociadas' });
+                    return res.status(400).json({ message: 'No se puede eliminar el viaje porque tiene reservas asociadas' });
                 });
             }
             // Paso 2: Eliminar entradas en Viaje_Parada

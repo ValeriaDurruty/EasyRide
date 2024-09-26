@@ -27,12 +27,9 @@
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab2" [ngClass]="{'active': currentTab === 'tab2'}" (click)="showTab('tab2')">Charters</a>
     </li>
-    <!--
     <li class="nav-item">
-      <a class="nav-link" [routerLink]="['/Reservas-empresa']" [ngClass]="{'active': currentTab === 'tab3'}">
-        Reservas
-      </a>
-    </li>-->
+      <a class="nav-link" data-toggle="tab" href="#tab3" [ngClass]="{'active': currentTab === 'tab3'}" (click)="showTab('tab3')">Paradas</a>
+    </li>
     <li class="nav-item">
       <a class="nav-link" data-toggle="tab" href="#tab4" [ngClass]="{'active': currentTab === 'tab4'}" (click)="showTab('tab4')">Reservas Futuras</a>
     </li>
@@ -40,6 +37,7 @@
       <a class="nav-link" data-toggle="tab" href="#tab5" [ngClass]="{'active': currentTab === 'tab5'}" (click)="showTab('tab5')">Historial de Reservas</a>
     </li>
   </ul>
+
   <!-- Contenido de las pestañas -->
      <!-- Listado de viajes cargados -->
   <div class="tab-content">
@@ -82,7 +80,7 @@
             </tr>
             <!-- Mensaje cuando no hay viajes -->
             <tr *ngIf="!listViajesParadas.length">
-              <td colspan="6">No hay viajes disponibles</td>
+              <td colspan="6">No hay viajes cargados.</td>
             </tr>
           </tbody>
         </table>
@@ -123,16 +121,59 @@
                   <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDelete(charter.PK_Charter || 0)"></i> <!-- Icono de tacho de basura -->
               </td>
             </tr>
+            <!-- Mensaje cuando no hay charters -->
+            <tr *ngIf="!listCharters.length">
+              <td colspan="6">No hay charters cargados.</td>
+            </tr>
           </tbody>
         </table>
     </div>
   </div>
 
-   <!-- Reservas -->
-   <div class="tab-content">
+ <!-- Listado de Paradas -->
+    <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab3'}" id="tab3">
+      <div class="nav nav-tabs justify-content-center">
+        <button [routerLink]="['/Agregar-parada']" class="bt-agregar">Agregar Paradas</button>
+      </div>
+      <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+      <div class="table-responsive">
+          <table class="table">
+            <thead class="text-secondary">
+              <tr>
+              <th>Nombre</th>
+              <th>Localidad</th>
+              <th>Provincia</th>
+              <th>Coordenadas</th>
+              <th>Opciones</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let parada of listParadas">
+                  <!-- Campos charter -->
+                  <td>{{ parada.parada }}</td>
+                  <td>{{ parada.localidad}}</td>
+                  <td>{{ parada.provincia }}</td>
+                  <td>{{ parada.coordenadas }}</td>
+                  <td>
+                    <!-- Botones charter -->
+                    <a [routerLink]="['/Agregar-parada',parada.PK_Parada]"   class="mr-2">
+                      <i class="fas fa-pencil-alt icon-pencil icon-background" ></i> <!-- Icono de lápiz -->
+                    </a>
+                    <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDeleteParada(parada.PK_Parada || 0)"></i>
+                  </td>
+              </tr>
+            <!-- Mensaje cuando no hay paradas -->
+            <tr *ngIf="!listParadas.length">
+              <td colspan="6">No hay paradas cargadas.</td>
+            </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    <!-- Reservas Futuras -->
     <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab4'}" id="tab4">
-    <!-- Activar el modo multi para permitir múltiples paneles expandidos -->
-    <mat-accordion [multi]="true">
+      <!-- Activar el modo multi para permitir múltiples paneles expandidos -->
+      <mat-accordion [multi]="true">
         <mat-expansion-panel *ngFor="let reserva of listReservasFut" [expanded]="true">
           <mat-expansion-panel-header>
             <mat-panel-title>
@@ -179,91 +220,107 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let reserva of reserva.reservas">
-                  <td>{{ reserva.PK_Reserva }}</td>
-                  <td>{{ formatFecha(reserva.fecha_creacion) }}</td>
-                  <td>{{ reserva.nombre }}</td>
-                  <td>{{ reserva.apellido }}</td>
+                <tr *ngFor="let reservaItem of reserva?.reservas">
+                  <td>{{ reservaItem.PK_Reserva }}</td>
+                  <td>{{ formatFecha(reservaItem.fecha_creacion) }}</td>
+                  <td>{{ reservaItem.nombre }}</td>
+                  <td>{{ reservaItem.apellido }}</td>
                   <td [ngClass]="{
-                        'estado-verde': reserva.estado_reserva === 'Reservado',
-                        'estado-rojo': reserva.estado_reserva === 'Cancelado'
+                        'estado-verde': reservaItem.estado_reserva === 'Reservado',
+                        'estado-rojo': reservaItem.estado_reserva === 'Cancelado'
                       }">
-                    {{ reserva.estado_reserva }}
+                    {{ reservaItem.estado_reserva }}
                   </td>
+                </tr>
+                <!-- Mensaje cuando no hay reservas -->
+                <tr *ngIf="!reserva?.reservas?.length">
+                  <td colspan="5">No hay reservas realizadas.</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </mat-expansion-panel>
+        <!-- Mensaje cuando no hay reservas -->
+        <div *ngIf="!listReservasFut?.length">
+          <td colspan="6">No hay reservas futuras.</td>
+        </div>
       </mat-accordion>
     </div>
-  
-<!-- Historial de reservas -->
-<div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab5'}" id="tab5">
-    <!-- Activar el modo multi para permitir múltiples paneles expandidos -->
-    <mat-accordion [multi]="true">
-    <mat-expansion-panel *ngFor="let reserva of listReservasPas" [expanded]="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          <strong> Viaje N° {{ reserva.PK_Viaje }} </strong>
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-  
-      <!-- Contenido del acordeón -->
-      <div class="row">
-        <!-- Primera columna -->
-        <div class="col">
-          <p>Fecha: {{ reserva.fecha }}</p>
-          <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
-          <p>Precio: {{ reserva.precio | currency }}</p>
+
+    <!-- Historial de reservas -->
+    <div class="tab-pane fade" [ngClass]="{'show active': currentTab === 'tab5'}" id="tab5">
+      <!-- Activar el modo multi para permitir múltiples paneles expandidos -->
+      <mat-accordion [multi]="true">
+        <mat-expansion-panel *ngFor="let reserva of listReservasPas" [expanded]="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <strong> Viaje N° {{ reserva.PK_Viaje }} </strong>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+      
+          <!-- Contenido del acordeón -->
+          <div class="row">
+            <!-- Primera columna -->
+            <div class="col">
+              <p>Fecha: {{ reserva.fecha }}</p>
+              <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
+              <p>Precio: {{ reserva.precio | currency }}</p>
+            </div>
+            <!-- Segunda columna -->
+            <div class="col">
+              <p>Patente: {{ reserva.patente }}</p>
+              <p>Modelo: {{ reserva.modelo }}</p>
+              <p>Marca: {{ reserva.marca }}</p>
+            </div>
+            <!-- Tercera columna -->
+            <div class="col">
+              <p>Paradas:</p>
+              <ul>
+                <li *ngFor="let parada of reserva.paradas">
+                  <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+      
+          <!-- Tabla de reservas -->
+          <div class="table-responsive mt-3">
+            <table class="reservas-table">
+              <thead>
+                <tr>
+                  <th>N° Reserva</th>
+                  <th>Fecha Creación</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let reservaItem of reserva?.reservas">
+                  <td>{{ reservaItem.PK_Reserva }}</td>
+                  <td>{{ formatFecha(reservaItem.fecha_creacion) }}</td>
+                  <td>{{ reservaItem.nombre }}</td>
+                  <td>{{ reservaItem.apellido }}</td>
+                  <td [ngClass]="{
+                        'estado-verde': reservaItem.estado_reserva === 'Reservado',
+                        'estado-rojo': reservaItem.estado_reserva === 'Cancelado'
+                      }">
+                    {{ reservaItem.estado_reserva }}
+                  </td>
+                </tr>
+                <!-- Mensaje cuando no hay reservas -->
+                <tr *ngIf="!reserva?.reservas?.length">
+                  <td colspan="5">No hay reservas en el historial.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </mat-expansion-panel>
+        <!-- Mensaje cuando no hay reservas -->
+        <div *ngIf="!listReservasPas?.length">
+          <td colspan="6">No hay reservas pasadas.</td>
         </div>
-        <!-- Segunda columna -->
-        <div class="col">
-          <p>Patente: {{ reserva.patente }}</p>
-          <p>Modelo: {{ reserva.modelo }}</p>
-          <p>Marca: {{ reserva.marca }}</p>
-        </div>
-        <!-- Tercera columna -->
-        <div class="col">
-          <p>Paradas:</p>
-          <ul>
-            <li *ngFor="let parada of reserva.paradas">
-              <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-  
-      <!-- Tabla de reservas -->
-      <div class="table-responsive mt-3">
-        <table class="reservas-table">
-          <thead>
-            <tr>
-              <th>N° Reserva</th>
-              <th>Fecha Creación</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let reserva of reserva.reservas">
-              <td>{{ reserva.PK_Reserva }}</td>
-              <td>{{ formatFecha(reserva.fecha_creacion) }}</td>
-              <td>{{ reserva.nombre }}</td>
-              <td>{{ reserva.apellido }}</td>
-              <td [ngClass]="{
-                    'estado-verde': reserva.estado_reserva === 'Reservado',
-                    'estado-rojo': reserva.estado_reserva === 'Cancelado'
-                  }">
-                {{ reserva.estado_reserva }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
+      </mat-accordion>
 </div>
 <app-listado-reservas *ngIf="showModal" [reservaData]="selectedReservaData"  (close)="handleClose()"></app-listado-reservas>
 </div>

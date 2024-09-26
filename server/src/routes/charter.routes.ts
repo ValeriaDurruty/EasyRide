@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkCharterPatente, deleteCharters, getCharter, getCharters, getChartersXEmpresa, postCharters, putCharters } from '../controllers/charter.controller';
+import { checkCharterPatente, deleteCharters, getCharters, getChartersXEmpresa, postCharters, putCharters } from '../controllers/charter.controller';
 
 const router = Router();
 
@@ -8,9 +8,6 @@ router.get('/empresa/:FK_Empresa', getChartersXEmpresa);
 
 // Ruta para obtener un charter en particular mediante una id
 router.get('/:id', getCharters);
-
-// Ruta para obtener un charter en particular mediante una id
-router.get('/:id', getCharter);
 
 // Ruta para eliminar un charter en particular mediante una id
 router.delete('/:id', deleteCharters);

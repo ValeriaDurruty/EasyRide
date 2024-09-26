@@ -122,7 +122,7 @@ export class VAdminComponent implements OnInit {
       error => {
         this.loading = false;
         console.error('Error al eliminar la empresa:', error);
-        this.mensaje('Error al eliminar la empresa');
+        this.mensaje(error.error.message);
       }
     );
   }
@@ -148,7 +148,7 @@ export class VAdminComponent implements OnInit {
       error => {
         this.loading = false;
         console.error('Error al eliminar el usuario:', error);
-        this.mensaje('Error al eliminar el usuario');
+        this.mensaje(error.error.message);
       }
     );
   }
@@ -175,7 +175,7 @@ export class VAdminComponent implements OnInit {
     error => {
       this.loading = false;
       console.error('Error al validar el usuario:', error);
-      this.mensaje('Error al validar el usuario');
+      this.mensaje(error.error.message);
     }
   );
 }

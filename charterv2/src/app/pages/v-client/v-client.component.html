@@ -68,7 +68,7 @@
                   </i>
                   <span style="margin-right: 5px;"></span>
                   <!-- Ver más info del viaje -->
-                  <a (click)="mostrarTicket(reserva.PK_Reserva ?? 0)" class="ticket-link">
+                  <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="mostrarTicket(reserva.PK_Reserva ?? 0)" class="ticket-link">
                       <i class="fas fa-ticket-alt"></i>
                   </a>
                 </div>

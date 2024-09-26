@@ -9,9 +9,9 @@
       <!-- Campo Patente -->
       <p>
         <strong>Patente</strong>
-        <input id="patente" type="text" class="form-control" placeholder="Patente" formControlName="patente" 
+      <input id="patente" type="text" class="form-control" placeholder="Patente" formControlName="patente" 
           (input)="onInputChange('patente')" style="text-transform: uppercase;">
-        <!-- Mensajes de error para el campo Patente -->
+     <!--Mensajes de error para el campo Patente -->
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('required') && form.get('patente')?.touched">
           La patente es obligatoria.
         </small>
@@ -23,52 +23,46 @@
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('pattern') && form.get('patente')?.touched">
           La patente debe tener el formato "ABC123" o "AB123CD".
-        </small>
+        </small> 
       </p>
-      
-      <!-- Desplegable Marca --> 
+        <!--Desplegable Marca--> 
       <p><strong>Marca</strong>
         <select id="marca" class="form-control select-control" name="marca-desplegable" formControlName="marca">
-          <option *ngFor="let marca of marcas" [value]="marca.PK_Marca">{{ marca.nombre }}</option>
+        <option *ngFor="let marca of marcas" [value]="marca.PK_Marca">{{ marca.nombre }}</option>
         </select>
         <!-- Mensajes de error para el campo Marca -->
         <small class="text-danger" *ngIf="form.get('marca')?.hasError('required') && form.get('marca')?.touched">La marca es obligatoria.</small>
       </p>
 
-      <!-- Desplegable Modelo -->   
+      <!--Desplegable Modelo-->   
       <p><strong>Modelo</strong>
         <select id="modelo" class="form-control select-control" name="modelo-desplegable" formControlName="modelo">
           <option *ngFor="let modelo of modelos" [value]="modelo.PK_Modelo">{{ modelo.nombre }}</option>
         </select>
-        <!-- Mensajes de error para el campo Modelo -->
+        <!-- Mensajes de error para el campo Modelo--> 
         <small class="text-danger" *ngIf="form.get('modelo')?.hasError('required') && form.get('modelo')?.touched">El modelo es obligatorio.</small>
       </p>
-
       <!-- Campo Año -->
       <p>
         <strong>Año</strong>
         <input id="anio" class="form-control" type="number" placeholder="Año" formControlName="anio">
-        <!-- Mensajes de error para el campo Año -->
+          <!--Mensajes de error para el campo Año -->
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">El año es obligatorio.</small>
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">El año debe ser mayor o igual a {{ maxYear - 10 }}.</small>
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('max') && form.get('anio')?.touched">El año no puede ser mayor al año actual.</small>
-      </p>
-
       <!-- Campo Capacidad -->
       <p>
         <strong>Capacidad</strong>
         <input id="capacidad" class="form-control" type="number" placeholder="Capacidad" formControlName="capacidad">
-        <!-- Mensajes de error para el campo Capacidad -->
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">La capacidad es obligatoria.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">La capacidad debe ser al menos 1.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">La capacidad no puede exceder de 25.</small>
+        <!--Mensajes de error para el campo Capacidad -->
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">La capacidad es obligatoria.</small>
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">La capacidad debe ser al menos 1.</small>
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">La capacidad no puede exceder de 25.</small>
       </p>
-
       <!-- Botones guardar y cancelar -->
       <div class="bt-container">
         <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button>
         <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-      </div>
-    </form>
   </div>
+</form>
 </div>

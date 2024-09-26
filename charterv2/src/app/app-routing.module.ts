@@ -20,6 +20,7 @@ import { EditEmpresaComponent } from './pages/edit-empresa/edit-empresa.componen
 import { RoleGuard } from './guards/admin.guard';
 import { UnauthorizedComponent } from './components/unauthorized/unauthorized.component';
 import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros.component';
+import { AddParadaComponent } from './pages/add-parada/add-parada.component';
 
 // RUTAS DE NAVEGACIÓN
 
@@ -47,9 +48,14 @@ const routes: Routes = [
   {path: "Editar-charter/:id", component: EditCharterComponent, canActivate: [RoleGuard] },
   {path:"Agregar-charter",component:AgregarCharterComponent, canActivate: [RoleGuard]},
   
+  //Paradas
+  {path:"Agregar-parada",component:AddParadaComponent,canActivate:[RoleGuard]},
+  {path: 'Agregar-parada/:id', component: AddParadaComponent,canActivate:[RoleGuard] },
+
   //Empresas
   {path:"Agregar-empresa",component:AddEmpresaComponent, canActivate: [RoleGuard]},
   {path:"Editar-empresa/:id",component:EditEmpresaComponent, canActivate: [RoleGuard]},
+
 
   //Reservas Empresa
   {path:"Reservas-empresa",component:ReservasEmpresaComponent, canActivate: [RoleGuard]},

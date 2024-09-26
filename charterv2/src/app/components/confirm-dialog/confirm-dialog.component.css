@@ -1,39 +1,98 @@
 .message {
-    border: 1px solid #a454ff; /* Borde alrededor del contenedor */
-    padding: 16px; /* Espacio interior */
-    background-color: #222222; /* Fondo blanco */
-    border-radius: 8px; /* Bordes redondeados */
-  }
-  
-  .message h1 {
-    margin-top: 0; /* Elimina el margen superior */
-    font-size: 24px; /* Tamaño de fuente del título */
-    color: #ffffff; /* Color del texto del título */
-  }
-  
-  .message mat-dialog-content {
-    margin: 16px 0; /* Espacio arriba y abajo del contenido */
-    justify-content: center;
-  }
-  
-  .message p {
-    font-size: 16px; /* Tamaño de fuente del párrafo */
-    font-family: 'Times New Roman', Times, serif;
-    color: #ffffff; /* Color del texto del párrafo */
-  }
-  
-  .message mat-dialog-actions {
-    display: flex; /* Muestra los botones en una fila */
-    justify-content: center; /* Alinea los botones a la derecha */
-  }
-  
-  .message button {
-    margin-left: 8px; /* Espacio entre los botones */
-    background-color: rgb(203, 52, 203);
-    border-radius: 5px;
-  }
-  
-  .message button:hover {
-    background-color: rgb(255, 28, 255);
-  }
-  
+  border: 1px solid #a454ff; /* Borde alrededor del contenedor */
+  padding: 8px; /* Espacio interior */
+  background-color: #222222; /* Fondo negro */
+  border-radius: 8px; /* Bordes redondeados */
+  width: 450px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  text-align: center; 
+  position: relative; /* Necesario para posicionar el ícono de cerrar */
+}
+
+.icon-container {
+  position: absolute; /* Posiciona el contenedor de íconos en la parte superior */
+  top: 10px; /* Ajusta según sea necesario */
+  right: 10px; /* Ajusta según sea necesario */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.warning-icon {
+  color: #ffcc00; /* Color del ícono de advertencia */
+  font-size: 30px; /* Tamaño del ícono de advertencia */
+  margin-right: 5px; /* Espacio entre el ícono y el texto del título */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: #ffffff; /* Color del ícono, ajusta según sea necesario */
+  font-size: 20px; /* Tamaño del ícono de cerrar */
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red; /* Color al pasar el cursor, ajusta según sea necesario */
+}
+
+.mat-dialog-title {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 100%;
+}
+
+.message h1 {
+  margin-top: 0;
+  font-size: 30px;
+  color: #ffffff;
+  display: flex;
+  align-items: center; /* Alinea verticalmente el ícono con el texto */
+}
+
+.message mat-dialog-content {
+  margin: 16px 0;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+}
+
+.message p {
+  font-size: 19px; 
+  font-family: 'Times New Roman', Times, serif;
+  color: #ffffff; 
+}
+
+.custom-dialog-actions {
+  display: flex;
+  justify-content: center; 
+  gap: 20px; 
+  margin-top: 2px;
+}
+
+.custom-button {
+  background: linear-gradient(45deg, #ae06ba, #e328e6);
+  border-radius: 5px;
+  color: white;
+  margin-top: 4px;
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background: rgb(255, 28, 255);
+  color: white;
+}
+
+.linea {
+  width: 45%;
+  height: 1px;
+  background: white;
+  margin: 5px 0; /* Reduce el margen superior e inferior */
+}

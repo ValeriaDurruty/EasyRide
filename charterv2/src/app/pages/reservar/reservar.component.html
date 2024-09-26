@@ -7,7 +7,7 @@
         <div class="reserva-info">
             <!-- Campos de reserva -->
             <div class="reserva-details">
-                <form [formGroup]="form" class="servicio-details" (ngSubmit)="guardarReserva()">
+                <form [formGroup]="form" class="servicio-details" (ngSubmit)="reservar()">
                     <!-- Campo Nombre de la Empresa -->
                     <p><strong>Nombre de la empresa:</strong></p>
                     <input id="viaje-empresa" type="text" class="form-control" placeholder="Nombre empresa" formControlName="empresa_nombre" [readonly]="true">
@@ -46,7 +46,8 @@
                     <p>Modelo:</p><input id="modelo_charter" formControlName="modelo_charter" class="form-control" type="text" placeholder="Charter" [readonly]="true" />
 
                     <!-- Botón reservar -->
-                    <button type="submit" class="btreservar gradient-button mr-3">Reservar</button>
+                    <!--<button type="submit" >Reservar</button>-->
+                    <button class="btreservar gradient-button mr-3" [disabled]="botonReservarPresionado || !form.valid" (click)="reservar()">Reservar</button>
                     <button type="button" [routerLink]="['/']" class="btreservar gradient-button">Cancelar</button>
 
                 </form>

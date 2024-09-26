@@ -75,13 +75,29 @@ input[type="checkbox"]:checked + label::after {
 
 .bt-add {
     color: white;
-    background: linear-gradient(45deg,  rgb(171, 41, 203), rgb(34, 0, 40));
-    border-radius: 5px;
+    background: linear-gradient(45deg, rgb(171, 41, 203), rgb(34, 0, 40));
+    border: none; /* Eliminado border-width y border-radius redundantes */
+    border-radius: 0.1875rem; /* Ajustado el border-radius */
+    box-shadow: 4px 4px  #5e0581; /* Sombra con desplazamiento y desenfoque */
+    font-weight: 400;
+    font-size: 0.8571em;
+    line-height: 1.35em;
+    margin: 10px 1px;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, background 0.3s ease-in-out;
 }
 
 .bt-add:hover {
     background: linear-gradient(45deg, rgb(231, 137, 255), rgb(57, 1, 71));
-} 
+    box-shadow: 4px 4px 8px #5e0581; /* Mantén la sombra en hover */
+}
+
+.bt-add:active {
+    transform: translateY(2px); /* Mueve el botón ligeramente hacia abajo */
+    box-shadow: 2px 2px 6px #8708aa; /* Sombra más pequeña al presionar, pero aún visible */
+    color: white;
+}
 
 .icon-check {
     color: rgb(0, 192, 32); /* Color para el ícono de check */

@@ -132,22 +132,22 @@ export class RegistrarComponent implements OnInit {
       
             // Agregar el usuario a la base de datos
             this.userService.addUsuario(usuario).subscribe(() => {
-              this.mensajeExito('Usuario registrado con éxito');
+              this.mensaje('Usuario registrado con éxito');
               setTimeout(() => {
                 console.log('Usuario agregado con éxito');
                 this.router.navigate(['/LogIn']);
               }, 2000);
             }, (error) => {
               console.error('Error registrando usuario en la base de datos:', error);
-              this.mensajeError('Error registrando usuario en la base de datos');
+              this.mensaje('Error registrando usuario en la base de datos');
             });
       
           } catch (error: any) {
             console.error('Error registrando usuario:', error);
             if (error.code === 'auth/email-already-in-use') {
-              this.mensajeError('El correo electrónico ya está registrado.');
+              this.mensaje('El correo electrónico ya está registrado.');
             } else {
-              this.mensajeError('Error registrando usuario');
+              this.mensaje('Error registrando usuario');
             }
           }
         } else {
@@ -168,22 +168,22 @@ export class RegistrarComponent implements OnInit {
       
             // Agregar el usuario a la base de datos
             this.userService.addUsuario(usuario).subscribe(() => {
-              this.mensajeExito('El usuario fue registrado con éxito');
+              this.mensaje('El usuario fue registrado con éxito');
               setTimeout(() => {
                 console.log('Usuario agregado con éxito');
                 this.router.navigate(['/LogIn']);
               }, 2000);
             }, (error) => {
               console.error('Error registrando usuario en la base de datos:', error);
-              this.mensajeError('Error registrando usuario en la base de datos');
+              this.mensaje('Error registrando usuario en la base de datos');
             });
       
           } catch (error: any) {
             console.error('Error registrando usuario:', error);
             if (error.code === 'auth/email-already-in-use') {
-              this.mensajeError('El correo electrónico ya está registrado.');
+              this.mensaje('El correo electrónico ya está registrado.');
             } else {
-              this.mensajeError('Error registrando usuario');
+              this.mensaje('Error registrando usuario');
             }
           }
         }
@@ -191,15 +191,7 @@ export class RegistrarComponent implements OnInit {
       
       
 
-  mensajeExito(mensaje:string) {
-    this._snackBar.open(mensaje, 'Cerrar', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
-  }
-
-  mensajeError(mensaje:string) {
+  mensaje(mensaje:string) {
     this._snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
       horizontalPosition: 'center',

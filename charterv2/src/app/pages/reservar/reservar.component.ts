@@ -1,54 +1,66 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, OnDestroy } from '@angular/core';
 import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ViajeService } from '../../services/viaje.service';
 import { Viaje } from '../../interfaces/viaje.interface';
 import { Charter } from '../../interfaces/charter.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
 import { ReservaService } from '../../services/reserva.service';
+import { SessionService } from '../../services/session.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reservar',
   templateUrl: './reservar.component.html',
-  styleUrls: ['/src/assets/assets/css/now-ui-kit.min.css',
+  styleUrls: [
+    '/src/assets/assets/css/now-ui-kit.min.css',
     '/src/assets/assets/css/bootstrap.min.css',
-    '/src/assets/assets/css/now-ui-kit.css','./reservar.component.css']
+    '/src/assets/assets/css/now-ui-kit.css',
+    './reservar.component.css'
+  ]
 })
 
-export class ReservarComponent implements OnInit{
+export class ReservarComponent implements OnInit, OnDestroy {
 
-  paradasSeleccionadas:ViajeParada[]=[];
-  parada:[]=[]
-  form:FormGroup;
+  paradasSeleccionadas: ViajeParada[] = [];
+  parada: [] = [];
+  form: FormGroup;
   idViaje: number | null = null;
   charters: any[] = [];
   paradas: Parada[] = [];
   selectedCharter: Charter | null = null;
+  public botonReservarPresionado: boolean = false;
+  private sessionSubscription: Subscription = new Subscription();  
 
-  constructor( private fb: FormBuilder,private _router: Router,
+  constructor(
+    private fb: FormBuilder,
+    private _router: Router,
     private _route: ActivatedRoute,
     private _viajeService: ViajeService,
     private _snackBar: MatSnackBar,
-    private _userService:UserService,
-    private _reservaService: ReservaService
-  ){
+    private _userService: UserService,
+    private _reservaService: ReservaService,
+    private ngZone: NgZone,
+    private _sessionService: SessionService
+  ) {
     this.form = this.fb.group({
       horario_salida: [''],
       horario_llegada: [''],
       fecha: [''],
       precio: [''],
       cupo: [''],
-      patente_charter:[''],
-      modelo_charter:[''],
-      marca_charter:[''],
+      patente_charter: [''],
+      modelo_charter: [''],
+      marca_charter: [''],
       empresa_nombre: [''],
     });
   }
+
   ngOnInit(): void {
+    // Suscripción al parámetro 'id' de la ruta
     this._route.paramMap.subscribe(params => {
       const id = +params.get('id')!;
       if (id) {
@@ -59,8 +71,15 @@ export class ReservarComponent implements OnInit{
         console.error('ID no válido');
       }
     });
-  }  
-  
+  }
+
+  ngOnDestroy(): void {
+    // Evitar pérdidas de memoria desuscribiéndose de la suscripción
+    if (this.sessionSubscription) {
+      this.sessionSubscription.unsubscribe();
+    }
+  }
+
   obtenerViajeXid(id: number): void {
     this._viajeService.getViajeXid(id).subscribe(
       response => {
@@ -73,24 +92,22 @@ export class ReservarComponent implements OnInit{
             fechaDate = new Date(viaje.fecha);
           }
           const fechaConvertida = this.convertirFechaAFormatoInput(fechaDate);
-          const datos_Charter = `${viaje.patente} - ${viaje.modelo} - ${viaje.marca}`;
           this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
             fecha: fechaConvertida,
             precio: viaje.precio,
             cupo: viaje.cupo,
-            empresa_nombre: viaje.empresa, // Asegúrate de que el nombre coincida
-            patente_charter:viaje.patente,
-            marca_charter:viaje.marca,
-            modelo_charter:viaje.modelo // Esto se usa para el ID del charter
+            empresa_nombre: viaje.empresa,
+            patente_charter: viaje.patente,
+            marca_charter: viaje.marca,
+            modelo_charter: viaje.modelo
           });
-  
-          if (typeof viaje.paradas === 'string') {
-            this.paradasSeleccionadas = this.parseParadas(viaje.paradas);
-          } else {
-            this.paradasSeleccionadas = [];
-          }
+
+          // Asignar paradas si están presentes
+          this.paradasSeleccionadas = typeof viaje.paradas === 'string'
+            ? this.parseParadas(viaje.paradas)
+            : [];
         } else {
           console.error('Respuesta inesperada del servidor');
         }
@@ -101,8 +118,6 @@ export class ReservarComponent implements OnInit{
       }
     );
   }
-
-  
 
   //PARADAS
   parseParadas(paradasString: string): ViajeParada[] {
@@ -156,7 +171,6 @@ export class ReservarComponent implements OnInit{
   }
 
   //MENSAJES DE NOTIFICACION
- 
   mensajeExito() {
     this._snackBar.open('La reserva fue realizada con éxito', 'Cerrar', {
       duration: 5000,
@@ -175,90 +189,67 @@ export class ReservarComponent implements OnInit{
     });
   }
 
-//GUARDAR RESERVA 
-/*guardarReserva(): void {
-  if (this.form.valid) {
-    console.log('Formulario válido, obteniendo usuario actual...');
-    
-    this._userService.getCurrentUser().subscribe(usuario => {
-      console.log('Usuario obtenido:', usuario);
-      
-      if (usuario && this.idViaje !== null) {
-        const reservaData = {
-          PK_Usuario: usuario.PK_Usuario, // Usa el ID del usuario
-          PK_Viaje: this.idViaje // ID del viaje
-        };
-
-        console.log('Datos de reserva a enviar:', reservaData);
-
-        this._reservaService.addReserva(reservaData).subscribe(
-          () => {
-            console.log('Reserva guardada exitosamente.');
-            this.mensajeExito();
-            this._router.navigate(['/V-cliente']);
-          },
-          error => {
-            console.error('Error al guardar la reserva:', error);
-            this.mensajeError('Error al guardar la reserva');
-          }
-        );
-      } else {
-        console.error('Datos requeridos faltan: usuario o idViaje');
-        this.mensajeError('Datos requeridos faltan: usuario o idViaje');
-      }
-    }, error => {
-      console.error('Error al obtener el usuario:', error);
-      this.mensajeError('Error al obtener el usuario');
-    });
-  } else {
-    console.error('Formulario inválido. Por favor, completa todos los campos obligatorios.');
-    this.mensajeError('Por favor, completa todos los campos obligatorios');
+  reservar(): void {
+    this.botonReservarPresionado = true;
+    console.log('Llamando a guardarReserva desde reservar()');
+    this.guardarReserva();
   }
-}
-*/
 
-guardarReserva(): void {
-  if (this.form.valid) {
-    console.log('Formulario válido, obteniendo usuario actual...');
+  guardarReserva(): void {
+    console.log('Iniciando guardarReserva');
     
-    this._userService.getCurrentUser().subscribe(usuario => {
-      console.log('Usuario obtenido:', usuario);
-      console.log('ID del usuario:', usuario ? usuario.PK_Usuario : 'Usuario no disponible');
-      
-      // Asegúrate de que el usuario y el idViaje no sean null o undefined
-      if (usuario && usuario.PK_Usuario && this.idViaje !== null) {
-        const reservaData = {
-          PK_Usuario: usuario.PK_Usuario, // Usa el ID del usuario
-          PK_Viaje: this.idViaje // ID del viaje
-        };
+    if (!this.botonReservarPresionado) {
+      console.error('El botón de reserva no ha sido presionado.');
+      return;
+    }
 
-        console.log('Datos de reserva a enviar:', reservaData);
+    if (this.form.valid) {
+      console.log('Formulario válido, obteniendo usuario actual...');
+      // Guardar la suscripción para poder desuscribirse más tarde
+      this.sessionSubscription.add(this._userService.getCurrentUser().subscribe(usuario => {
+        console.log('Usuario obtenido:', usuario);
+        this.ngZone.run(() => {
+          if (usuario) {
+            const ROLES_NO_PERMITIDOS = [1, 2];
+            if (ROLES_NO_PERMITIDOS.includes(usuario.FK_Rol)) {
+              this.mensajeError('No tienes permiso para realizar reservas.');
+              return;
+            }
 
-        this._reservaService.addReserva(reservaData).subscribe(
-          () => {
-            console.log('Reserva guardada exitosamente.');
-            this.mensajeExito();
-            this._router.navigate(['/V-cliente']);
-          },
-          error => {
-            console.error('Error al guardar la reserva:', error);
-            this.mensajeError('Error al guardar la reserva');
+            if (usuario.PK_Usuario && this.idViaje !== null) {
+              console.log('Datos válidos para la reserva:', {
+                PK_Usuario: usuario.PK_Usuario,
+                PK_Viaje: this.idViaje
+              });
+
+              const reservaData = {
+                PK_Usuario: usuario.PK_Usuario,
+                PK_Viaje: this.idViaje
+              };
+
+              this._reservaService.addReserva(reservaData).subscribe(
+                () => {
+                  this.mensajeExito();
+                  this._router.navigate(['/V-cliente']);
+                },
+                error => {
+                  console.error('Error al guardar la reserva:', error);
+                  this.mensajeError('Error al guardar la reserva');
+                }
+              );
+            } else {
+              console.error('Usuario o ID de viaje inválidos.');
+              this.mensajeError('No se puede realizar la reserva.');
+            }
+          } else {
+            console.error('Usuario no encontrado.');
+            this.mensajeError('No se pudo obtener el usuario.');
           }
-        );
-      } else {
-        console.error('Datos requeridos faltan: usuario o idViaje');
-        console.log('Datos de reserva:', {
-          usuario: usuario ? usuario.PK_Usuario : 'Usuario no disponible',
-          idViaje: this.idViaje
         });
-      }
-    }, error => {
-      console.error('Error al obtener el usuario:', error);
-      this.mensajeError('Error al obtener el usuario');
-    });
-  } else {
-    console.error('Formulario inválido. Por favor, completa todos los campos obligatorios.');
-    this.mensajeError('Por favor, completa todos los campos obligatorios');
+      }));
+    } else {
+      console.error('Formulario inválido.');
+      this.mensajeError('Formulario inválido.');
+    }
   }
-}
 }

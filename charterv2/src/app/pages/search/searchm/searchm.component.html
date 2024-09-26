@@ -6,7 +6,7 @@
       <!-- Desplegable de origenes -->
       <select id="origen" name="search-origen" [(ngModel)]="selectedOrigen" required>
         <option [ngValue]="null" disabled>Selecciona un origen</option>
-        <option *ngFor="let parada of paradas" [value]="parada.PK_Parada">{{ parada.parada }}</option>
+        <option *ngFor="let parada of paradas" [value]="parada.parada">{{ parada.parada }}</option>
       </select>
     </div>
     
@@ -15,7 +15,7 @@
       <!-- Desplegable de destinos -->
       <select id="destino" name="search-destino" [(ngModel)]="selectedDestino" required>
         <option [ngValue]="null" disabled>Selecciona un destino</option>
-        <option *ngFor="let parada of paradas" [value]="parada.PK_Parada">{{ parada.parada }}</option>
+        <option *ngFor="let parada of paradas" [value]="parada.parada">{{ parada.parada }}</option>
       </select>
     </div>
     

@@ -1,11 +1,24 @@
 <div class="message">
-    <h1 mat-dialog-title>Confirmar</h1>
-    <div mat-dialog-content>
-      <p>{{ data.message }}</p>
-    </div>
-    <div mat-dialog-actions>
-      <button mat-button (click)="onNoClick()">Cancelar</button>
-      <button mat-button color="warn" (click)="onYesClick()">Confirmar</button>
-    </div>
+  <!-- Contenedor para el ícono de advertencia y el botón de cerrar -->
+  <div class="icon-container">
+    <!-- Icono de cerrar -->
+    <button class="close-button" (click)="onNoClick()">
+      <i class="fas fa-times"></i> <!-- Font Awesome X icon -->
+    </button>
   </div>
   
+  <h1 mat-dialog-title>
+    <!-- Icono de advertencia al lado del título -->
+    <i class="fas fa-exclamation-triangle warning-icon"></i> 
+    Confirmar
+  </h1>
+  
+  <div class="linea"></div>
+  <div mat-dialog-content>
+    <p>{{ data.message }}</p>
+  </div>
+  <div class="custom-dialog-actions">
+    <button class="custom-button" (click)="onNoClick()">Cancelar</button>
+    <button class="custom-button" (click)="onYesClick()">Confirmar</button>
+  </div>
+</div>

@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ViajeService } from '../../services/viaje.service';
 import { ParadaService } from '../../services/parada.service';
 import { CharterService } from '../../services/charter.service';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup,Validators } from '@angular/forms';
 import { Viaje } from '../../interfaces/viaje.interface';
 import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
@@ -12,6 +12,8 @@ import { Charter } from '../../interfaces/charter.interface';
 import { EmpresaService } from '../../services/empresa.service';
 import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
 
+
+//Agrego Validators
 @Component({
   selector: 'app-edit-viaje',
   templateUrl: './edit-viaje.component.html',
@@ -43,14 +45,15 @@ export class EditViajeComponent implements OnInit {
     private _empresaService:EmpresaService
   ) {
     this.form = this.fb.group({
-      horario_salida: [''],
-      horario_llegada: [''],
-      fecha: ['', [fechaNoPasada()]],
+      fecha: ['', [Validators.required, fechaNoPasada()]],
+      horario_salida: ['', Validators.required],
+      horario_llegada: ['', Validators.required],
       precio: ['', [Validators.required, Validators.min(1)]],
       cupo: ['', [Validators.min(1)]],
       FK_Charter: ['', [Validators.required]]
     }, { validators: horariosDiferentes });
-  }
+  } 
+
 
   //NO ME CAMBIEN EL ORDEN DE COMO SE CARGA
   ngOnInit(): void {
@@ -188,14 +191,58 @@ export class EditViajeComponent implements OnInit {
         }))
       };
 
-    if (this.form.invalid) {
-      this.mensaje('Por favor, corrige los errores en el formulario');
+    // Validación de horarios
+    /*if (!viaje.horario_salida || !viaje.horario_llegada) {
+      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
+      return;
+    }
+
+    // Validación de fecha
+    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
+      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
+      return;
+    }
+
+    // Validación de precios
+    if (isNaN(viaje.precio) || viaje.precio <= 0) {
+      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
       return;
     }
 
     // Validación de número de paradas
     if (this.paradasSeleccionadas.length < 2) {
-      this.mensaje('El viaje debe tener al menos dos paradas');
+      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
+      return;
+    }*/
+  
+    // Validación de charter
+    if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`
+      this._snackBar.open('Por favor, selecciona un charter', 'Cerrar', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['custom-snackbar']
+      });
       return;
     }
   
@@ -304,14 +351,6 @@ export class EditViajeComponent implements OnInit {
 
    //MENSAJES DE NOTIFICACION
  
-   mensajeExito() {
-    this._snackBar.open('El viaje fue actualizado con éxito', 'Cerrar', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: ['custom-snackbar']
-    });
-  }
 
   mensaje(mensaje: string) {
     this._snackBar.open(mensaje, 'Cerrar', {

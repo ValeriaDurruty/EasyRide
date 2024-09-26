@@ -22,8 +22,8 @@ export class EditEmpresaComponent implements OnInit{
     
       this.form = this.fb.group({
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
-      cuil: [null, [Validators.required, Validators.min(1), Validators.max(99999999999)]], // Pasar la ID actual para no validar contra sí misma  
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]], // Patrón para 9 dígitos
+      cuit: [null, [Validators.required, Validators.min(1), Validators.max(99999999999)]], // Pasar la ID actual para no validar contra sí misma  
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9,10}$')]], // Patrón para 9 dígitos
       email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]]
     });
   }
@@ -43,7 +43,7 @@ export class EditEmpresaComponent implements OnInit{
       console.log(empresa);
       this.form.patchValue({
         razon_social: empresa.razon_social,
-        cuil: +empresa.cuil,
+        cuit: +empresa.cuit,
         telefono: empresa.telefono,
         email: empresa.email
       });
@@ -59,7 +59,7 @@ export class EditEmpresaComponent implements OnInit{
   
     const empresa = {
       razon_social: this.form.value.razon_social,
-      cuil: this.form.value.cuil,
+      cuit: this.form.value.cuit,
       telefono: this.form.value.telefono,
       email: this.form.value.email
     };
@@ -73,11 +73,11 @@ export class EditEmpresaComponent implements OnInit{
       error: (error) => {
         console.error('Error al editar la empresa:', error);
         if (error.status === 400) {
-          this.mensaje('El CUIL ya está registrado');
-          this.form.controls['cuil'].reset();
+          this.mensaje('El CUIT ya está registrado');
+          this.form.controls['cuit'].reset();
         } else {
           this.mensaje('Error al editar la empresa');
-          this.form.controls['cuil'].reset();  // Solo restablecer en otros errores
+          this.form.controls['cuit'].reset();  // Solo restablecer en otros errores
         }
       }
     });

@@ -29,6 +29,7 @@ export class VClientComponent implements OnInit {
   PK_Usuario: number = 0;
   selectedReserva: any = null; 
   showModal: boolean = false;  // Controla la visibilidad del modal
+  private reservasSubscription: Subscription | null = null;
 
 
   constructor(
@@ -176,4 +177,16 @@ export class VClientComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    // Cancelar las suscripciones para evitar fugas de memoria
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
+    if (this.reservasSubscription) {
+      this.reservasSubscription.unsubscribe();
+    }
+  }
 }

@@ -37,8 +37,8 @@ export class EmpresaService {
       return this.http.put<Empresa>(this.myAppUrl + this.myApiUrl + id, empresa); 
     }
 
-    checkCUIL(cuil: number): Observable<{ exists: boolean }> {
-      return this.http.get<{ exists: boolean }>(this.myAppUrl + this.myApiUrl + 'checkcuil/' + cuil);;
+    checkCUIT(cuit: number): Observable<{ exists: boolean }> {
+      return this.http.get<{ exists: boolean }>(this.myAppUrl + this.myApiUrl + 'checkcuit/' + cuit);;
     }
 
 

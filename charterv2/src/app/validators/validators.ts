@@ -1,4 +1,4 @@
-import { AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, ValidationErrors,ValidatorFn } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { catchError, debounceTime, map, switchMap } from 'rxjs/operators';
 import { CharterService } from '../services/charter.service';
@@ -21,7 +21,7 @@ import { EmpresaService } from '../services/empresa.service';
   };
 }*/
 
-export function cuilAsyncValidator(empresaService: EmpresaService, currentEmpresaId?: number): AsyncValidatorFn {
+export function cuitAsyncValidator(empresaService: EmpresaService, currentEmpresaId?: number): AsyncValidatorFn {
   return (control: AbstractControl): Observable<ValidationErrors | null> => {
     // Retorna null si el control está vacío
     if (!control.value) {
@@ -35,18 +35,18 @@ export function cuilAsyncValidator(empresaService: EmpresaService, currentEmpres
           return of(null);
         }
 
-        const cuil = Number(value);
-        return empresaService.checkCUIL(cuil).pipe(
+        const cuit = Number(value);
+        return empresaService.checkCUIT(cuit).pipe(
           map(response => {
-            // Verifica si el CUIL ya está registrado
+            // Verifica si el CUIT ya está registrado
             if (response.exists && (currentEmpresaId === undefined || currentEmpresaId === null)) {
-              return { cuilTaken: true };
+              return { cuitTaken: true };
             } else {
               return null;
             }
           }),
           catchError((error) => {
-            console.error('Error en checkCUIL:', error);
+            console.error('Error en checkCUIT:', error);
             return of(null); // Maneja el error de manera segura
           })
         );

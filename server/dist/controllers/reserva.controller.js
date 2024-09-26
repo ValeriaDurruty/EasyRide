@@ -615,7 +615,6 @@ const addReserva = (req, res) => {
                         }
                         // Responder con éxito y con el ID de la nueva reserva
                         res.status(201).json({ message: 'Reserva creada exitosamente N° ', PK_Reserva: result.insertId });
-                        console.log('Reserva creada exitosamente N° ', result.insertId);
                     });
                 });
             });

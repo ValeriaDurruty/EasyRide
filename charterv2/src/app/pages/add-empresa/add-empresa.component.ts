@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa.service';
 import { Empresa } from '../../interfaces/empresa.interface';
-import { cuilAsyncValidator } from '../../validators/validators';
+import { cuitAsyncValidator } from '../../validators/validators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -23,8 +23,8 @@ export class AddEmpresaComponent implements OnInit {
   ){
     this.form = this.fb.group({
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
-      cuil: [null, [Validators.required, Validators.min(1), Validators.max(99999999999)], [cuilAsyncValidator(this._empresaService)]], // Ajusta según el largo del CUIL
-      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9}$')]], // Patrón para 9 dígitos
+      cuit: [null, [Validators.required, Validators.min(1), Validators.max(99999999999)], [cuitAsyncValidator(this._empresaService)]], // Ajusta según el largo del CUIT
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9,10}$')]], // Patrón para 9 dígitos
       email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]]
     });
   }
@@ -33,14 +33,15 @@ export class AddEmpresaComponent implements OnInit {
   }
 
   addEmpresa(){
+   
     if(this.form.invalid) {
       this.mensaje('Por favor, corrige los errores en el formulario');
       return;
-    }
+    } 
 
     const empresa: Empresa = {
       razon_social: this.form.value.razon_social,
-      cuil: this.form.value.cuil,
+      cuit: this.form.value.cuit,
       telefono: this.form.value.telefono,
       email: this.form.value.email
     };
@@ -54,13 +55,13 @@ export class AddEmpresaComponent implements OnInit {
     },
     error: (error) => {
       if (error.status === 400) {
-        console.error('El CUIL ya está registrado');
-        this.mensaje('El CUIL ya está registrado');
+        console.error('El CUIT ya está registrado');
+        this.mensaje('El CUIT ya está registrado');
       } else {
         console.error('Error al agregar la empresa', error);
         this.mensaje('Error al agregar la empresa');
       }
-      this.form.controls['cuil'].reset();
+      this.form.controls['cuit'].reset();
     }
   });
 }
