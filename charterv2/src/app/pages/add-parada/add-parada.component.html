@@ -4,7 +4,7 @@
   </div>
   <div class="servicio-container">
     <h2>{{ isEditMode ? 'Editar Parada' : 'Agregar Parada' }}</h2>
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="saveParada()" #charterForm="ngForm">
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()" #charterForm="ngForm">
       <!-- Campo Nombre -->
       <p>
         <strong>Nombre</strong>
@@ -24,7 +24,7 @@
         </select>
         <small class="text-danger" *ngIf="form.get('provincia')?.hasError('required') && form.get('provincia')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          La Provincia es obligatoria.</small>
+          La provincia es obligatoria.</small>
       </p>
 
       <!-- Campo Localidad -->
@@ -35,7 +35,7 @@
         </select>
         <small class="text-danger" *ngIf="form.get('localidad')?.hasError('required') && form.get('localidad')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          La Localidad es obligatoria.</small>
+          La localidad es obligatoria.</small>
       </p>
 
       <!-- Campo Coordenadas -->
@@ -53,7 +53,7 @@
       <!-- Botones -->
       <div class="botones">
         <button type="button" class=" bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-        <button type="submit" class=" bt-a-servicio">{{ isEditMode ? 'Actualizar Parada' : 'Agregar Parada' }}</button>
+        <button type="submit" class=" bt-a-servicio" (click)="openModal()">{{ isEditMode ? 'Actualizar Parada' : 'Agregar Parada' }}</button>
       </div>
     </form>
   </div>

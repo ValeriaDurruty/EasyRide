@@ -1,0 +1,14 @@
+<div class="empresaModal">
+    <button (click)="onClose()" class="close-btn">&#x2715;</button> 
+  
+    <h2 class="title">Información de la Empresa</h2>
+  
+    <div class="empresa-info">
+      <p><strong>Razón Social: </strong> {{ data.razon_social }}</p>
+      <p><strong>CUIT: </strong> {{ data.cuit }}</p>
+      <p><strong>Email: </strong> <a href="mailto:{{ data.email }}">{{ data.email }}</a></p>
+      <p><strong>Teléfono: </strong> {{ data.telefono }}</p>
+    </div>
+  </div>
+  
+  

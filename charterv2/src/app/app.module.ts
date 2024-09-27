@@ -42,6 +42,10 @@ import { ListadoReservasComponent } from './components/listado-reservas/listado-
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SobrenosotrosComponent } from './components/sobrenosotros/sobrenosotros.component';
 import { AddParadaComponent } from './pages/add-parada/add-parada.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ModalcontactEmpresaComponent } from './components/modal-contact-empresa/modal-contact-empresa.component';
+import { ModalshComponent } from './components/modalsh/modalsh.component';
+import { ModalcontactComponent } from './components/modalcontact/modalcontact.component'
 
 @NgModule({
   declarations: [
@@ -75,7 +79,10 @@ import { AddParadaComponent } from './pages/add-parada/add-parada.component';
     TicketComponent,
     ListadoReservasComponent,
     SobrenosotrosComponent,
-    AddParadaComponent
+    AddParadaComponent,
+    ModalcontactEmpresaComponent,
+    ModalshComponent,
+    ModalcontactComponent    
   ],
   imports: [
     BrowserModule,
@@ -86,7 +93,8 @@ import { AddParadaComponent } from './pages/add-parada/add-parada.component';
     MatProgressBarModule,
     MatSnackBarModule,
     ReactiveFormsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatTooltipModule
   ],
   exports: [
     HttpClientModule,

@@ -5,7 +5,7 @@
   <div class="servicio-container">
     <h2>Información de Empresa</h2>
     <!-- Comienza el form -->
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="updateEmpresa()">
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()">
       <!-- Campo Razón Social -->
       <p>
         <strong>Razón social</strong>
@@ -23,18 +23,14 @@
       <!-- Campo CUIT -->
       <p>
         <strong>CUIT</strong>
-        <input id="cuit" type="number" class="form-control" placeholder="Ingrese CUIT" formControlName="cuit">
+        <input id="cuit" type="text" class="form-control" placeholder="Ingrese CUIT" formControlName="cuit">
         <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('required') && form.get('cuit')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El CUIT es requerido.
         </small>
-        <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('min') && form.get('cuit')?.touched">
+        <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('cuitInvalido') && form.get('cuit')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          El CUIT debe ser un número válido.
-        </small>
-        <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('max') && form.get('cuit')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          El CUIT debe ser un número válido.
+          El CUIT no es válido.
         </small>
         <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('cuitAsyncValidator') && form.get('cuit')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->

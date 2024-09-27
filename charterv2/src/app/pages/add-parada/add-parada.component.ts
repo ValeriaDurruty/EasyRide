@@ -9,6 +9,8 @@ import { EmpresaService } from '../../services/empresa.service';
 import { Parada } from '../../interfaces/parada.interface';
 import { Provincia } from '../../interfaces/provincia.interface';
 import { Localidad } from '../../interfaces/localidad.interface';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-parada',
@@ -34,7 +36,8 @@ export class AddParadaComponent implements OnInit {
     private _provinciaService: ProvinciaService,
     private _localidadService: LocalidadService,
     private _empresaService: EmpresaService,
-    private route: ActivatedRoute // Para acceder a los parámetros de la ruta
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.maxLength(30)]],
@@ -109,7 +112,27 @@ export class AddParadaComponent implements OnInit {
     }
   }
 
-  saveParada(): void {
+  openModal() {
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: {
+        tipoOperacion: 'parada', // o 'viaje' o 'parada'
+        nombre: this.form.get('nombre')?.value,
+        provincia: this.form.get('provincia')?.value,
+        localidad: this.form.get('localidad')?.value,
+        coordenadas: this.form.get('coordenadas')?.value,
+        // Agrega más propiedades según el tipo de operación
+      }
+    });
+  
+    dialogRef.componentInstance.confirm.subscribe((parada) => {
+      console.log('Datos de la parada confirmados:', parada); // Muestra los datos en la consola para verificar
+  
+      // Aquí se llama al método para agregar la empresa
+      this.saveParada(parada);
+    });
+  }
+  
+  saveParada(paradaData:any): void {
     if (this.form.invalid) {
       this.mensaje('Por favor, corrige los errores en el formulario');
       return;

@@ -29,7 +29,7 @@ exports.getChartersXEmpresa = getChartersXEmpresa;
 //Trae un charter en particular mediante una id
 const getCharters = (req, res) => {
     const { id } = req.params;
-    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
+    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, modelo.FK_Marca, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.PK_Charter = ?;', id, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al traer el charter:', err);

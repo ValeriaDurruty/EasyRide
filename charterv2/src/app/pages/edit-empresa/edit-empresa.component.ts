@@ -3,6 +3,9 @@ import { EmpresaService } from '../../services/empresa.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { cuitAsyncValidator, cuitValidator } from '../../validators/validators';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-empresa',
@@ -18,11 +21,14 @@ export class EditEmpresaComponent implements OnInit{
   constructor(private _empresaService: EmpresaService, 
     private route: ActivatedRoute,
     private router:Router,
-    private _snackBar:MatSnackBar, private fb: FormBuilder){
+    private _snackBar:MatSnackBar, 
+    private fb: FormBuilder,
+    private dialog: MatDialog
+  ){
     
       this.form = this.fb.group({
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
-      cuit: [null, [Validators.required, Validators.min(1), Validators.max(99999999999)]], // Pasar la ID actual para no validar contra sí misma  
+      cuit: ['', [Validators.required, cuitValidator],[cuitAsyncValidator(this._empresaService)]], // Pasar la ID actual para no validar contra sí misma  
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9,10}$')]], // Patrón para 9 dígitos
       email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]]
     });
@@ -43,14 +49,35 @@ export class EditEmpresaComponent implements OnInit{
       console.log(empresa);
       this.form.patchValue({
         razon_social: empresa.razon_social,
-        cuit: +empresa.cuit,
+        cuit: empresa.cuit,
         telefono: empresa.telefono,
         email: empresa.email
       });
     });
   }
 
-  updateEmpresa() {
+
+  openModal() {
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: {
+        tipoOperacion: 'empresa', // o 'viaje' o 'parada'
+        razonSocial: this.form.get('razon_social')?.value,
+        cuit: this.form.get('cuit')?.value,
+        email: this.form.get('email')?.value,
+        telefono: this.form.get('telefono')?.value,
+        // Agrega más propiedades según el tipo de operación
+      }
+    });
+  
+    dialogRef.componentInstance.confirm.subscribe((empresa) => {
+      console.log('Datos de la empresa confirmados:', empresa); // Muestra los datos en la consola para verificar
+  
+      // Aquí se llama al método para agregar la empresa
+      this.updateEmpresa(empresa);
+    });
+  }
+  
+  updateEmpresa(empresaData: any) {
     if (this.form.invalid) {
       console.log('Formulario inválido:', this.form.errors); 
       this.mensaje('Por favor, corrige los errores en el formulario');

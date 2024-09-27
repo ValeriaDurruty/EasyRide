@@ -5,7 +5,7 @@
   <div class="servicio-container">
     <h2>Información de Charter</h2>
     <!--Comienza el form--> 
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="updateCharter()">            
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()">            
       <!--Campo Patente--> 
       <p><strong>Patente</strong> 
        <input id="patente" type="text" class="form-control" placeholder="Ingrese Patente" formControlName="patente"
@@ -45,17 +45,20 @@
           <option *ngFor="let modelo of modelos" [value]="modelo.PK_Modelo">{{ modelo.nombre }}</option>
         </select>
         <!-- Mensajes de error para el campo Modelo -->
-        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-        <small class="text-danger" *ngIf="form.get('modelo')?.hasError('required') && form.get('modelo')?.touched">El modelo es obligatorio.</small>
+        <small class="text-danger" *ngIf="form.get('modelo')?.hasError('required') && form.get('modelo')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El modelo es obligatorio.</small>
       </p> 
 
       <!--Campo Año-->
       <p><strong>Año</strong> 
         <input id="anio" class="form-control" type="number" formControlName="anio" placeholder="Ingrese Año">
         <!-- Mensajes de error para el campo Año -->
-        <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El año es obligatorio.</small>
-        <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El año debe ser mayor o igual a {{ maxYear - 10 }}.</small>
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('max') && form.get('anio')?.touched">    
         <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
@@ -69,9 +72,11 @@
         <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">  
         <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La capacidad es obligatoria.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La capacidad debe ser al menos 1.</small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La capacidad no puede exceder de 25.</small>
       </p>
 

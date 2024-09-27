@@ -61,9 +61,9 @@
                 <div class="container">
                   <div class="d-flex align-items-center">
                       <!-- Icono para validar -->
-                      <i class="fas fa-check-circle icon-check icon-background" (click)="confirmValidarUsuario(usuario.PK_Usuario || 0)"></i>
+                      <i class="fas fa-check-circle icon-check icon-background" (click)="confirmValidarUsuario(usuario.PK_Usuario || 0)" matTooltip="Validar cuenta"></i>
                       <!-- Icono para eliminar cuenta -->
-                      <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)"></i>
+                      <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)" matTooltip="Eliminar cuenta"></i>
                   </div>
                 </div>
               </td>
@@ -97,7 +97,7 @@
                 <td id="nombreEmpresa">{{ usuario.nombreEmpresa }}</td>
                 <td>
                  <!-- Icono para eliminar cuenta -->
-                <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)"></i>
+                <i class="fas fa-trash-alt icono  icon-trash icon-background mr-3" (click)="confirmDeleteUsuario(usuario.PK_Usuario || 0)" matTooltip="Eliminar cuenta"></i>
                 </td>
               </tr>
             </tbody>
@@ -131,10 +131,10 @@
                   <div class="container">
                     <div class="d-flex align-items-center">
                         <!-- Icono de lápiz -->
-                        <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]" class="mr-2">
+                        <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]" class="mr-2" matTooltip="Editar empresa">
                           <i class="fas fa-pencil-alt icon-pencil icon-background"></i></a>
                         <!-- Icono para eliminar cuenta -->
-                        <i class="fas fa-trash-alt icono icon-trash icon-background mr-2" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)"></i>
+                        <i class="fas fa-trash-alt icono icon-trash icon-background mr-2" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)" matTooltip="Eliminar empresa"></i>
                     </div>
                   </div>
                 </td>

@@ -1,0 +1,45 @@
+<div class="info-container">
+  <button class="close-btn mt-3" (click)="onClose()">&#x2715;</button>
+
+  <h1 class="mt-3 mb-3">Confirmación</h1>
+
+  <div *ngIf="tipoOperacion === 'empresa'">
+    <h2 class="mt-3">Información de la empresa</h2>
+    <p>Razón Social: <span class="highlight">{{ data.razonSocial }}</span></p>
+    <p>CUIT: <span class="highlight">{{ data.cuit }}</span></p>
+    <p>Email: <span class="highlight">{{ data.email }}</span></p>
+    <p>Teléfono: <span class="highlight">{{ data.telefono }}</span></p>
+  </div>
+
+  <div *ngIf="tipoOperacion === 'viaje'">
+    <h2>Información del viaje</h2>
+    <p>Hora Salida: <span class="highlight">{{ data.horario_salida }}</span></p>
+    <p>Hora llegada: <span class="highlight">{{ data.horario_llegada }}</span></p>
+    <p>Fecha: <span class="highlight">{{ data.fecha | date }}</span></p>
+    <p>Precio: <span class="highlight">{{ data.precio }}</span></p>
+    <p>Charter: <span class="highlight">{{ data.charter?.patente }} - {{ data.charter?.marca }} - {{ data.charter?.modelo }}</span></p>
+    <p *ngFor="let parada of data.paradas">Parada: <span class="highlight">{{ parada.parada }}</span> - <span class="highlight">{{ parada.orden }}</span></p>
+  </div>
+
+  <div *ngIf="tipoOperacion === 'parada'">
+    <h2>Información de la parada</h2>
+    <p>Nombre de la Parada: <span class="highlight">{{ data.nombre }}</span></p>
+    <p>Provincia: <span class="highlight">{{ data.provincia }}</span></p>
+    <p>Localidad: <span class="highlight">{{ data.localidad }}</span></p>
+    <p>Coordenadas: <span class="highlight">{{ data.coordenadas }}</span></p>
+  </div>
+
+  <div *ngIf="tipoOperacion === 'charter'">
+    <h2>Información de Charter</h2>
+    <p>Patente: <span class="highlight">{{ data.patente }}</span></p>
+    <p>Marca: <span class="highlight">{{ data.marca }}</span></p>
+    <p>Modelo: <span class="highlight">{{ data.modelo }}</span></p>
+    <p>Año: <span class="highlight">{{ data.anio }}</span></p>
+    <p>Capacidad: <span class="highlight">{{ data.capacidad }}</span></p>
+  </div>
+
+  <div class="button-container">
+    <button (click)="onClose()">Cancelar</button>
+    <button (click)="onConfirm()">Confirmar</button>
+  </div>
+</div>

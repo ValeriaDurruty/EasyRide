@@ -5,7 +5,7 @@
   <div class="servicio-container">
     <h2>Información de Viaje</h2>
     <!-- Comienza el form -->
-    <form [formGroup]="form" class="servicio-details" (ngSubmit)="EditarViaje()">
+    <form [formGroup]="form" class="servicio-details" (ngSubmit)="openModal()">
       <!-- Campo Horario de salida -->
       <p><strong>Horario de salida:</strong></p>
       <input id="horario_salida" type="time" formControlName="horario_salida" class="form-control">
@@ -76,7 +76,7 @@
         </small>
       <div class="bt-container">
         <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-        <button type="submit" class="bt-a-servicio">Guardar</button>
+        <button type="submit" class="bt-a-servicio" >Guardar</button>
       </div>
     </form>
   </div>

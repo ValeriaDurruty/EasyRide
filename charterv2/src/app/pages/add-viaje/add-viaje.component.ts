@@ -10,6 +10,8 @@ import { ViajeParada } from '../../interfaces/viaje.parada';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa.service';
 import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 //Agrego Validators
@@ -38,7 +40,8 @@ export class AddViajeComponent implements OnInit {
     private _charterService: CharterService,
     private _router:Router,
     private route: ActivatedRoute,
-    private _empresaService:EmpresaService
+    private _empresaService:EmpresaService,
+    private dialog: MatDialog
   ) {
     this.form = this.fb.group({
       horario_salida: ['', [Validators.required]],
@@ -79,7 +82,26 @@ export class AddViajeComponent implements OnInit {
     );
   }
 
-  addViaje() {
+  openModal() {
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: {
+        tipoOperacion: 'viaje',
+        horario_salida: this.form.get('horario_salida')?.value,
+        horario_llegada: this.form.get('horario_llegada')?.value,
+        fecha: this.form.get('fecha')?.value,
+        precio: this.form.get('precio')?.value,
+        FK_Charter: this.form.get('FK_Charter')?.value ?? 0, // Corregido
+        paradas: this.paradasSeleccionadas // Pasando las paradas seleccionadas al modal
+      }
+    });
+  
+    dialogRef.componentInstance.confirm.subscribe((viaje) => {
+      console.log('Datos del viaje confirmados:', viaje);
+      this.addViaje(viaje); // Llama a la función para agregar el viaje
+    });
+  }
+
+  addViaje(viajeData:any) {
     const viaje: Viaje = {
       horario_salida: this.form.get('horario_salida')?.value ?? '',
       horario_llegada: this.form.get('horario_llegada')?.value ?? '',
@@ -87,57 +109,8 @@ export class AddViajeComponent implements OnInit {
       precio: +this.form.get('precio')?.value || 0,
       FK_Charter: +this.form.get('FK_Charter')?.value || 0, //Si no anda en donde esta || ponele ??
       cupo: +this.form.get('cupo')?.value || 0,
-      paradas: this.paradasSeleccionadas.map(parada => ({
-          PK_Viaje_Parada: 0,
-          orden: this.paradasSeleccionadas.length + 1,
-          FK_Viaje: 0,
-          FK_Parada: parada.FK_Parada
-      }))
+      paradas: this.paradasSeleccionadas
   };
-
-    // Validación de horarios
-    /*if (!viaje.horario_salida || !viaje.horario_llegada) {
-      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de fecha
-    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
-      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de precios
-    if (isNaN(viaje.precio) || viaje.precio <= 0) {
-      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de número de paradas
-    if (this.paradasSeleccionadas.length < 2) {
-      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }*/
   
     // Validación de charter
     if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`

@@ -13,6 +13,7 @@ export interface ReservaPasajero {
     patente?: string;
     modelo?: string;
     marca?: string;
+    PK_Empresa?: number;
     empresa?: string;
     paradas?: ViajeParada[];
   };

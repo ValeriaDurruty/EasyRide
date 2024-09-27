@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmpresaService } from '../../services/empresa.service';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-charter',
@@ -33,7 +35,9 @@ export class EditCharterComponent implements OnInit{
     private route: ActivatedRoute,
     private router:Router,
     private _snackBar:MatSnackBar,
-    private _empresaService: EmpresaService
+    private _empresaService: EmpresaService,
+    private dialog: MatDialog
+
   ) {
 
     //CHEQUEAR VALIDACION DE CAPACIDAD
@@ -62,8 +66,17 @@ export class EditCharterComponent implements OnInit{
       }
     });
 
-    this.FK_empresa = this._empresaService.getEmpresaId() ?? 0; // Asegúrate de que sea un número
-
+    const storedFKEmpresa = sessionStorage.getItem('FK_empresa') || localStorage.getItem('FK_empresa');
+    if (storedFKEmpresa) {
+      this.FK_empresa = +storedFKEmpresa;
+    } else {
+      // Obtener FK_empresa del servicio y almacenarla en el navegador
+      this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
+      if (this.FK_empresa !== 0) {
+        sessionStorage.setItem('FK_empresa', this.FK_empresa.toString()); // O localStorage según lo que prefieras
+      }
+    }
+  
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
       // Manejar el caso donde FK_empresa es 0 o no está disponible
@@ -112,8 +125,36 @@ export class EditCharterComponent implements OnInit{
     });
   }
 
+
+  openModal() {
+    const dataToSend = {
+      tipoOperacion: 'charter',
+      patente: this.form.get('patente')?.value,
+      capacidad: this.form.get('capacidad')?.value,
+      anio: this.form.get('anio')?.value,
+      modelo: this.form.get('modelo')?.value,
+      marca: this.form.get('marca')?.value,
+    };
+  
+    console.log('Datos que se enviarán al modal:', dataToSend); // Agregado aquí
+  
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: dataToSend
+    });
+  
+    // Suscribirse al evento de confirmación y cerrar el modal
+    dialogRef.componentInstance.confirm.subscribe((charter) => {
+      console.log('Datos del viaje confirmados:', charter);
+  
+      // Procesar el viaje confirmado
+      this.updateCharter(charter);
+  
+      // Cerrar el modal después de confirmar
+      dialogRef.close();  // Aquí se cierra el modal
+    });
+  }
   //ANDA TODO
-  updateCharter() {
+  updateCharter(charterData:any) {
     // Verifica si el formulario es válido
     if (this.form.invalid) {
       console.log('Formulario inválido:', this.form.errors);
@@ -159,4 +200,5 @@ export class EditCharterComponent implements OnInit{
       panelClass: ['custom-snackbar']  // Es para darle estilo
     });
   }
+  
 }

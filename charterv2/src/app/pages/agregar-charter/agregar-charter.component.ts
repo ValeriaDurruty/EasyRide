@@ -9,6 +9,8 @@ import { Modelo } from '../../interfaces/modelo.interface';
 import { Marca } from '../../interfaces/marca.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EmpresaService } from '../../services/empresa.service';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-agregar-charter',
@@ -31,7 +33,9 @@ export class AgregarCharterComponent implements OnInit {
      private _marcaService: MarcaService,
      private _snackBar: MatSnackBar,
      private route: ActivatedRoute,
-    private _empresaService:EmpresaService) {
+    private _empresaService:EmpresaService,
+    private dialog: MatDialog
+  ) {
     this.maxYear = new Date().getFullYear();
     this.form = this.fb.group({
 
@@ -51,13 +55,20 @@ export class AgregarCharterComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
-
+    const storedFKEmpresa = sessionStorage.getItem('FK_empresa') || localStorage.getItem('FK_empresa');
+    if (storedFKEmpresa) {
+      this.FK_empresa = +storedFKEmpresa;
+    } else {
+      // Obtener FK_empresa del servicio y almacenarla en el navegador
+      this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
+      if (this.FK_empresa !== 0) {
+        sessionStorage.setItem('FK_empresa', this.FK_empresa.toString()); // O localStorage según lo que prefieras
+      }
+    }
+  
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
       // Manejar el caso donde FK_empresa es 0 o no está disponible
-      this.mensaje('No se pudo obtener el ID de la empresa.'); // Mensaje de error al usuario
-      return; // Salir del método si no hay un ID válido
     }
 
     this._marcaService.getMarcas().subscribe(data => {
@@ -88,7 +99,36 @@ export class AgregarCharterComponent implements OnInit {
     });
   };
 
-  addCharter() {
+  openModal() {
+    const dataToSend = {
+      tipoOperacion: 'charter',
+      patente: this.form.get('patente')?.value,
+      capacidad: this.form.get('capacidad')?.value,
+      anio: this.form.get('anio')?.value,
+      modelo: this.form.get('modelo')?.value,
+      marca: this.form.get('marca')?.value,
+    };
+  
+    console.log('Datos que se enviarán al modal:', dataToSend); // Agregado aquí
+  
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: dataToSend
+    });
+  
+    // Suscribirse al evento de confirmación y cerrar el modal
+    dialogRef.componentInstance.confirm.subscribe((charter) => {
+      console.log('Datos del viaje confirmados:', charter);
+  
+      // Procesar el viaje confirmado
+      this.addCharter(charter);
+  
+      // Cerrar el modal después de confirmar
+      dialogRef.close();  // Aquí se cierra el modal
+    });
+  }
+  
+
+  addCharter(charterData:any) {
     if (this.form.invalid) {
       console.error('Formulario inválido');
       this.mensaje('Por favor, corrige los errores en el formulario');

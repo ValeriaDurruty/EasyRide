@@ -98,3 +98,8 @@
   .text-secondary th{
     color: rgb(150, 0, 150);
   }
+
+  .info-link i {
+    font-size: 22px;
+    color: #1d06cd;
+}

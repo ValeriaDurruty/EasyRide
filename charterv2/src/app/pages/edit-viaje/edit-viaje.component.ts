@@ -11,6 +11,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Charter } from '../../interfaces/charter.interface';
 import { EmpresaService } from '../../services/empresa.service';
 import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalshComponent } from '../../components/modalsh/modalsh.component';
 
 
 //Agrego Validators
@@ -42,7 +44,9 @@ export class EditViajeComponent implements OnInit {
     private _charterService: CharterService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _empresaService:EmpresaService
+    private _empresaService:EmpresaService,
+    private dialog: MatDialog
+
   ) {
     this.form = this.fb.group({
       fecha: ['', [Validators.required, fechaNoPasada()]],
@@ -57,14 +61,21 @@ export class EditViajeComponent implements OnInit {
 
   //NO ME CAMBIEN EL ORDEN DE COMO SE CARGA
   ngOnInit(): void {
-    this.FK_empresa = this._empresaService.getEmpresaId() ?? 0; // Asegúrate de que sea un número
+    const storedFKEmpresa = sessionStorage.getItem('FK_empresa') || localStorage.getItem('FK_empresa');
+    if (storedFKEmpresa) {
+      this.FK_empresa = +storedFKEmpresa;
+    } else {
+      // Obtener FK_empresa del servicio y almacenarla en el navegador
+      this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
+      if (this.FK_empresa !== 0) {
+        sessionStorage.setItem('FK_empresa', this.FK_empresa.toString()); // O localStorage según lo que prefieras
+      }
+    }
   
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
-      this.mensaje('Error: FK_empresa no está disponible');
-      return; // Salir del método si FK_empresa no está disponible
+      // Manejar el caso donde FK_empresa es 0 o no está disponible
     }
-  
     // Cargar charters y luego procesar parámetros y paradas
     this.cargarCharters(this.FK_empresa)
       .then(() => {
@@ -170,8 +181,35 @@ export class EditViajeComponent implements OnInit {
     );
   }
 
+  openModal() {
+    const charterSeleccionado = this.charters.find(
+      (charter) => charter.PK_Charter === +this.form.get('FK_Charter')?.value // Asegúrate de comparar como número
+    );
+  
+    const dialogRef = this.dialog.open(ModalshComponent, {
+      data: {
+        tipoOperacion: 'viaje',
+        horario_salida: this.form.get('horario_salida')?.value,
+        horario_llegada: this.form.get('horario_llegada')?.value,
+        fecha: this.form.get('fecha')?.value,
+        precio: this.form.get('precio')?.value,
+        FK_Charter: this.form.get('FK_Charter')?.value ?? 0,
+        charter: charterSeleccionado, // Pasar el objeto completo del charter
+        paradas: this.paradasSeleccionadas
+      }
+    });
+  
+    // Suscribirse al evento de confirmación y cerrar el modal
+    dialogRef.componentInstance.confirm.subscribe((viaje) => {
+      console.log('Datos del viaje confirmados:', viaje);
+  
+      // Procesar el viaje confirmado
+      this.editarViaje(viaje);
+    });
+  }
+
   //EDITAR VIAJE 
-  EditarViaje() {
+  editarViaje(viajeData:any) {
     if (this.idViaje) {
       console.log('ID de viaje:', this.idViaje);
   
@@ -190,50 +228,6 @@ export class EditViajeComponent implements OnInit {
           FK_Viaje: this.idViaje // Asegúrate de que FK_Viaje esté correctamente asignado
         }))
       };
-
-    // Validación de horarios
-    /*if (!viaje.horario_salida || !viaje.horario_llegada) {
-      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de fecha
-    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
-      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de precios
-    if (isNaN(viaje.precio) || viaje.precio <= 0) {
-      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de número de paradas
-    if (this.paradasSeleccionadas.length < 2) {
-      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }*/
   
     // Validación de charter
     if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`

@@ -1,0 +1,54 @@
+
+.button-container button{
+    background-color: violet;
+    color: white;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.button-container button:hover{
+    background-color: blue;
+    color: white;
+}
+.modalContact {
+    width: 450px; /* Ajusta el ancho del contenedor */
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 20px 20px 20px 20px; /* Añade padding a los lados */
+    background: linear-gradient(to bottom, violet 0, black 40%);
+    border-radius: 8px;
+    color: white; /* Color de texto blanco para mejor visibilidad */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute; 
+    top: 10px; 
+    right: 10px;
+    background: transparent; /* Fondo transparente */
+    border: none; /* Sin borde */
+    color: white; /* Color blanco para visibilidad */
+    font-size: 24px; /* Tamaño de la X */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.close-btn:hover {
+    color: violet; /* Color al pasar el cursor por encima */
+}
+
+.email-link {
+    color: #ff6cfa; /* Color para el email */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.instagram-link {
+    color: #ff6cfa; /* Color para Instagram */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.email-link:hover, .instagram-link:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}

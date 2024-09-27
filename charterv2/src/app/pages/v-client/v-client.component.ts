@@ -4,11 +4,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDataService } from '../../shared/user-data.service';
 import { Usuario } from '../../interfaces/user.interface';
 import { ReservaService } from '../../services/reserva.service';
+import { EmpresaService } from '../../services/empresa.service';
 import { ConfirmationService } from '../../services/dialog.confirm';
 import { Subscription } from 'rxjs';
 import { ReservaPasajero } from '../../interfaces/reservaPasajero.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { Parada } from '../../interfaces/parada.interface';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalcontactEmpresaComponent } from '../../components/modal-contact-empresa/modal-contact-empresa.component';
 
 @Component({
   selector: 'app-v-client',
@@ -35,10 +38,12 @@ export class VClientComponent implements OnInit {
   constructor(
     private userDataService: UserDataService,
     private _reservaService: ReservaService,
+    private _empresaService: EmpresaService,
     private _dialog: ConfirmationService,
     private router: Router,
     private route: ActivatedRoute,
-    private _snackBar: MatSnackBar) { }
+    private _snackBar: MatSnackBar,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.getUsuarioCompartido();
@@ -164,6 +169,44 @@ export class VClientComponent implements OnInit {
       console.log('No se encontró reserva con ID:', idReserva);
     }
   }
+
+  selectedEmpresaData: any = null; // Datos de la empresa seleccionada
+
+  mostrarInfoEmpresa(idReserva: number) {
+    console.log('Buscando ticket con ID:', idReserva);
+    const reserva = this.listReservasFuturas.find(res => res.PK_Reserva === idReserva);
+    
+    if (reserva) {
+        console.log('Reserva encontrada:', reserva);
+        
+        const idEmpresa = reserva.PK_Empresa;
+        const idEmpresaNumber = Number(idEmpresa);
+        this._empresaService.getEmpresa(idEmpresaNumber).subscribe(
+            empresa => {
+                console.log('Datos de la empresa:', empresa);
+                this.selectedEmpresaData = empresa;  // Almacenar los datos de la empresa
+                
+                // Abre el modal y pasa los datos de la empresa
+                const dialogRef = this.dialog.open(ModalcontactEmpresaComponent, {
+                    data: this.selectedEmpresaData // Pasa los datos aquí
+                });
+
+                // Puedes manejar la respuesta del modal si es necesario
+                dialogRef.afterClosed().subscribe(result => {
+                    console.log('El modal se cerró con el resultado:', result);
+                });
+            },
+            error => {
+                console.error('Error al obtener los datos de la empresa:', error);
+                this.mensaje('Error al obtener la información de la empresa');
+            }
+        );
+    } else {
+        console.log('No se encontró reserva con ID:', idReserva);
+        this.mensaje('No se encontró la reserva seleccionada');
+    }
+}
+  
 
   handleClose() {
     this.showModal = false;  // Ocultar el modal

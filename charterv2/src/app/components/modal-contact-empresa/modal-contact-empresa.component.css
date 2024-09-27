@@ -1,0 +1,66 @@
+.empresaModal {
+    width: 450px; /* Ajusta el ancho del contenedor */
+    max-width: 1200px;
+    margin: 0 auto; /* Centra el contenedor */
+    padding: 20px; /* Añade padding a los lados */
+    background: linear-gradient(to bottom, violet 0, black 40%);
+    border-radius: 8px;
+    color: white; /* Color de texto blanco para mejor visibilidad */
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra ligera */
+    text-align: center;
+}
+
+.close-btn {
+    position: absolute; 
+    top: 10px; 
+    right: 10px;
+    background: transparent; /* Fondo transparente */
+    border: none; /* Sin borde */
+    color: white; /* Color blanco para visibilidad */
+    font-size: 24px; /* Tamaño de la X */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.close-btn:hover {
+    color: violet; /* Color al pasar el cursor por encima */
+}
+
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.empresa-info {
+    font-size: 18px;
+}
+
+.empresa-info p {
+    margin: 10px 0;
+}
+
+.empresa-info a {
+    color: #ff6cfa; /* Color para los links */
+    text-decoration: none; /* Sin subrayado */
+}
+
+.empresa-info a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+.button-container button {
+    background-color: violet;
+    color: white;
+    border-radius: 5px;
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.button-container button:hover {
+    background-color: blue;
+    color: white;
+}
