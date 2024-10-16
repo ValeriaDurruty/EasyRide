@@ -1,11 +1,11 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter">
-  <div class="page-header-image" style="background-image:url(assets/images/charter-agregar.png)">
+  <div class="page-header-image" style="background-image:url(assets/images/charter-agregar.webp)">
   </div>
   <div class="servicio-container">
     <h2>Información de Charter</h2>
     <!-- Comienza el form -->
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()" #charterForm="ngForm">
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="addCharter()" #charterForm="ngForm">
       <!-- Campo Patente -->
       <p>
         <strong>Patente</strong>
@@ -13,19 +13,19 @@
           (input)="onInputChange('patente')" style="text-transform: uppercase;">
      <!--Mensajes de error para el campo Patente -->
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('required') && form.get('patente')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente es obligatoria.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('minlength') && form.get('patente')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente debe tener al menos 6 caracteres.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('maxlength') && form.get('patente')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente no puede tener más de 7 caracteres.
         </small>
         <small class="text-danger" *ngIf="form.get('patente')?.hasError('pattern') && form.get('patente')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La patente debe tener el formato "ABC123" o "AB123CD".
         </small> 
       </p>
@@ -36,7 +36,7 @@
         </select>
         <!-- Mensajes de error para el campo Marca -->
         <small class="text-danger" *ngIf="form.get('marca')?.hasError('required') && form.get('marca')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           La marca es obligatoria.
         </small>
       </p>
@@ -48,7 +48,7 @@
         </select>
         <!-- Mensajes de error para el campo Modelo--> 
         <small class="text-danger" *ngIf="form.get('modelo')?.hasError('required') && form.get('modelo')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El modelo es obligatorio.
         </small>
       </p>
@@ -58,15 +58,15 @@
         <input id="anio" class="form-control" type="number" placeholder="Año" formControlName="anio">
           <!--Mensajes de error para el campo Año -->
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('required') && form.get('anio')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El año es obligatorio.
         </small>
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('min') && form.get('anio')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El año debe ser mayor o igual a {{ maxYear - 10 }}.
         </small>
         <small class="text-danger" *ngIf="form.get('anio')?.hasError('max') && form.get('anio')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El año no puede ser mayor al año actual.
         </small>
       <!-- Campo Capacidad -->
@@ -74,23 +74,23 @@
         <strong>Capacidad</strong>
         <input id="capacidad" class="form-control" type="number" placeholder="Capacidad" formControlName="capacidad">
         <!--Mensajes de error para el campo Capacidad -->
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
-          La capacidad es obligatoria.
-        </small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
-          La capacidad debe ser al menos 1.
-        </small>
-        <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">
-          <i class="fas fa-exclamation-triangle warning-icon"></i>
-          La capacidad no puede exceder de 25.
-        </small>
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('required') && form.get('capacidad')?.touched">
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        La capacidad es obligatoria.
+      </small>
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('min') && form.get('capacidad')?.touched">
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        La capacidad debe ser al menos 1.
+      </small>
+      <small class="text-danger" *ngIf="form.get('capacidad')?.hasError('max') && form.get('capacidad')?.touched">
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+        La capacidad no puede exceder de 25.
+      </small>
       </p>
       <!-- Botones guardar y cancelar -->
       <div class="bt-container">
-        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-        <button id="bt-guardar" type="button" class="bt-a-servicio">Guardar</button>
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']" [queryParams]="{ tab: 'tab2' }">Cancelar</button>
+        <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button>
   </div>
 </form>
 </div>

@@ -4,8 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { cuitAsyncValidator, cuitValidator } from '../../validators/validators';
-import { ModalshComponent } from '../../components/modalsh/modalsh.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-empresa',
@@ -21,10 +19,7 @@ export class EditEmpresaComponent implements OnInit{
   constructor(private _empresaService: EmpresaService, 
     private route: ActivatedRoute,
     private router:Router,
-    private _snackBar:MatSnackBar, 
-    private fb: FormBuilder,
-    private dialog: MatDialog
-  ){
+    private _snackBar:MatSnackBar, private fb: FormBuilder){
     
       this.form = this.fb.group({
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
@@ -46,7 +41,7 @@ export class EditEmpresaComponent implements OnInit{
 
   loadEmpresa(id: number){
     this._empresaService.getEmpresa(id).subscribe((empresa: any) => {
-      console.log(empresa);
+      //console.log(empresa);
       this.form.patchValue({
         razon_social: empresa.razon_social,
         cuit: empresa.cuit,
@@ -56,28 +51,7 @@ export class EditEmpresaComponent implements OnInit{
     });
   }
 
-
-  openModal() {
-    const dialogRef = this.dialog.open(ModalshComponent, {
-      data: {
-        tipoOperacion: 'empresa', // o 'viaje' o 'parada'
-        razonSocial: this.form.get('razon_social')?.value,
-        cuit: this.form.get('cuit')?.value,
-        email: this.form.get('email')?.value,
-        telefono: this.form.get('telefono')?.value,
-        // Agrega más propiedades según el tipo de operación
-      }
-    });
-  
-    dialogRef.componentInstance.confirm.subscribe((empresa) => {
-      console.log('Datos de la empresa confirmados:', empresa); // Muestra los datos en la consola para verificar
-  
-      // Aquí se llama al método para agregar la empresa
-      this.updateEmpresa(empresa);
-    });
-  }
-  
-  updateEmpresa(empresaData: any) {
+  updateEmpresa() {
     if (this.form.invalid) {
       console.log('Formulario inválido:', this.form.errors); 
       this.mensaje('Por favor, corrige los errores en el formulario');

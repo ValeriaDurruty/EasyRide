@@ -61,9 +61,18 @@ export class TicketComponent {
     }
 }
 
-  getFormattedParadas(): string {
+  /*getFormattedParadas(): string {
     if (this.reserva?.paradas && this.reserva.paradas.length > 0) {
       return this.reserva.paradas.map(p => p.parada).join(' - ');
+    }
+    return '';
+  }*/
+
+  getFormattedParadas(): string {
+    if (this.reserva?.paradas && this.reserva.paradas.length > 0) {
+      const primeraParada = this.reserva.paradas[0].parada;
+      const ultimaParada = this.reserva.paradas[this.reserva.paradas.length - 1].parada;
+      return `${primeraParada} - ${ultimaParada}`;
     }
     return '';
   }

@@ -7,7 +7,7 @@ exports.getMarcas = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 //Listar todos las marcas
 const getMarcas = (req, res) => {
-    connection_1.default.query('SELECT * FROM marca;', (err, data) => {
+    connection_1.default.query('SELECT * FROM marca ORDER BY nombre ASC;', (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las marcas:', err);

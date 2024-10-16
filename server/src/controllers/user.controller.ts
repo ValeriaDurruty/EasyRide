@@ -27,7 +27,7 @@ export const getUsuarioPorEmail = (req: Request, res: Response) => {
 //Listar todos los usuarios
 
 export const getUsuarios = (req: Request, res: Response) => {
-    connection.query('SELECT * FROM usuario;', (err, data) => {
+    connection.query('SELECT * FROM usuario ORDER BY apellido ASC;', (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar los usuarios:', err);
@@ -89,7 +89,6 @@ export const deleteUsuario = (req: Request, res: Response) => {
 //Agrega un usuario
 
 export const postUsuario = (req: Request, res: Response) => {
-    console.log('Request body:', req.body); // Agrega esta línea para ver qué datos está recibiendo el servidor
     const { nombre, apellido, nro_documento, email, contrasenia, FK_Rol, FK_Empresa } = req.body;
 
     // Generar hash de la contraseña

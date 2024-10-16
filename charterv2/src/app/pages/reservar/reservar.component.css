@@ -73,7 +73,7 @@
   .gradient-button {
     background: linear-gradient(45deg, #ae06ba, #0f0021);
     color: white;
-    padding: 10px 20px;
+    /*padding: 10px 20px;*/
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -89,6 +89,11 @@
   label {
     font-size: 20px; /* Ajusta el tamaño de la fuente según sea necesario */
   }
+
+  .fa-map-marker-alt{
+    color: #9600b7;
+  }
+
 
 /* Estilos para pantallas pequeñas */
 @media screen and (max-width: 600px) {

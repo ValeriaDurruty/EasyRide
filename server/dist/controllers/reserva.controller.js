@@ -117,7 +117,8 @@ const getReservasPasadasPasajero = (req, res) => {
                             ', Orden: ', vp.orden, 
                             ', Parada: ', p.nombre, 
                             ', Localidad: ', l.nombre, 
-                            ', Provincia: ', pr.nombre
+                            ', Provincia: ', pr.nombre,
+                            ', Coordenadas: ', p.coordenadas
                         )
                         ORDER BY vp.orden
                         SEPARATOR '; '
@@ -204,7 +205,8 @@ const getReservasFuturasPasajero = (req, res) => {
                             ', Orden: ', vp.orden, 
                             ', Parada: ', p.nombre, 
                             ', Localidad: ', l.nombre, 
-                            ', Provincia: ', pr.nombre
+                            ', Provincia: ', pr.nombre,
+                            ', Coordenadas: ', p.coordenadas
                         )
                         ORDER BY vp.orden
                         SEPARATOR '; '
@@ -362,95 +364,115 @@ exports.getReservasEmpresa = getReservasEmpresa;
 // Listar todas las reservas pasadas de una empresa
 const getReservasPasadasEmpresa = (req, res) => {
     const { PK_Empresa } = req.params;
-    const query = `SELECT 
-                    v.PK_Viaje,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
-                    DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
-                    DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
-                    v.precio,
-                    c.patente,
-                    m.nombre AS modelo,
-                    ma.nombre AS marca,
-                    paradas.paradas,
-                    reservas.reservas
-                FROM 
-                    Viaje v
-                INNER JOIN 
-                    Charter c ON v.FK_Charter = c.PK_Charter
-                INNER JOIN 
-                    Empresa e ON c.FK_Empresa = e.PK_Empresa
-                INNER JOIN 
-                    Modelo m ON c.FK_Modelo = m.PK_Modelo
-                INNER JOIN 
-                    Marca ma ON m.FK_Marca = ma.PK_Marca
-                LEFT JOIN (
-                    SELECT
-                        vp.FK_Viaje,
-                        GROUP_CONCAT(
-                            CONCAT(
-                                'Orden: ', vp.orden, 
-                                ', Parada: ', p.nombre, 
-                                ', Localidad: ', l.nombre, 
-                                ', Provincia: ', pr.nombre
-                            )
-                            ORDER BY vp.orden
-                            SEPARATOR '; '
-                        ) AS paradas
-                    FROM
-                        Viaje_Parada vp
-                    INNER JOIN 
-                        Parada p ON vp.FK_Parada = p.PK_Parada
-                    INNER JOIN 
-                        Localidad l ON p.FK_Localidad = l.PK_Localidad
-                    INNER JOIN 
-                        Provincia pr ON l.FK_Provincia = pr.PK_Provincia
-                    GROUP BY
-                        vp.FK_Viaje
-                ) paradas ON paradas.FK_Viaje = v.PK_Viaje
-                LEFT JOIN (
-                    SELECT
-                        r.FK_Viaje,
-                        GROUP_CONCAT(
-                            CONCAT(
-                                'PK_Usuario: ', u.PK_Usuario, 
-                                ', Nombre: ', u.nombre, 
-                                ', Apellido: ', u.apellido, 
-                                ', PK_Reserva: ', r.PK_Reserva, 
-                                ', Fecha Creación: ', DATE_FORMAT(r.fecha_creacion, '%d-%m-%Y'), 
-                                ', Estado Reserva: ', esr.nombre
-                            )
-                            ORDER BY r.PK_Reserva
-                            SEPARATOR '; '
-                        ) AS reservas
-                    FROM
-                        Reserva r
-                    INNER JOIN 
-                        Usuario u ON r.FK_Usuario = u.PK_Usuario
-                    INNER JOIN 
-                        Estado_reserva esr ON r.FK_Estado_reserva = esr.PK_Estado_reserva
-                    GROUP BY
-                        r.FK_Viaje
-                ) reservas ON reservas.FK_Viaje = v.PK_Viaje
-                WHERE 
-                    e.PK_Empresa = ? 
-                    AND v.fecha < CURDATE()
-                    AND reservas.reservas IS NOT NULL
-                ORDER BY  
-                    v.fecha ASC,
-                    v.PK_Viaje ASC;`;
-    connection_1.default.query(query, PK_Empresa, (err, data) => {
-        if (err) {
-            console.error('Error al listar las reservas pasadas:', err);
-            return res.status(500).json({ error: 'Error al listar las reservas pasadas' });
+    // Se actualiza el FK_Estado_reserva de todas las reservas pasadas
+    const updateQuery = `
+        UPDATE Reserva r
+        INNER JOIN Viaje v ON r.FK_Viaje = v.PK_Viaje
+        INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter  -- Faltaba este INNER JOIN
+        INNER JOIN Empresa e ON c.FK_Empresa = e.PK_Empresa
+        SET r.FK_Estado_reserva = 3
+        WHERE e.PK_Empresa = ?
+          AND v.fecha < CURDATE()
+          AND r.FK_Estado_reserva = 1;
+    `;
+    connection_1.default.query(updateQuery, [PK_Empresa], (updateErr) => {
+        if (updateErr) {
+            console.error('Error al actualizar las reservas pasadas:', updateErr);
+            return res.status(500).json({ error: 'Error al actualizar las reservas pasadas' });
         }
-        else {
-            if (data.length === 0) {
-                return res.json('No hay reservas pasadas realizadas');
+        // Se obtiene el listado de las reservas pasadas
+        const selectQuery = `
+            SELECT 
+                v.PK_Viaje,
+                DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
+                DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
+                v.precio,
+                c.patente,
+                m.nombre AS modelo,
+                ma.nombre AS marca,
+                paradas.paradas,
+                reservas.reservas
+            FROM 
+                Viaje v
+            INNER JOIN 
+                Charter c ON v.FK_Charter = c.PK_Charter
+            INNER JOIN 
+                Empresa e ON c.FK_Empresa = e.PK_Empresa
+            INNER JOIN 
+                Modelo m ON c.FK_Modelo = m.PK_Modelo
+            INNER JOIN 
+                Marca ma ON m.FK_Marca = ma.PK_Marca
+            LEFT JOIN (
+                SELECT
+                    vp.FK_Viaje,
+                    GROUP_CONCAT(
+                        CONCAT(
+                            'Orden: ', vp.orden, 
+                            ', Parada: ', p.nombre, 
+                            ', Localidad: ', l.nombre, 
+                            ', Provincia: ', pr.nombre
+                        )
+                        ORDER BY vp.orden
+                        SEPARATOR '; '
+                    ) AS paradas
+                FROM
+                    Viaje_Parada vp
+                INNER JOIN 
+                    Parada p ON vp.FK_Parada = p.PK_Parada
+                INNER JOIN 
+                    Localidad l ON p.FK_Localidad = l.PK_Localidad
+                INNER JOIN 
+                    Provincia pr ON l.FK_Provincia = pr.PK_Provincia
+                GROUP BY
+                    vp.FK_Viaje
+            ) paradas ON paradas.FK_Viaje = v.PK_Viaje
+            LEFT JOIN (
+                SELECT
+                    r.FK_Viaje,
+                    GROUP_CONCAT(
+                        CONCAT(
+                            'PK_Usuario: ', u.PK_Usuario, 
+                            ', Nombre: ', u.nombre, 
+                            ', Apellido: ', u.apellido, 
+                            ', PK_Reserva: ', r.PK_Reserva, 
+                            ', Fecha Creación: ', DATE_FORMAT(r.fecha_creacion, '%d-%m-%Y'), 
+                            ', Estado Reserva: ', esr.nombre
+                        )
+                        ORDER BY r.PK_Reserva
+                        SEPARATOR '; '
+                    ) AS reservas
+                FROM
+                    Reserva r
+                INNER JOIN 
+                    Usuario u ON r.FK_Usuario = u.PK_Usuario
+                INNER JOIN 
+                    Estado_reserva esr ON r.FK_Estado_reserva = esr.PK_Estado_reserva
+                GROUP BY
+                    r.FK_Viaje
+            ) reservas ON reservas.FK_Viaje = v.PK_Viaje
+            WHERE 
+                e.PK_Empresa = ? 
+                AND v.fecha < CURDATE()
+                AND reservas.reservas IS NOT NULL
+            ORDER BY  
+                v.fecha ASC,
+                v.PK_Viaje ASC;
+        `;
+        connection_1.default.query(selectQuery, [PK_Empresa], (err, data) => {
+            if (err) {
+                console.error('Error al listar las reservas pasadas:', err);
+                return res.status(500).json({ error: 'Error al listar las reservas pasadas' });
             }
             else {
-                res.json(data);
+                if (data.length === 0) {
+                    return res.json('No hay reservas pasadas realizadas');
+                }
+                else {
+                    res.json(data);
+                }
             }
-        }
+        });
     });
 };
 exports.getReservasPasadasEmpresa = getReservasPasadasEmpresa;

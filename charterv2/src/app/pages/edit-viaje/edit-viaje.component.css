@@ -75,7 +75,7 @@
     font-size: 14px;
     border: 1px solid #a100db;
     border-radius: 4px;
-    width: 300px; /* ajusta el ancho según sea necesario */
+    width: 650px; /* ajusta el ancho según sea necesario */
   }
   
   #desplegable-charter:hover {
@@ -187,4 +187,10 @@
     border-right: 8px solid transparent;
     border-bottom: 8px solid #ffe6e6; /* Mismo color que el fondo */
   }
-  
+
+  @media (max-width: 600px) {
+
+    #desplegable-charter{
+      width: 300px;
+    }
+  }

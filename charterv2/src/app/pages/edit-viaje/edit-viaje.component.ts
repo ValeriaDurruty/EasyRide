@@ -11,8 +11,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Charter } from '../../interfaces/charter.interface';
 import { EmpresaService } from '../../services/empresa.service';
 import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalshComponent } from '../../components/modalsh/modalsh.component';
 
 
 //Agrego Validators
@@ -44,9 +42,7 @@ export class EditViajeComponent implements OnInit {
     private _charterService: CharterService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _empresaService:EmpresaService,
-    private dialog: MatDialog
-
+    private _empresaService:EmpresaService
   ) {
     this.form = this.fb.group({
       fecha: ['', [Validators.required, fechaNoPasada()]],
@@ -61,21 +57,14 @@ export class EditViajeComponent implements OnInit {
 
   //NO ME CAMBIEN EL ORDEN DE COMO SE CARGA
   ngOnInit(): void {
-    const storedFKEmpresa = sessionStorage.getItem('FK_empresa') || localStorage.getItem('FK_empresa');
-    if (storedFKEmpresa) {
-      this.FK_empresa = +storedFKEmpresa;
-    } else {
-      // Obtener FK_empresa del servicio y almacenarla en el navegador
-      this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
-      if (this.FK_empresa !== 0) {
-        sessionStorage.setItem('FK_empresa', this.FK_empresa.toString()); // O localStorage según lo que prefieras
-      }
-    }
+    this.FK_empresa = this._empresaService.getEmpresaId() ?? 0; // Asegúrate de que sea un número
   
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
-      // Manejar el caso donde FK_empresa es 0 o no está disponible
+      this.mensaje('Error: FK_empresa no está disponible');
+      return; // Salir del método si FK_empresa no está disponible
     }
+  
     // Cargar charters y luego procesar parámetros y paradas
     this.cargarCharters(this.FK_empresa)
       .then(() => {
@@ -112,7 +101,7 @@ export class EditViajeComponent implements OnInit {
       this._charterService.getChartersXEmpresa(FK_empresa).subscribe(
         (charters: Charter[]) => {
           this.charters = charters;
-          console.log('Charters cargados:', this.charters);
+          //console.log('Charters cargados:', this.charters);
           resolve();
         },
         (error) => {
@@ -161,12 +150,12 @@ export class EditViajeComponent implements OnInit {
           // Actualiza el valor del formulario para FK_Charter
           this.form.get('FK_Charter')?.setValue(this.selectedCharter ? this.selectedCharter.PK_Charter : '');
         
-          // Logging individual form field values
+          /* Logging individual form field values
           console.log('Horario de Salida:', this.form.get('horario_salida')?.value);
           console.log('Horario de Llegada:', this.form.get('horario_llegada')?.value);
           console.log('Fecha:', this.form.get('fecha')?.value);
           console.log('Precio:', this.form.get('precio')?.value);
-          console.log('FK_Charter:', this.form.get('FK_Charter')?.value);
+          console.log('FK_Charter:', this.form.get('FK_Charter')?.value);*/
         } else {
           console.error('Respuesta inesperada del servidor');
         }
@@ -181,37 +170,10 @@ export class EditViajeComponent implements OnInit {
     );
   }
 
-  openModal() {
-    const charterSeleccionado = this.charters.find(
-      (charter) => charter.PK_Charter === +this.form.get('FK_Charter')?.value // Asegúrate de comparar como número
-    );
-  
-    const dialogRef = this.dialog.open(ModalshComponent, {
-      data: {
-        tipoOperacion: 'viaje',
-        horario_salida: this.form.get('horario_salida')?.value,
-        horario_llegada: this.form.get('horario_llegada')?.value,
-        fecha: this.form.get('fecha')?.value,
-        precio: this.form.get('precio')?.value,
-        FK_Charter: this.form.get('FK_Charter')?.value ?? 0,
-        charter: charterSeleccionado, // Pasar el objeto completo del charter
-        paradas: this.paradasSeleccionadas
-      }
-    });
-  
-    // Suscribirse al evento de confirmación y cerrar el modal
-    dialogRef.componentInstance.confirm.subscribe((viaje) => {
-      console.log('Datos del viaje confirmados:', viaje);
-  
-      // Procesar el viaje confirmado
-      this.editarViaje(viaje);
-    });
-  }
-
   //EDITAR VIAJE 
-  editarViaje(viajeData:any) {
+  EditarViaje() {
     if (this.idViaje) {
-      console.log('ID de viaje:', this.idViaje);
+      //console.log('ID de viaje:', this.idViaje);
   
       const viaje: Viaje = {
         PK_Viaje: this.idViaje, // Incluye el PK_Viaje aquí
@@ -240,7 +202,7 @@ export class EditViajeComponent implements OnInit {
       return;
     }
   
-      console.log('Datos a enviar:', viaje);
+      //console.log('Datos a enviar:', viaje);
   
       this._viajeService.updateViaje(this.idViaje, viaje).subscribe(
         response => {
@@ -304,7 +266,7 @@ export class EditViajeComponent implements OnInit {
         parada: partes[3].split(':')[1].trim(),
         FK_Viaje: 0 // Asigna un valor adecuado para FK_Viaje si lo tienes
       };
-      console.log('Parada procesada:', paradaObj); // Verifica que el objeto sea correcto
+      //console.log('Parada procesada:', paradaObj); 
       return paradaObj;
     });
     return paradasArray;
@@ -323,7 +285,7 @@ export class EditViajeComponent implements OnInit {
     const dia = String(fecha.getDate()).padStart(2, '0');
     
     const fechaConvertida = `${anio}-${mes}-${dia}`;
-    console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
+   // console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
     return fechaConvertida;
   }
 
@@ -335,7 +297,7 @@ export class EditViajeComponent implements OnInit {
       const anio = Number(partes[2]);
     
       const fecha = new Date(anio, mes, dia);
-      console.log(`Fecha convertida a Date: ${fecha}`);
+      //console.log(`Fecha convertida a Date: ${fecha}`);
       return fecha;
     }
     console.error('Formato de fecha incorrecto:', fechaStr);
@@ -345,7 +307,6 @@ export class EditViajeComponent implements OnInit {
 
    //MENSAJES DE NOTIFICACION
  
-
   mensaje(mensaje: string) {
     this._snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
@@ -355,3 +316,5 @@ export class EditViajeComponent implements OnInit {
     });
   }
 }
+
+

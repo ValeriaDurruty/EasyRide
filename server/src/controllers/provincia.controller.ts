@@ -5,7 +5,7 @@ import connection from "../db/connection";
 //Listar todas las provincias
 export const getProvincias = (req: Request, res: Response) => {
     
-    connection.query('SELECT * FROM provincia;', (err, data) => {
+    connection.query('SELECT * FROM provincia ORDER BY nombre ASC;', (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar las provincias:', err);

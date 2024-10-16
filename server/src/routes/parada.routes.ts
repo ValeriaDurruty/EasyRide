@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addParada, getParadas, getParadasxEmpresa, getParadasxId, deleteParadas, putParadas } from '../controllers/parada.controller';
+import { addParada, getParadas, getParadasxLocalidad, getParadasxEmpresa, getParadasxId, deleteParadas, putParadas } from '../controllers/parada.controller';
 
 const router = Router();
 
@@ -14,6 +14,9 @@ router.delete('/:PK_Parada', deleteParadas);
 
 // Ruta para listar todas las paradas
 router.get('/', getParadas);
+
+// Ruta para filtrar paradas por localidad
+router.get('/localidad/:PK_Localidad', getParadasxLocalidad);
 
 // Ruta para agregar una nueva parada
 router.post('/', addParada);

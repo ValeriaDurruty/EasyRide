@@ -89,7 +89,7 @@
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    width: 300px; /* ajusta el ancho según sea necesario */
+    width: 650px; /* ajusta el ancho según sea necesario */
   }
   
   #desplegable-charter:hover {
@@ -176,7 +176,6 @@
 
 /* Piquito del tooltip */
 .text-danger::before {
-  content: "";
   position: absolute;
   top: -10px; /* Coloca el piquito justo encima del contenedor */
   left: 20px; /* Ajusta según sea necesario para posicionarlo */
@@ -185,4 +184,11 @@
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
   border-bottom: 8px solid #ffe6e6; /* Mismo color que el fondo */
+}
+
+@media (max-width: 600px) {
+
+  #desplegable-charter{
+    width: 300px;
+  }
 }

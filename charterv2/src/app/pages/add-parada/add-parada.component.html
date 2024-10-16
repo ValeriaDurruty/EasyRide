@@ -1,14 +1,14 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter">
-  <div class="page-header-image" style="background-image:url(assets/images/charter-agregar.png)">
+  <div class="page-header-image"  [ngStyle]="{'background-image': isEditMode ? 'url(assets/images/editar-parada.webp)' : 'url(assets/images/agregar-parada.webp)'}">
   </div>
   <div class="servicio-container">
     <h2>{{ isEditMode ? 'Editar Parada' : 'Agregar Parada' }}</h2>
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()" #charterForm="ngForm">
+    <form class="servicio-details" [formGroup]="form" #charterForm="ngForm">
       <!-- Campo Nombre -->
       <p>
         <strong>Nombre</strong>
-        <input id="nombre" type="text" class="form-control" placeholder="nombre" formControlName="nombre" 
+        <input id="nombre" type="text" class="form-control nombre-input" placeholder="Ingrese nombre" formControlName="nombre" 
             (input)="onInputChange('nombre')" style="text-transform: uppercase;">
         <small class="text-danger" *ngIf="form.get('nombre')?.hasError('required') && form.get('nombre')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
@@ -24,7 +24,7 @@
         </select>
         <small class="text-danger" *ngIf="form.get('provincia')?.hasError('required') && form.get('provincia')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          La provincia es obligatoria.</small>
+          La Provincia es obligatoria.</small>
       </p>
 
       <!-- Campo Localidad -->
@@ -35,25 +35,40 @@
         </select>
         <small class="text-danger" *ngIf="form.get('localidad')?.hasError('required') && form.get('localidad')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          La localidad es obligatoria.</small>
+          La Localidad es obligatoria.</small>
       </p>
 
       <!-- Campo Coordenadas -->
       <p>
         <strong>Coordenadas</strong>
+        
+        <!-- Componente del mapa debajo del título "Coordenadas" -->
+        <app-map-component 
+        (coordinatesChange)="form.get('coordenadas')?.setValue($event)"
+        [provincia]="form.get('provincia')?.value"
+        [localidad]="form.get('localidad')?.value"
+      ></app-map-component>
+              
         <input id="coordenadas" type="text" class="form-control" placeholder="Ej: -34.617, -58.381" formControlName="coordenadas" />
+        
         <small class="text-danger" *ngIf="form.get('coordenadas')?.hasError('required') && form.get('coordenadas')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          Las coordenadas son obligatorias.</small>
+          Las coordenadas son obligatorias.
+        </small>
+        
         <small class="text-danger" *ngIf="form.get('coordenadas')?.hasError('invalidCoordinates')">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
-          Las coordenadas no son válidas. Deben ser en formato 'lat, lon'.</small>
+          Las coordenadas no son válidas. Deben ser en formato 'lat, lon'.
+        </small>
       </p>
-
+      
       <!-- Botones -->
       <div class="botones">
-        <button type="button" class=" bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-        <button type="submit" class=" bt-a-servicio" (click)="openModal()">{{ isEditMode ? 'Actualizar Parada' : 'Agregar Parada' }}</button>
+        <!-- Botón Cancelar -->
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']" [queryParams]="{ tab: 'tab3' }">Cancelar</button>
+        <button type="button" class="bt-a-servicio" (click)="saveParada(form.value)">
+          {{ isEditMode ? 'Actualizar Parada' : 'Agregar Parada' }}
+        </button>
       </div>
     </form>
   </div>

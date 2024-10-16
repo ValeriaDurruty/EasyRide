@@ -1,14 +1,69 @@
 .unauthorized {
-    text-align: center;
-    margin-top: 50px;
-  }
-  
+  height: 100vh;
+  background-image: url('/assets/images/403.1.png'); 
+  background-size: cover; 
+  background-position: center; 
+  background-attachment: fixed;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: flex-start; 
+  align-items: center; 
+  color: white; 
+  text-align: center;
+  padding-top: 20px; 
+}
+
+
   h1 {
-    font-size: 2em;
-    color: #e74c3c;
+    font-size: 250px;
+    color: #ae06ba;
+    margin-bottom: 0;
+    border-radius: 5px;
+    padding: 2px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    margin: 0;
+
   }
   
   p {
-    font-size: 1.2em;
-  }
-  
+    color:#ae06ba; 
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 5px;
+    font-size: 25px;
+    margin-top: 0;
+}
+
+  a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    transition: color 0.3s;
+    padding: 5px;
+    background: #ae06ba;
+    border-radius: 10px;
+}
+
+    a:hover {
+        color: rgb(0, 0, 0); 
+        cursor: pointer; 
+    }
+
+    @media (max-width: 400px) {
+     h1{
+      font-size: 150px;
+     }
+
+     p{
+      font-size: 15px;
+     }
+    }
+
+    @media (max-width: 255px) {
+      h1{
+       font-size: 95px;
+      }
+ 
+      p{
+       font-size: 10px;
+      }
+     }

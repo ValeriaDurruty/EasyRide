@@ -1,11 +1,11 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter" filter-color="">
-  <div class="page-header-image" style="background-image:url(assets/images/Empresa-agregar.png)">
+  <div class="page-header-image" style="background-image:url(assets/images/Empresa-agregar.webp)">
   </div>
   <div class="servicio-container">
     <h2>Información de Empresa</h2>
     <!-- Comienza el form -->
-    <form class="servicio-details" [formGroup]="form" (ngSubmit)="openModal()" #charterForm="ngForm">
+    <form class="servicio-details" [formGroup]="form" (ngSubmit)="addEmpresa()" #charterForm="ngForm">
       
       <!-- Campo Razon Social -->
       <p>
@@ -34,7 +34,7 @@
         <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('cuitInvalido') && form.get('cuit')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El CUIT no es válido.
-        </small>
+        </small>        
         <small class="tooltip-container text-danger" *ngIf="form.get('cuit')?.hasError('cuitAsyncValidator') && form.get('cuit')?.touched">
           <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
           El CUIT ya está registrado.
@@ -77,8 +77,9 @@
 
       <!-- Botones Guardar y Cancelar -->
       <div class="botones">
-        <button type="button" class="bt-a-servicio" [routerLink]="['/V-admin']">Cancelar</button>
-        <button id="bt-guardar" type="button" class="bt-a-servicio" (click)="openModal()">Guardar</button>
+        <!-- Botón Cancelar -->
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-admin']" [queryParams]="{ tab: 'tab3' }">Cancelar</button>
+        <button id="bt-guardar" type="submit" class="bt-a-servicio">Guardar</button>
       </div>
     </form>
   </div>

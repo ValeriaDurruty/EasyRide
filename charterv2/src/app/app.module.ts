@@ -45,7 +45,7 @@ import { AddParadaComponent } from './pages/add-parada/add-parada.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalcontactEmpresaComponent } from './components/modal-contact-empresa/modal-contact-empresa.component';
 import { ModalshComponent } from './components/modalsh/modalsh.component';
-import { ModalcontactComponent } from './components/modalcontact/modalcontact.component'
+import { MapComponentComponent } from './components/map-component/map-component.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +82,7 @@ import { ModalcontactComponent } from './components/modalcontact/modalcontact.co
     AddParadaComponent,
     ModalcontactEmpresaComponent,
     ModalshComponent,
-    ModalcontactComponent    
+    MapComponentComponent
   ],
   imports: [
     BrowserModule,

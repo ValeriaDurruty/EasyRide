@@ -7,7 +7,7 @@ exports.getLocalidadesXProvincia = exports.getLocalidades = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 //Listar todos las localidades
 const getLocalidades = (req, res) => {
-    connection_1.default.query('SELECT * FROM localidad;', (err, data) => {
+    connection_1.default.query('SELECT * FROM localidad ORDER BY nombre ASC;', (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las localidades:', err);
@@ -28,7 +28,7 @@ exports.getLocalidades = getLocalidades;
 //Listar todos los modelos de una marca
 const getLocalidadesXProvincia = (req, res) => {
     const { FK_Provincia } = req.params;
-    connection_1.default.query('SELECT * FROM localidad WHERE localidad.FK_Provincia = ?;', FK_Provincia, (err, data) => {
+    connection_1.default.query('SELECT * FROM localidad WHERE localidad.FK_Provincia = ? ORDER BY nombre ASC;', FK_Provincia, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las localidades:', err);

@@ -11,6 +11,7 @@ import { UserService } from '../../services/user.service';
 import { ReservaService } from '../../services/reserva.service';
 import { SessionService } from '../../services/session.service';
 import { Subscription } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-reservar',
@@ -44,7 +45,8 @@ export class ReservarComponent implements OnInit, OnDestroy {
     private _userService: UserService,
     private _reservaService: ReservaService,
     private ngZone: NgZone,
-    private _sessionService: SessionService
+    private _sessionService: SessionService,
+    private location: Location
   ) {
     this.form = this.fb.group({
       horario_salida: [''],
@@ -65,7 +67,7 @@ export class ReservarComponent implements OnInit, OnDestroy {
       const id = +params.get('id')!;
       if (id) {
         this.idViaje = id;
-        console.log(this.idViaje);
+        //console.log(this.idViaje);
         this.obtenerViajeXid(id);
       } else {
         console.error('ID no válido');
@@ -83,8 +85,13 @@ export class ReservarComponent implements OnInit, OnDestroy {
   obtenerViajeXid(id: number): void {
     this._viajeService.getViajeXid(id).subscribe(
       response => {
+        console.log('Respuesta recibida del servidor:', response); // Log del viaje recibido
         if (Array.isArray(response) && response.length > 0) {
           const viaje: Viaje = response[0];
+  
+          // Mostrar detalles del viaje recibido
+          console.log('Viaje procesado:', viaje);
+  
           let fechaDate: Date;
           if (typeof viaje.fecha === 'string') {
             fechaDate = this.convertirCadenaADate(viaje.fecha);
@@ -92,6 +99,8 @@ export class ReservarComponent implements OnInit, OnDestroy {
             fechaDate = new Date(viaje.fecha);
           }
           const fechaConvertida = this.convertirFechaAFormatoInput(fechaDate);
+          
+          // Actualizar el formulario con los datos del viaje
           this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
@@ -103,40 +112,57 @@ export class ReservarComponent implements OnInit, OnDestroy {
             marca_charter: viaje.marca,
             modelo_charter: viaje.modelo
           });
-
+  
           // Asignar paradas si están presentes
-          this.paradasSeleccionadas = typeof viaje.paradas === 'string'
-            ? this.parseParadas(viaje.paradas)
-            : [];
+          if (typeof viaje.paradas === 'string') {
+            this.paradasSeleccionadas = this.parseParadas(viaje.paradas);
+  
+            // Log de las paradas procesadas
+            console.log('Paradas procesadas:', this.paradasSeleccionadas);
+          } else {
+            console.log('No se encontraron paradas en el viaje.');
+            this.paradasSeleccionadas = [];
+          }
         } else {
           console.error('Respuesta inesperada del servidor');
         }
       },
       error => {
         console.error('Error al obtener el viaje:', error);
-        this.mensajeError('Error al obtener el viaje');
+        this.mensaje('Error al obtener el viaje');
       }
     );
   }
-
-  //PARADAS
-  parseParadas(paradasString: string): ViajeParada[] {
-    const paradasArray = paradasString.split(';').map(paradaString => {
-      const partes = paradaString.split(',').map(part => part.trim());
-      
-      // Asegúrate de que todas las propiedades necesarias están presentes
-      const paradaObj: ViajeParada = {
-        PK_Viaje_Parada: Number(partes[0].split(':')[1]),
-        FK_Parada: Number(partes[1].split(':')[1]),
-        orden: Number(partes[2].split(':')[1]),
-        parada: partes[3].split(':')[1].trim(),
-        FK_Viaje: 0 // Asigna un valor adecuado para FK_Viaje si lo tienes
-      };
-      console.log('Parada procesada:', paradaObj); // Verifica que el objeto sea correcto
-      return paradaObj;
-    });
-    return paradasArray;
+  
+  // PARADAS
+  parseParadas(paradasStr: string): ViajeParada[] {
+    const paradasArray = paradasStr.split(';');
+  
+    return paradasArray.map(paradaStr => {
+      // Eliminar espacios en blanco antes y después de la cadena
+      const trimmedParadaStr = paradaStr.trim();
+  
+      // Expresión regular para capturar la información de las paradas
+      const matches = trimmedParadaStr.match(/PK_Viaje_parada:\s*(\d+),\s*PK_Parada:\s*(\d+),\s*Orden:\s*(\d+),\s*Parada:\s*([^,]+),\s*Localidad:\s*([^,]+),\s*Provincia:\s*([^,]+),\s*Coordenadas:\s*([\-\d.]+),\s*([\-\d.]+)/);
+  
+      if (matches) {
+        const paradaData: ViajeParada = {
+          PK_Viaje_Parada: Number(matches[1]),
+          FK_Parada: Number(matches[2]),
+          orden: Number(matches[3]),
+          parada: matches[4].trim(),
+          coordenadas: `${matches[7]},${matches[8]}`, // Juntamos latitud y longitud
+          FK_Viaje: 0 // Asigna un valor adecuado para FK_Viaje si lo tienes
+        };
+  
+        console.log('Parada procesada:', paradaData); // Log de cada parada procesada
+        return paradaData;
+      }
+  
+      return null; // Si no hay coincidencias, devolvemos null
+    }).filter(parada => parada !== null) as ViajeParada[]; // Filtramos los nulos
   }
+  
 
   //CHARTER
   onCharterChange(event: Event): void {
@@ -151,7 +177,7 @@ export class ReservarComponent implements OnInit, OnDestroy {
     const dia = String(fecha.getDate()).padStart(2, '0');
     
     const fechaConvertida = `${anio}-${mes}-${dia}`;
-    console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
+    //console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
     return fechaConvertida;
   }
 
@@ -163,24 +189,34 @@ export class ReservarComponent implements OnInit, OnDestroy {
       const anio = Number(partes[2]);
     
       const fecha = new Date(anio, mes, dia);
-      console.log(`Fecha convertida a Date: ${fecha}`);
+      //console.log(`Fecha convertida a Date: ${fecha}`);
       return fecha;
     }
-    console.error('Formato de fecha incorrecto:', fechaStr);
+    //console.error('Formato de fecha incorrecto:', fechaStr);
     return new Date(); // Retorna una fecha por defecto en caso de error
   }
 
-  //MENSAJES DE NOTIFICACION
-  mensajeExito() {
-    this._snackBar.open('La reserva fue realizada con éxito', 'Cerrar', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-      panelClass: ['custom-snackbar']
-    });
+  navegar() {
+    const previousUrl = this._sessionService.getPreviousUrl(); // Obtener la URL previa
+  
+    // Verificar si el usuario está autenticado
+    if (this._userService.isAuthenticated()) {
+      // Si la URL previa empieza con /LogIn
+      if (previousUrl?.startsWith('/LogIn')) {
+        // Aquí puedes almacenar la URL anterior antes de que se acceda a LogIn
+        const lastValidUrl = this._sessionService.getLastValidUrl(); // Método que debes implementar en SessionService
+        this._router.navigate([lastValidUrl || '/']); // Redirigir a la última URL válida o a la página principal
+      } else {
+        this.location.back(); // Redirigir a la página anterior
+      }
+    } else {
+      // Si no está autenticado, redirigir al login
+      this._router.navigate(['/Login']);
+    }
   }
-
-  mensajeError(mensaje: string) {
+  
+  //MENSAJES DE NOTIFICACION
+  mensaje(mensaje: string) {
     this._snackBar.open(mensaje, 'Cerrar', {
       duration: 5000,
       horizontalPosition: 'center',
@@ -191,7 +227,7 @@ export class ReservarComponent implements OnInit, OnDestroy {
 
   reservar(): void {
     this.botonReservarPresionado = true;
-    console.log('Llamando a guardarReserva desde reservar()');
+    //console.log('Llamando a guardarReserva desde reservar()');
     this.guardarReserva();
   }
 
@@ -207,12 +243,12 @@ export class ReservarComponent implements OnInit, OnDestroy {
       console.log('Formulario válido, obteniendo usuario actual...');
       // Guardar la suscripción para poder desuscribirse más tarde
       this.sessionSubscription.add(this._userService.getCurrentUser().subscribe(usuario => {
-        console.log('Usuario obtenido:', usuario);
+        //console.log('Usuario obtenido:', usuario);
         this.ngZone.run(() => {
           if (usuario) {
             const ROLES_NO_PERMITIDOS = [1, 2];
             if (ROLES_NO_PERMITIDOS.includes(usuario.FK_Rol)) {
-              this.mensajeError('No tienes permiso para realizar reservas.');
+              this.mensaje('No tienes permiso para realizar reservas.');
               return;
             }
 
@@ -229,27 +265,27 @@ export class ReservarComponent implements OnInit, OnDestroy {
 
               this._reservaService.addReserva(reservaData).subscribe(
                 () => {
-                  this.mensajeExito();
+                  this.mensaje('La reserva fue realizada con éxito');
                   this._router.navigate(['/V-cliente']);
                 },
                 error => {
                   console.error('Error al guardar la reserva:', error);
-                  this.mensajeError('Error al guardar la reserva');
+                  this.mensaje('Error al guardar la reserva');
                 }
               );
             } else {
               console.error('Usuario o ID de viaje inválidos.');
-              this.mensajeError('No se puede realizar la reserva.');
+              this.mensaje('No se puede realizar la reserva.');
             }
           } else {
             console.error('Usuario no encontrado.');
-            this.mensajeError('No se pudo obtener el usuario.');
+            this.mensaje('No se pudo obtener el usuario.');
           }
         });
       }));
     } else {
       console.error('Formulario inválido.');
-      this.mensajeError('Formulario inválido.');
+      this.mensaje('Formulario inválido.');
     }
   }
 }

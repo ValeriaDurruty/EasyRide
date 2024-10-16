@@ -1,11 +1,11 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter">
-    <div class="page-header-image" style="background-image:url(/assets/images/viaje-agregar.png)">
+    <div class="page-header-image" style="background-image:url(/assets/images/viaje-agregar.webp)">
     </div>
 <div class="servicio-container">
     <h2>Información de Viaje</h2>
     <!--Comienza el form--> 
-    <form [formGroup]="form" class="servicio-details" (ngSubmit)="openModal()">    
+    <form [formGroup]="form" class="servicio-details" (ngSubmit)="addViaje()">    
       <!-- Campo Horario de salida--> 
       <p><strong>Horario de salida:</strong></p>
       <input id="horario_salida" type="time" formControlName="horario_salida" class="form-control">
@@ -78,8 +78,8 @@
       Debes seleccionar un charter.
       </small>
       <div class="bt-container">
-        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']">Cancelar</button>
-        <button type="button" class="bt-a-servicio" (click)="openModal()">Guardar</button>
+        <button type="button" class="bt-a-servicio" [routerLink]="['/V-empresa']" [queryParams]="{ tab: 'tab1' }">Cancelar</button>
+        <button type="submit" class="bt-a-servicio">Guardar</button>
       </div>
     </form>
     </div>

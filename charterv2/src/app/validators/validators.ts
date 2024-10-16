@@ -84,30 +84,38 @@ export function cuitValidator(control: AbstractControl): ValidationErrors | null
   if (!cuit) {
     return null; // Si el CUIT está vacío, no hay error
   }
+
   return validarCuit(cuit) ? null : { cuitInvalido: true }; // Si el CUIT es válido, no hay error
 }
+
 export function validarCuit(cuit: string | number): boolean {
   // Convertir a string si es un número
   const cuitStr = typeof cuit === 'number' ? cuit.toString() : cuit;
   console.log('CUIT recibido para validar:', cuitStr);
+
   // Eliminar guiones del CUIT
   const cuitLimpio = cuitStr.replace(/-/g, '');
   console.log('CUIT después de eliminar guiones:', cuitLimpio);
+
   // Validar longitud
   if (cuitLimpio.length !== 11) {
     console.log('CUIT tiene un largo incorrecto');
     return false;
   }
+
   // Coeficientes para el cálculo del dígito verificador
   const coeficientes = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
   let suma = 0;
+
   // Calcular la suma usando los coeficientes
   for (let i = 0; i < 10; i++) {
     suma += parseInt(cuitLimpio[i]) * coeficientes[i];
   }
+
   // Calcular el dígito verificador
   const modulo11 = 11 - (suma % 11);
   const digitoVerificador = modulo11 === 11 ? 0 : modulo11 === 10 ? 9 : modulo11;
+
   // Comparar el dígito verificador esperado con el real
   return parseInt(cuitLimpio[10]) === digitoVerificador;
 }

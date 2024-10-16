@@ -7,10 +7,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./modalsh.component.css']
 })
 export class ModalshComponent {
+ @Output() onSelect = new EventEmitter<any>(); // Emisor de evento corregido
+  @Output() confirm = new EventEmitter<any>(); // Ya tienes el de confirmación
+  @Output() select: EventEmitter<any> = new EventEmitter();
   data: any;
   tipoOperacion: string;
-
-  @Output() confirm = new EventEmitter<any>();
+  direccion: any;
 
   constructor(
     public dialogRef: MatDialogRef<ModalshComponent>,
@@ -18,16 +20,25 @@ export class ModalshComponent {
   ) {
     this.data = dialogData;
     this.tipoOperacion = this.data.tipoOperacion;
+    this.direccion = this.data.direccion;
   }
 
+  onSelectLocation(result: any) {
+    this.select.emit(result); // Emitir el resultado seleccionado
+    this.dialogRef.close(); // Cerrar el modal
+  }
+  selectResult(result: any) {
+    this.select.emit(result); // Emite el resultado seleccionado
+  }
+  
   onClose(): void {
     this.dialogRef.close();
   }
 
   onConfirm() {
-    this.confirm.emit(this.data);
-    console.log('Datos emitidos:', this.data);
+    this.confirm.emit(this.data); // Emite la confirmación
+    //console.log('Datos emitidos:', this.data);
     this.dialogRef.close();
-    console.log('Modal cerrado');
+    //console.log('Modal cerrado');
   }
 }

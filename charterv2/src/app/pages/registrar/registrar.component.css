@@ -152,4 +152,7 @@ background-color: #ae06ba;
     .search-box input[type="date"] {
         width: calc(100% - 10px); /* Reducimos el ancho de los campos de entrada para darles más espacio */
     }
+   .toggle-btn{
+      width: 100px !important;
+    }
 }

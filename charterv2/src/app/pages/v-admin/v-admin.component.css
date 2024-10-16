@@ -135,3 +135,12 @@ input[type="checkbox"]:checked + label::after {
     display: flex;
     align-items: center; /* Alinea verticalmente */
 }
+.nav-link{
+    color: #343434 !important;
+  }
+  
+  .nav-link.active {
+    background-color: #444;
+    border-radius: 30px;
+    color: #FFFFFF !important;
+  }

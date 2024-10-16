@@ -9,13 +9,6 @@
       <li id="viaje-origen" class="list-group-item">Horario Salida: {{ viaje.horario_salida}}</li>
       <li id="viaje-destino" class="list-group-item">Horario Llegada: {{ viaje.horario_llegada }}</li>
       <li id="viaje-precio" class="list-group-item">Precio: {{ viaje.precio | currency }}</li>
-        <!--<li id="viaje-cupo" class="list-group-item">Cupo: {{ viaje.cupo }}</li>
-      </ul>
-      <div class="card-body">
-        <a class="card-link" (click)="reservar(viaje.PK_Viaje || 0)">Reservar</a>
-      </div>
-    </div>
-  </div>-->
 
     <!-- Mostrar "No hay cupo" si el cupo es 0 -->
       <li id="viaje-cupo" class="list-group-item">

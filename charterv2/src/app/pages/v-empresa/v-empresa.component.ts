@@ -18,6 +18,7 @@ import { ReservaService } from '../../services/reserva.service';
 import { Reserva } from '../../interfaces/reserva.interface';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ParadaService } from '../../services/parada.service';
+import { error } from 'node:console';
 
 @Component({
   selector: 'app-v-empresa',
@@ -103,7 +104,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
   }
 
   loadEmpresa(fkEmpresa: number): void {
-    console.log('ID de empresa pasado a loadEmpresa:', fkEmpresa); // Agregado para depuración
+   // console.log('ID de empresa pasado a loadEmpresa:', fkEmpresa); // Agregado para depuración
     this.empresaService.getEmpresa(fkEmpresa).subscribe(
       empresa => {
         this.empresa = empresa;
@@ -147,7 +148,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
   
 
   obtenerCharters(fkEmpresa: number): void {
-    console.log('ID de empresa pasado a obtenerCharters:', fkEmpresa); // Agregado para depuración
+   // console.log('ID de empresa pasado a obtenerCharters:', fkEmpresa); // Agregado para depuración
     this.loading = true;
     this._charterService.getChartersXEmpresa(fkEmpresa).subscribe(
       data => {
@@ -298,7 +299,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
         if (Array.isArray(data)) {
           this.listReservasPas = data.map(reservaEmpresa => {
             // Agregar un console.log para el campo reservas
-            console.log('Contenido de reservas:', reservaEmpresa.reservas);
+           // console.log('Contenido de reservas:', reservaEmpresa.reservas);
   
             return {
               ...reservaEmpresa,

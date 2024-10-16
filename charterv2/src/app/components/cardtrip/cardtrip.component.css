@@ -19,6 +19,10 @@
   color: black;
 }
 
+.card-title{
+  color: blueviolet;;
+}
+
 .card-body a.card-link {
   color: blueviolet;
   font-weight: bold;

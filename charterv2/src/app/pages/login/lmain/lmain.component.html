@@ -1,10 +1,10 @@
 <div class="page-header clear-filter" filter-color="violet">
-  <div class="page-header-image" style="background-image:url(assets/images/fondo2.jpg)">
+  <div class="page-header-image" style="background-image:url(assets/images/fondo2.webp)">
   </div>
 <div class="container">
 <div class="main-container">
     <div class="image-container">
-    <img src="/assets/images/logo2.png" alt="Logo empresa">
+    <img src="/assets/images/logo2.webp" alt="Logo empresa">
     </div>
     <form (ngSubmit)="login()"> <!--Comienzo de form -->
       <div class="form-css">
@@ -13,22 +13,31 @@
           <i class="material-icons">email</i>
           Correo electrónico:
         </label>
-       <!-- Input para Correo electronico -->
-        <input type="email" id="email-usuario" #emailUsuario name="email" placeholder="Ingresa tu correo electrónico">
-      </div>
-      <div class="form-css">
-        <!-- Iconos de angular material -->
-        <label for="password" class="input-label">
-          <i class="material-icons">lock</i>  
-           Contraseña:
-        </label>
+        <input 
+        type="email" 
+        id="email-usuario" 
+        #emailUsuario 
+        name="email" 
+        placeholder="Ingresa tu correo electrónico" 
+        autocomplete="username">  <!-- Added autocomplete attribute -->
        <!-- Input para Contraseña -->
-        <div class="password-container">
-          <input [type]="passwordVisible ? 'text' : 'password'" id="contraseña-usuario" #contraseñaLoginUsuario name="password"  placeholder="Ingresa tu contraseña">
-          <!-- Ojito para hacer visible o no contraseña-->
-          <span toggle="#contraseña-usuario" class="field-icon toggle-password"(click)="togglePasswordVisibility()">
-              <i class="fa fa-fw fa-eye toggle-icon" [ngClass]="{'fa-eye': passwordVisible, 'fa-eye-slash': !passwordVisible}"></i>
-          </span>
+       <label for="password" class="input-label">
+        <i class="material-icons">lock</i>  
+         Contraseña:
+      </label>
+       <div class="password-container">
+        <input 
+          [type]="passwordVisible ? 'text' : 'password'" 
+          id="contraseña-usuario" 
+          #contraseñaLoginUsuario 
+          name="password"  
+          placeholder="Ingresa tu contraseña" 
+          autocomplete="current-password">  <!-- Added autocomplete attribute -->
+          
+        <!-- Ojito para hacer visible o no contraseña-->
+        <span toggle="#contraseña-usuario" class="field-icon toggle-password" (click)="togglePasswordVisibility()">
+            <i class="fa fa-fw fa-eye toggle-icon" [ngClass]="{'fa-eye': passwordVisible, 'fa-eye-slash': !passwordVisible}"></i>
+        </span>
       </div>
       </div>
       <!-- Boton Iniciar sesion -->

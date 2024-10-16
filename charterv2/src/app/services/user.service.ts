@@ -99,21 +99,22 @@ export class UserService {
 
   isAuthenticated(): boolean {
     console.log('Verificando autenticación...');
-    
+  
     if (typeof window !== 'undefined' && localStorage) {
-      console.log('Contexto de ventana y localStorage es válido.');
-      
       const token = localStorage.getItem('token');
-      console.log('Token encontrado en localStorage:', token);
       
-      return !!token;
+      if (token) {
+        console.log('Usuario autenticado.');
+        return !!token;
+      } else {
+        console.log('Token no encontrado. Usuario no autenticado.');
+        return false;
+      }
     } else {
       console.log('localStorage no está disponible.');
+      return false;
     }
-  
-    return false;
-  }
-  
+  }  
 
   //Lo nuevo
   private redirectUrl: string | null = null;

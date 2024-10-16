@@ -25,15 +25,16 @@ export class VClientComponent implements OnInit {
   listReservasPasadas: ReservaPasajero[] = [];
   listParadas: Parada[] = [];
   loading: boolean = false; // Variable para mostrar la barra de carga
-  private userSubscription: Subscription | null = null;
-  private logoutSubscription: Subscription | null = null;
   currentTab: string = 'tab1'; // Pestaña activa por defecto
   user: Usuario | null = null;
   PK_Usuario: number = 0;
   selectedReserva: any = null; 
   showModal: boolean = false;  // Controla la visibilidad del modal
-  private reservasSubscription: Subscription | null = null;
+  selectedTicketData: any = null; // Datos del ticket seleccionado
 
+  private reservasSubscription: Subscription | null = null;
+  private userSubscription: Subscription | null = null;
+  private logoutSubscription: Subscription | null = null;
 
   constructor(
     private userDataService: UserDataService,
@@ -56,10 +57,10 @@ export class VClientComponent implements OnInit {
   getUsuarioCompartido() {
     this.userDataService.currentUser$.subscribe(user => {
       if (user) {
-        console.log('Usuario recibido:', user);
+        //console.log('Usuario recibido:', user);
         this.user = user;
         this.PK_Usuario = this.user.PK_Usuario;
-        console.log('PK de usuario:', this.PK_Usuario);
+        //console.log('PK de usuario:', this.PK_Usuario);
   
         // Llama a getReservasPasajero solo después de asignar PK_Usuario
         this.getReservasFuturasPasajero(this.PK_Usuario);
@@ -74,15 +75,19 @@ export class VClientComponent implements OnInit {
     this.loading = true;
     this._reservaService.getReservasFuturasPasajero(PK_Usuario).subscribe(
       data => {
-        console.log('Datos recibidos:', data);
+       // console.log('Datos recibidos:', data);
         // Verifica que `data` sea un array
         if (Array.isArray(data)) {
           this.listReservasFuturas = data.map(reserva => ({
             ...reserva,
             paradas: typeof reserva.paradas === 'string' ? this.parseParadas(reserva.paradas) : []
           }));
+        } else if (typeof data === 'string')  {
+          this.listReservasFuturas = []; // Si no hay reservas, establecer un array vacío
+          console.log(data);
         } else {
           console.error('La respuesta no es un array:', data);
+          this.listReservasFuturas = []; // Si no hay reservas, establecer un array vacío
         }
         this.loading = false;
       },
@@ -94,19 +99,51 @@ export class VClientComponent implements OnInit {
     );
   }
 
+  /* PARA MOSTRAR SOLO LAS RESERVAS CON ESTADO RESERVA
+   getReservasFuturasPasajero(PK_Usuario: number): void {
+    this.loading = true;
+    this._reservaService.getReservasFuturasPasajero(PK_Usuario).subscribe(
+      data => {
+        console.log('Datos recibidos:', data);
+        // Verifica que `data` sea un array
+        if (Array.isArray(data)) {
+          // Filtrar reservas que no están canceladas
+          this.listReservasFuturas = data
+            .filter(reserva => reserva.estado_reserva !== 'cancelada') // Excluir reservas canceladas
+            .map(reserva => ({
+              ...reserva,
+              paradas: typeof reserva.paradas === 'string' ? this.parseParadas(reserva.paradas) : []
+            }));
+        } else {
+          console.error('La respuesta no es un array:', data);
+        }
+        this.loading = false;
+      },
+      error => {
+        this.loading = false;
+        console.error('Error al obtener las reservas:', error);
+        this.mensaje('Error al obtener las reservas');
+      }
+    );
+  }*/ 
+
   getReservasPasadasPasajero(PK_Usuario: number): void {
     this.loading = true;
     this._reservaService.getReservasPasadasPasajero(PK_Usuario).subscribe(
       data => {
-        console.log('Datos recibidos:', data);
+        //console.log('Datos recibidos:', data);
         // Verifica que `data` sea un array
         if (Array.isArray(data)) {
           this.listReservasPasadas = data.map(reserva => ({
             ...reserva,
             paradas: typeof reserva.paradas === 'string' ? this.parseParadas(reserva.paradas) : []
           }));
+        } else if (typeof data === 'string')  {
+          this.listReservasPasadas = []; // Si no hay reservas, establecer un array vacío
+          console.log(data);
         } else {
           console.error('La respuesta no es un array:', data);
+          this.listReservasPasadas = []; // Si no hay reservas, establecer un array vacío
         }
         this.loading = false;
       },
@@ -120,14 +157,25 @@ export class VClientComponent implements OnInit {
 
 
   parseParadas(paradasStr: string): ViajeParada[] {
-    return paradasStr.split(';').map(paradaStr => {
-      const matches = paradaStr.match(/Orden: (\d+), Parada: ([^,]+)/);
+    const paradasArray = paradasStr.split(';');
+    //console.log('Array de paradas:', paradasArray);
+    
+    return paradasArray.map(paradaStr => {
+      // Eliminar espacios en blanco antes y después de la cadena
+      const trimmedParadaStr = paradaStr.trim();
+      const matches = trimmedParadaStr.match(/Orden:\s*(\d+),\s*Parada:\s*([^,]+),\s*Localidad:\s*([^,]+),\s*Provincia:\s*([^,]+),\s*Coordenadas:\s*([\-\d.]+),\s*([\-\d.]+)/);
+      
       if (matches) {
-        return {
+        const paradaData = {
           orden: parseInt(matches[1], 10),
-          parada: matches[2]
+          parada: matches[2].trim(),
+          coordenadas: `${matches[5]},${matches[6]}` // Juntamos latitud y longitud
         } as ViajeParada;
+        
+        //console.log('Parada procesada:', paradaData);
+        return paradaData;
       }
+      
       return null;
     }).filter(parada => parada !== null) as ViajeParada[];
   }
@@ -145,35 +193,40 @@ export class VClientComponent implements OnInit {
     this.loading = true;
     this._reservaService.cancelarReserva(id).subscribe(
       () => {
-        this.getReservasFuturasPasajero(this.PK_Usuario);
+        this.loading = false; // Asegúrate de detener la carga aquí
+        this.getReservasFuturasPasajero(this.PK_Usuario); // Actualiza la lista de reservas
         this.mensaje('Reserva cancelada con éxito');
       },
       error => {
-        this.loading = false;
+        this.loading = false; // Detener la carga si hay un error
         console.error('Error al cancelar la reserva:', error);
         this.mensaje('Error al cancelar la reserva');
       }
     );
   }
 
-  selectedTicketData: any = null; // Datos del ticket seleccionado
 
   mostrarTicket(idReserva: number) {
-    console.log('Buscando ticket con ID:', idReserva);
     const reserva = this.listReservasFuturas.find(res => res.PK_Reserva === idReserva);
     if (reserva) {
-      console.log('Reserva encontrada:', reserva);
-      this.selectedTicketData = reserva;
-      this.showModal = true;  // Mostrar el modal
+        // Verifica si la reserva está cancelada
+        if (reserva.estado_reserva === 'Cancelado') {
+            this.mensaje('No se puede abrir el ticket, la reserva ha sido cancelada.');
+            return; // Salir del método si la reserva está cancelada
+        }
+        this.selectedTicketData = reserva;
+        this.showModal = true;  // Mostrar el modal
     } else {
-      console.log('No se encontró reserva con ID:', idReserva);
+        console.log('No se encontró reserva con ID:', idReserva);
+        this.mensaje('No se encontró la reserva seleccionada');
     }
-  }
+}
+
 
   selectedEmpresaData: any = null; // Datos de la empresa seleccionada
 
   mostrarInfoEmpresa(idReserva: number) {
-    console.log('Buscando ticket con ID:', idReserva);
+    //console.log('Buscando ticket con ID:', idReserva);
     const reserva = this.listReservasFuturas.find(res => res.PK_Reserva === idReserva);
     
     if (reserva) {

@@ -5,7 +5,7 @@ import connection from "../db/connection";
 //Listar todos las localidades
 export const getLocalidades = (req: Request, res: Response) => {
     
-    connection.query('SELECT * FROM localidad;', (err, data) => {
+    connection.query('SELECT * FROM localidad ORDER BY nombre ASC;', (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar las localidades:', err);
@@ -26,7 +26,7 @@ export const getLocalidadesXProvincia = (req: Request, res: Response) => {
 
     const { FK_Provincia } = req.params;
     
-    connection.query('SELECT * FROM localidad WHERE localidad.FK_Provincia = ?;', FK_Provincia, (err, data) => {
+    connection.query('SELECT * FROM localidad WHERE localidad.FK_Provincia = ? ORDER BY nombre ASC;', FK_Provincia, (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar las localidades:', err);

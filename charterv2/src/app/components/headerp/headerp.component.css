@@ -189,6 +189,11 @@ cursor: pointer;
   border-radius: 5px;
 }
 
+.custom-icon {
+  color: rgb(217, 0, 255);
+  font-size: 20px;
+}
+
 
 
 @keyframes cambioColor {

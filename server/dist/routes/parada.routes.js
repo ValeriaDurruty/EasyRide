@@ -11,6 +11,8 @@ router.get('/:PK_Parada', parada_controller_1.getParadasxId);
 router.delete('/:PK_Parada', parada_controller_1.deleteParadas);
 // Ruta para listar todas las paradas
 router.get('/', parada_controller_1.getParadas);
+// Ruta para filtrar paradas por localidad
+router.get('/localidad/:PK_Localidad', parada_controller_1.getParadasxLocalidad);
 // Ruta para agregar una nueva parada
 router.post('/', parada_controller_1.addParada);
 // Ruta para modificar una parada en particular mediante una id

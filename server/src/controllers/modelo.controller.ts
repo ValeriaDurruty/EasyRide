@@ -5,7 +5,7 @@ import connection from "../db/connection";
 //Listar todos los modelos
 export const getModelos = (req: Request, res: Response) => {
     
-    connection.query('SELECT * FROM modelo;', (err, data) => {
+    connection.query('SELECT * FROM modelo ORDER BY nombre ASC;', (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar los modelos:', err);
@@ -26,7 +26,7 @@ export const getModelosXMarca = (req: Request, res: Response) => {
 
     const { FK_Marca } = req.params;
     
-    connection.query('SELECT * FROM modelo WHERE modelo.FK_Marca = ?;', FK_Marca, (err, data) => {
+    connection.query('SELECT * FROM modelo WHERE modelo.FK_Marca = ? ORDER BY nombre ASC;', FK_Marca, (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar los modelos:', err);
@@ -34,7 +34,7 @@ export const getModelosXMarca = (req: Request, res: Response) => {
             return res.status(500).json({ error: 'Error al listar los modelos' });
         } else {
             if (data.length === 0) {
-                return res.json('No hay mmodelos cargados');
+                return res.json('No hay modelos cargados para la marca seleccionada');
             } else {
                 res.json(data);
             }

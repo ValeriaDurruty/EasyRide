@@ -27,7 +27,7 @@ export class SearchmComponent implements OnInit {
 
   ngOnInit(): void {
     this._paradaService.getParadas().subscribe(data => {
-      console.log('Paradas recibidas:', data);
+      //console.log('Paradas recibidas:', data);
       this.paradas = data;
     }, error => {
       console.error('Error al obtener las paradas:', error);
@@ -53,11 +53,11 @@ export class SearchmComponent implements OnInit {
         destino: this.selectedDestino
       };
 
-      console.log('Datos enviados para la búsqueda:', body);
+      //console.log('Datos enviados para la búsqueda:', body);
   
       this._viajeService.getBusquedaViajes(body).subscribe({
         next: (data: Viaje[] | string) => {
-          console.log('Viajes recibidos:', data);
+          //console.log('Viajes recibidos:', data);
           if (typeof data === 'string' && data === 'No hay viajes cargados') {
             this.viajes = []; // Si no hay viajes cargados, se asigna un array vacío
             this.mensaje('No hay viajes disponibles que cumplan con los criterios de búsqueda');
@@ -65,6 +65,9 @@ export class SearchmComponent implements OnInit {
             this.viajes = data; // Si es un array de viajes, se asigna a `viajes`
             // Almacenar los viajes en localStorage
             localStorage.setItem('viajes', JSON.stringify(this.viajes));
+            localStorage.setItem('origenSeleccionado', this.selectedOrigen ? String(this.selectedOrigen) : ''); // Convierte a string
+            localStorage.setItem('destinoSeleccionado', this.selectedDestino ? String(this.selectedDestino) : ''); // Convierte a string
+            localStorage.setItem('fechaSeleccionada', this.selectedFecha ? String(this.selectedFecha) : ''); // Convierte a string
             // Redirigir a la vista de viajes
             this.router.navigate(['/Vista-Trips']);
           }

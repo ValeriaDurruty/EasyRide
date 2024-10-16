@@ -2,11 +2,11 @@
 
 <div class="wrapper">
   <div class="page-header clear-filter page-header-small" filter-color="orange">
-    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.jpg');">
+    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.webp');">
     </div>
     <div class="container">
       <div class="photo-container">
-        <img src="../assets/images/user.png" alt="">
+        <img src="../assets/images/user.webp" alt="">
       </div>
       <div *ngIf="user">
         <h3>{{ user.nombre }} {{ user.apellido }}</h3>
@@ -51,29 +51,32 @@
               <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
               <td id="precio">$ {{ reserva.precio }}</td>
               <td id="empresa">{{ reserva.empresa }}</td>
-              <td id="vehiculo">{{ reserva.patente }} <br> {{ reserva.modelo }} {{ reserva.marca }}</td>
+              <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
               <td id="paradas">
                 <div *ngFor="let parada of reserva.paradas">
-                  <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
+                  <div style="display: flex; align-items: center;"> <!-- Contenedor flex -->
+                    Parada {{ parada.orden }}: {{ parada.parada }} 
+                    <a *ngIf="reserva.estado_reserva !== 'Cancelado'" [href]="'https://www.google.com/maps?q=' + parada.coordenadas" target="_blank" matTooltip="Ver ubicación de la parada en el mapa">
+                      <i class="fas fa-map-marker-alt"></i>
+                    </a>
+                  </div>
                 </div>
-              </td>
+              </td>                           
               <td>
                 <!-- Iconos de opciones -->
                 <!-- Cruz para cancelar reserva, visible solo si estado_reserva no es "Cancelado" -->
                 <div class="action-container">
-                  <i *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="confirmCancelarReserva(reserva.PK_Reserva ?? 0)" matTooltip="Cancelar reserva">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="red" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-                          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-                      </svg>
-                  </i>
-                  <span style="margin-right: 5px;"></span>
+                  <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="confirmCancelarReserva(reserva.PK_Reserva ?? 0)" matTooltip="Cancelar reserva">
+                    <i class="fas fa-times-circle"></i>
+                  </a>
+                  <!--<span style="margin-right: 5px;"></span>-->
                   <!-- Ticket del viaje -->
                   <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="mostrarTicket(reserva.PK_Reserva ?? 0)" class="ticket-link" matTooltip="Ticket reserva">
-                      <i class="fas fa-ticket-alt"></i>
+                      <i class="fas fa-ticket-alt" ></i>
                   </a>
                   <!-- Información de la empresa -->
                   <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="mostrarInfoEmpresa(reserva.PK_Reserva ?? 0)" class="info-link" matTooltip="Contacto empresa">
-                      <i class="fas fa-info-circle"></i>
+                    <i class="fas fa-info-circle"></i>
                   </a>
                 </div>
                 </td>
@@ -106,10 +109,10 @@
                 <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
                 <td id="precio">$ {{ reserva.precio }}</td>
                 <td id="empresa">{{ reserva.empresa }}</td>
-                <td id="vehiculo">{{ reserva.patente }} <br> {{ reserva.modelo }} {{ reserva.marca }}</td>
+                <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
                 <td id="paradas">
                   <div *ngFor="let parada of reserva.paradas">
-                    <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
+                    Parada {{ parada.orden }}: {{ parada.parada }}
                   </div>
                 </td>
               </tr>

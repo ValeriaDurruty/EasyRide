@@ -1,6 +1,10 @@
 .titulo{
-    margin-top: 65px;
+    margin-top: 85px;
     margin-left: 55px;
+}
+
+.font-secundaria{
+    font-size: 25px;
 }
 
 .bt-buscar{
@@ -25,4 +29,11 @@
     justify-content: center;
     align-items: center;
     margin-top: 15px; /* Aumentamos el margen superior para separar el botón */
+}
+
+@media(max-width: 800px) {
+    .titulo h1{
+        margin-top: 95px;
+        font-size: 25px;
+    }
 }

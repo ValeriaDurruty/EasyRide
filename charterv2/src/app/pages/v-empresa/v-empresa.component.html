@@ -2,11 +2,11 @@
 
 <div class="wrapper">
   <div class="page-header clear-filter page-header-small" filter-color="orange">
-    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.jpg');">
+    <div class="page-header-image" data-parallax="true" style="background-image:url('../assets/images/fondo.webp');">
     </div>
     <div class="container">
       <div class="photo-container">
-        <img src="../assets/images/user.png" alt="">
+        <img src="../assets/images/user.webp" alt="">
       </div>
      <!-- Datos de usuario -->
       <div *ngIf="empresa"> 
@@ -62,7 +62,7 @@
           <tbody>
             <tr *ngFor="let viaje of listViajesParadas">
               <td>{{ viaje.PK_Viaje }}</td>
-              <td>{{ fecha | date:'dd-MM-yyyy' }}</td>
+              <td>{{ viaje.fecha }}</td>
               <td>{{ viaje.horario_salida }}</td>
               <td>{{ viaje.horario_llegada }}</td>
               <td>
@@ -303,7 +303,8 @@
                   <td>{{ reservaItem.apellido }}</td>
                   <td [ngClass]="{
                         'estado-verde': reservaItem.estado_reserva === 'Reservado',
-                        'estado-rojo': reservaItem.estado_reserva === 'Cancelado'
+                        'estado-rojo': reservaItem.estado_reserva === 'Cancelado',
+                        'estado-azul': reservaItem.estado_reserva === 'Finalizado'
                       }">
                     {{ reservaItem.estado_reserva }}
                   </td>

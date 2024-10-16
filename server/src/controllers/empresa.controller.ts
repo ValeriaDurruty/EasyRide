@@ -5,7 +5,7 @@ import connection from "../db/connection";
 //Listar todas las empresas
 export const getEmpresas = (req: Request, res: Response) => {
 
-    connection.query('SELECT * FROM empresa;', (err, data) => {
+    connection.query('SELECT * FROM empresa ORDER BY razon_social ASC;', (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al listar las empresas:', err);

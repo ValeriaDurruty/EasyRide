@@ -1,11 +1,11 @@
 <app-headers></app-headers>
 <div class="wrapper">
       <div class="page-header clear-filter page-header-small" filter-color="orange">
-        <div class="page-header-image" style="background-image:url('../assets/images/fondo.jpg');">
+        <div class="page-header-image" style="background-image:url('../assets/images/fondo.webp');">
         </div>
         <div class="container">
           <div class="photo-container">
-            <img src="../assets/images/user.png" alt="">
+            <img src="../assets/images/user.webp" alt="">
           </div>
          <!-- Datos de usuario -->
           <div> 
@@ -133,7 +133,7 @@
                         <!-- Icono de lápiz -->
                         <a [routerLink]="['/Editar-empresa',empresa.PK_Empresa]" class="mr-2" matTooltip="Editar empresa">
                           <i class="fas fa-pencil-alt icon-pencil icon-background"></i></a>
-                        <!-- Icono para eliminar cuenta -->
+                        <!-- Icono para eliminar empresa -->
                         <i class="fas fa-trash-alt icono icon-trash icon-background mr-2" (click)="confirmDeleteEmpresa(empresa.PK_Empresa || 0)" matTooltip="Eliminar empresa"></i>
                     </div>
                   </div>

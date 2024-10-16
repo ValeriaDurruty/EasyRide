@@ -1,6 +1,6 @@
 <app-headers></app-headers>
 <div class="page-header clear-filter">
-    <div class="page-header-image" style="background-image:url(assets/images/reserva-fondo2.png)">
+    <div class="page-header-image" style="background-image:url(assets/images/reserva-fondo2.webp)">
     </div>
     <div class="reserva-container">
         <h2>Información de Reserva</h2>
@@ -36,8 +36,11 @@
                     <p><strong>Paradas:</strong></p>
                     <ul id="viaje-lista-paradas">
                         <li *ngFor="let parada of paradasSeleccionadas; let i = index">
-                            Orden: {{ parada.orden }} - {{ parada.parada }}
-                        </li>
+                            Parada {{ parada.orden }}: {{ parada.parada }} 
+                            <a [href]="'https://www.google.com/maps?q=' + parada.coordenadas" target="_blank" matTooltip="Ver ubicación de la parada en el mapa">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>
+                        </li>                        
                     </ul>
                     <!-- Información del Charter Asignado -->
                     <label for="FK_Charter">Charter Asignado</label>
@@ -47,8 +50,8 @@
 
                     <!-- Botón reservar -->
                     <!--<button type="submit" >Reservar</button>-->
+                    <button type="button" (click)="navegar()" class="btreservar gradient-button mr-3">Cancelar</button>
                     <button class="btreservar gradient-button mr-3" [disabled]="botonReservarPresionado || !form.valid" (click)="reservar()">Reservar</button>
-                    <button type="button" [routerLink]="['/']" class="btreservar gradient-button">Cancelar</button>
 
                 </form>
             </div>

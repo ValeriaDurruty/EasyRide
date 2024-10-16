@@ -93,14 +93,14 @@ export class RoleGuard implements CanActivate {
   constructor(private userService: UserService, private router: Router,private ngZone: NgZone) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    console.log('Ejecutando RoleGuard...');
+    //console.log('Ejecutando RoleGuard...');
 
     return this.userService.getCurrentUser().pipe(
       map(user => {
-        console.log('Usuario desde RoleGuard:', user);
+        //console.log('Usuario desde RoleGuard:', user);
 
         const currentUrl = state.url.toLowerCase();
-        console.log('Ruta actual:', currentUrl);
+        //console.log('Ruta actual:', currentUrl);
 
         if (currentUrl === '/login' ||  currentUrl === '/vista-trips' || currentUrl === '/search' || currentUrl === '/unauthorized') {
           console.log('Ruta pública. Acceso permitido.');
@@ -109,7 +109,7 @@ export class RoleGuard implements CanActivate {
 
         if (user) {
           const isAuthorized = this.isAuthorized(user.FK_Rol, currentUrl);
-          console.log('Autorizado:', isAuthorized);
+          //console.log('Autorizado:', isAuthorized);
           if (isAuthorized) {
             console.log('Usuario autorizado. Acceso permitido.');
             return true;
@@ -132,7 +132,7 @@ export class RoleGuard implements CanActivate {
   }
 
   private isAuthorized(role: number, url: string): boolean {
-    console.log('Verificando autorización para rol:', role, 'y URL:', url);
+    //console.log('Verificando autorización para rol:', role, 'y URL:', url);
 
     const roleRoutes: { [key: number]: string[] } = {
       1: ['/v-admin', '/Agregar-empresa', '/Editar-empresa/:id'],                
@@ -142,13 +142,13 @@ export class RoleGuard implements CanActivate {
     };
 
     const allowedRoutes = roleRoutes[role] || [];
-    console.log('Rutas permitidas para rol', role, ':', allowedRoutes);
+    //console.log('Rutas permitidas para rol', role, ':', allowedRoutes);
 
     const normalizedUrl = this.stripQueryParams(url.toLowerCase());
-    console.log('URL normalizada:', normalizedUrl);
+    //console.log('URL normalizada:', normalizedUrl);
 
     const isAuthorized = allowedRoutes.some(route => this.matchRoute(route.toLowerCase(), normalizedUrl));
-    console.log('Autorización final:', isAuthorized);
+    //console.log('Autorización final:', isAuthorized);
 
     return isAuthorized;
   }

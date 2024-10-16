@@ -8,7 +8,7 @@ const connection_1 = __importDefault(require("../db/connection"));
 //Listar todos los charters de una empresa
 const getChartersXEmpresa = (req, res) => {
     const { FK_Empresa } = req.params;
-    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.FK_Empresa = ?;', FK_Empresa, (err, data) => {
+    connection_1.default.query('SELECT marca.nombre AS marca, modelo.nombre AS modelo, charter.* FROM charter INNER JOIN modelo INNER JOIN marca ON marca.PK_Marca = modelo.FK_Marca AND modelo.PK_Modelo = charter.FK_Modelo WHERE charter.FK_Empresa = ? ORDER BY patente ASC;', FK_Empresa, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar los charters:', err);

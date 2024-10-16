@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.putParadas = exports.deleteParadas = exports.getParadasxId = exports.addParada = exports.getParadas = exports.getParadasxEmpresa = void 0;
+exports.putParadas = exports.deleteParadas = exports.getParadasxId = exports.addParada = exports.getParadasxLocalidad = exports.getParadas = exports.getParadasxEmpresa = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
 //Listar todos las paradas
 const getParadasxEmpresa = (req, res) => {
     const { FK_Empresa } = req.params;
-    connection_1.default.query('SELECT p.PK_Parada, p.nombre AS parada, p.coordenadas, l.PK_Localidad, l.nombre AS localidad, pr.PK_Provincia, pr.nombre AS provincia FROM Parada p INNER JOIN Localidad l ON p.FK_Localidad = l.PK_Localidad INNER JOIN Provincia pr ON l.FK_Provincia = pr.PK_Provincia WHERE p.FK_Empresa = ?;', FK_Empresa, (err, data) => {
+    connection_1.default.query('SELECT p.PK_Parada, p.nombre AS parada, p.coordenadas, l.PK_Localidad, l.nombre AS localidad, pr.PK_Provincia, pr.nombre AS provincia FROM Parada p INNER JOIN Localidad l ON p.FK_Localidad = l.PK_Localidad INNER JOIN Provincia pr ON l.FK_Provincia = pr.PK_Provincia WHERE p.FK_Empresa = ? ORDER BY parada ASC;', FK_Empresa, (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las paradas:', err);
@@ -28,7 +28,7 @@ const getParadasxEmpresa = (req, res) => {
 exports.getParadasxEmpresa = getParadasxEmpresa;
 //Listar todos las paradas
 const getParadas = (req, res) => {
-    connection_1.default.query('SELECT p.PK_Parada, p.nombre AS parada, p.coordenadas, p.FK_Empresa, l.PK_Localidad, l.nombre AS localidad, pr.PK_Provincia, pr.nombre AS provincia FROM Parada p INNER JOIN Localidad l ON p.FK_Localidad = l.PK_Localidad INNER JOIN Provincia pr ON l.FK_Provincia = pr.PK_Provincia GROUP BY p.nombre, l.PK_Localidad, pr.PK_Provincia ORDER BY p.nombre;', (err, data) => {
+    connection_1.default.query('SELECT p.PK_Parada, p.nombre AS parada, p.coordenadas, p.FK_Empresa, l.PK_Localidad, l.nombre AS localidad, pr.PK_Provincia, pr.nombre AS provincia FROM Parada p INNER JOIN Localidad l ON p.FK_Localidad = l.PK_Localidad INNER JOIN Provincia pr ON l.FK_Provincia = pr.PK_Provincia GROUP BY p.nombre, l.PK_Localidad, pr.PK_Provincia ORDER BY parada ASC;', (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las paradas:', err);
@@ -46,6 +46,27 @@ const getParadas = (req, res) => {
     });
 };
 exports.getParadas = getParadas;
+//Filtrar paradaspor localidad
+const getParadasxLocalidad = (req, res) => {
+    const { PK_Localidad } = req.params;
+    connection_1.default.query('SELECT p.PK_Parada, p.nombre AS parada, p.coordenadas, p.FK_Empresa, l.PK_Localidad, l.nombre AS localidad, pr.PK_Provincia, pr.nombre AS provincia FROM Parada p INNER JOIN Localidad l ON p.FK_Localidad = l.PK_Localidad INNER JOIN Provincia pr ON l.FK_Provincia = pr.PK_Provincia WHERE l.PK_Localidad = ? GROUP BY p.nombre, l.PK_Localidad, pr.PK_Provincia ORDER BY parada ASC;', PK_Localidad, (err, data) => {
+        if (err) {
+            // Registrar el error en la consola
+            console.error('Error al listar las paradas:', err);
+            // Devolver un mensaje de error al cliente
+            return res.status(500).json({ error: 'Error al listar las paradas' });
+        }
+        else {
+            if (data.length === 0) {
+                return res.json('No hay paradas cargadas');
+            }
+            else {
+                res.json(data);
+            }
+        }
+    });
+};
+exports.getParadasxLocalidad = getParadasxLocalidad;
 const addParada = (req, res) => {
     const { nombre, coordenadas, FK_Empresa, FK_Localidad } = req.body;
     // Validamos que se hayan proporcionado todos los datos necesarios

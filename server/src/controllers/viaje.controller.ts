@@ -12,7 +12,8 @@ export const getViajesXEmpresa = (req: Request, res: Response) => {
     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
     v.cupo,
     v.precio,
-    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
     c.patente,
     GROUP_CONCAT(
         CONCAT(
@@ -25,16 +26,17 @@ export const getViajesXEmpresa = (req: Request, res: Response) => {
         )
         ORDER BY vp.orden
         SEPARATOR '; '
-    ) AS paradas
-FROM viaje v
-INNER JOIN charter c ON v.FK_Charter = c.PK_Charter
-INNER JOIN viaje_Parada vp ON v.PK_Viaje = vp.FK_Viaje
-INNER JOIN parada p ON vp.FK_Parada = p.PK_Parada
-INNER JOIN localidad l ON p.FK_Localidad = l.PK_Localidad
-INNER JOIN provincia pr ON l.FK_Provincia = pr.PK_Provincia
-WHERE c.FK_Empresa = ?
-GROUP BY v.PK_Viaje, v.horario_salida, v.horario_llegada, v.cupo, v.precio, v.fecha, c.patente
-ORDER BY v.PK_Viaje ASC;`;
+        ) AS paradas
+    FROM viaje v
+    INNER JOIN charter c ON v.FK_Charter = c.PK_Charter
+    INNER JOIN viaje_Parada vp ON v.PK_Viaje = vp.FK_Viaje
+    INNER JOIN parada p ON vp.FK_Parada = p.PK_Parada
+    INNER JOIN localidad l ON p.FK_Localidad = l.PK_Localidad
+    INNER JOIN provincia pr ON l.FK_Provincia = pr.PK_Provincia
+    WHERE c.FK_Empresa = ?
+    AND v.fecha_salida >= CURDATE()
+    GROUP BY v.PK_Viaje, v.horario_salida, v.horario_llegada, v.cupo, v.precio, v.fecha_salida, v.fecha_llegada, c.patente
+    ORDER BY v.PK_Viaje ASC;`;
 
     connection.query(query, FK_Empresa, (err, data) => {
         if(err) {
@@ -61,7 +63,8 @@ export const getViajes = (req: Request, res: Response) => {
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.cupo,
                     v.precio,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     c.patente,
                     e.razon_social AS empresa,
                     GROUP_CONCAT(
@@ -83,8 +86,8 @@ export const getViajes = (req: Request, res: Response) => {
                 INNER JOIN parada p ON vp.FK_Parada = p.PK_Parada
                 INNER JOIN localidad l ON p.FK_Localidad = l.PK_Localidad
                 INNER JOIN provincia pr ON l.FK_Provincia = pr.PK_Provincia
-                WHERE v.fecha >= CURDATE() AND v.cupo > 0
-                GROUP BY v.PK_Viaje, v.horario_salida, v.horario_llegada, v.cupo, v.precio, v.fecha, c.patente
+                WHERE v.fecha_salida >= CURDATE() AND v.cupo > 0
+                GROUP BY v.PK_Viaje, v.horario_salida, v.horario_llegada, v.cupo, v.precio, v.fecha_salida, v.fecha_llegada, c.patente
                 ORDER BY v.PK_Viaje ASC;`;
 
     connection.query(query, (err, data) => {
@@ -115,7 +118,8 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
                 DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                 v.cupo, 
                 v.precio, 
-                DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha, 
+                DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada, 
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social AS empresa, 
@@ -128,7 +132,7 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
                         ', Orden: ', vp.orden, 
                         ', Parada: ', p.nombre, 
                         ', Localidad: ', l.nombre, 
-                        ', Provincia: ', pr.nombre 
+                        ', Provincia: ', pr.nombre
                     ) 
                     ORDER BY vp.orden SEPARATOR '; ' 
                 ) AS paradas 
@@ -179,7 +183,8 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
                 v.horario_llegada, 
                 v.cupo, 
                 v.precio, 
-                v.fecha, 
+                v.fecha_salida,
+                v.fecha_llegada,
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social, 
@@ -217,7 +222,8 @@ export const getViajesXid = (req: Request, res: Response) => {
                 DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                 v.cupo, 
                 v.precio, 
-                DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha, 
+                DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada, 
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social AS empresa, 
@@ -230,7 +236,8 @@ export const getViajesXid = (req: Request, res: Response) => {
                         ', Orden: ', vp.orden, 
                         ', Parada: ', p.nombre, 
                         ', Localidad: ', l.nombre, 
-                        ', Provincia: ', pr.nombre 
+                        ', Provincia: ', pr.nombre ,
+                        ', Coordenadas: ', p.coordenadas
                     ) 
                     ORDER BY vp.orden SEPARATOR '; ' 
                 ) AS paradas 
@@ -260,7 +267,8 @@ export const getViajesXid = (req: Request, res: Response) => {
                 v.horario_llegada, 
                 v.cupo, 
                 v.precio, 
-                v.fecha, 
+                v.fecha_salida,
+                v.fecha_llegada,
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social, 
@@ -358,7 +366,7 @@ export const deleteViajes = (req: Request, res: Response) => {
 //Agrega un viaje
 export const addViaje = (req: Request, res: Response) => {
 
-    const { horario_salida, horario_llegada, precio, fecha, FK_Charter, paradas } = req.body;
+    const { horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
     //console.log(req.body);
 
     // Verifica que al menos se proporcionen dos paradas
@@ -375,8 +383,8 @@ export const addViaje = (req: Request, res: Response) => {
 
         // Inserta el viaje
         connection.query(
-            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha, FK_Charter) VALUES (?, ?, ?, ?, ?)`,
-            [horario_salida, horario_llegada, precio, fecha, FK_Charter],
+            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?)`,
+            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter],
             (err, result) => {
                 if (err) {
                     // Rollback en caso de error
@@ -425,7 +433,7 @@ export const addViaje = (req: Request, res: Response) => {
 
 //Modificar un viaje en particular
 export const putViajes = (req: Request, res: Response) => {
-    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha, FK_Charter, paradas } = req.body;
+    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
 
     // Verifica que al menos se proporcionen dos paradas
     if (!Array.isArray(paradas) || paradas.length < 2) {
@@ -444,7 +452,7 @@ export const putViajes = (req: Request, res: Response) => {
             `UPDATE Viaje 
              SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha = ?, FK_Charter = ?
              WHERE PK_Viaje = ?`,
-            [horario_salida, horario_llegada, precio, fecha, FK_Charter, PK_Viaje],
+            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, PK_Viaje],
             (err, result) => {
                 if (err) {
                     return connection.rollback(() => {

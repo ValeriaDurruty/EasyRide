@@ -1,60 +1,112 @@
+.scrollable-content {
+  max-height: calc(100vh - 100px); /* Ajusta según el espacio disponible */
+  overflow-y: auto; /* Habilita el scroll vertical en pantallas pequeñas */
+}
+
+/* Resto de tus estilos existentes */
 .content {
-    padding: 20px;
-  }
-  
+  padding: 20px;
+}
+
+.image-title {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.image {
+  width: 600px; /* Tamaño original */
+  height: auto;
+  margin-right: 20px;
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.title,
+.subtitle {
+  font-size: 28px;
+  text-shadow: 1px 1px 3px rgba(145, 0, 177, 1); 
+}
+
+.paragraph {
+  font-size: 18px; /* Tamaño de fuente uniforme */
+  font-family: 'Arial', sans-serif; /* Fuente predeterminada */
+  color: #ffffff; /* Asegura un color consistente */
+}
+
+.contact-icons {
+  display: flex;
+  font-weight: 400;
+  justify-content: center; /* Centers the links horizontally */
+  align-items: center; /* Vertically centers the text and icons */
+  gap: 10px; /* Space between the links */
+}
+
+.contact-icons a {
+  display: flex;
+  align-items: center; /* Centers text and icon vertically */
+  color: rgb(255, 156, 253);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.contact-icons i {
+  color: rgb(236, 0, 232);
+  font-size: 24px; /* Adjust the icon size as needed */
+}
+
+.contact-icons a:hover {
+  text-decoration: underline; /* Underline only the text on hover */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
   .image-title {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
+    flex-direction: column; /* Cambia a columna para pantallas pequeñas */
+    align-items: center; /* Centra el contenido */
+    text-align: center;
   }
-  
+
   .image {
-    width: 600px;
-    height: auto;
-    margin-right: 20px;
-  }
-  
-  .text-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-  
-  .title,
-  .subtitle {
-    font-size: 28px;
-    margin: 0 0 10px 0; 
-    text-shadow:1px 1px 3px rgba(145, 0, 177, 1); 
-  }
-  
-  .paragraph {
-    font-size: 16px;
-    font-weight: 400;
-    margin: 0 0 20px 0; /* Espaciado inferior entre párrafos */
+    .image {
+      width: 300px;
+      height: auto;
+      margin-right: 20px;
+    }
   }
 
   .contact-icons {
-    display: flex;
-    font-weight: 400;
-    justify-content: center; /* Centers the links horizontally */
-    align-items: center; /* Vertically centers the text and icons */
-    gap: 10px; /* Space between the links */
+    flex-direction: column; /* Coloca los iconos uno debajo del otro */
+    align-items: center; /* Centra los enlaces */
+    gap: 20px; /* Aumenta el espacio entre los íconos en pantallas pequeñas */
   }
-  
-  .contact-icons a {
-    display: flex;
-    align-items: center; /* Centers text and icon vertically */
-    color: rgb(255, 156, 253);
-    text-decoration: none;
-    font-weight: bold;
-    margin-right: 40px; /* Space between links */
+
+  .title,
+  .subtitle {
+    font-size: 24px; /* Reduce el tamaño de la fuente en pantallas pequeñas */
+    text-align: center;
   }
-  
-  .contact-icons i {
-    color: rgb(236, 0, 232);
-    font-size: 24px; /* Adjust the icon size as needed */
+
+  .paragraph {
+    font-size: 14px; /* Reduce el tamaño de la fuente de los párrafos */
+    text-align: center;
   }
-  
-  .contact-icons a:hover {
-    text-decoration: underline; /* Underline only the text on hover */
+
+  .contact-icons a{
+    text-align: center;
+    font-size: 18px;
   }
+}
+
+/* Estilos para pantallas grandes */
+@media (min-width: 1000px) {
+  .scrollable-content {
+    max-height: none; /* Elimina el límite de altura */
+    overflow-y: visible; /* Asegúrate de que no haya scroll */
+  }
+}

@@ -7,7 +7,7 @@ exports.checkCuitEmpresa = exports.putEmpresas = exports.deleteEmpresas = export
 const connection_1 = __importDefault(require("../db/connection"));
 //Listar todas las empresas
 const getEmpresas = (req, res) => {
-    connection_1.default.query('SELECT * FROM empresa;', (err, data) => {
+    connection_1.default.query('SELECT * FROM empresa ORDER BY razon_social ASC;', (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar las empresas:', err);

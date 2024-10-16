@@ -3,8 +3,6 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { SessionService } from '../../services/session.service';
-import { MatDialog } from '@angular/material/dialog';
-import { ModalcontactComponent } from '../modalcontact/modalcontact.component';
 
 @Component({
   selector: 'app-headers',
@@ -21,10 +19,9 @@ export class HeadersComponent implements OnInit {
   isVistatrips: boolean = false;
   isRegistrarse:boolean =false;
 
-  constructor(private location: Location,
-    public router: Router, //Cualquier cosa pasarlo a private
+  constructor(private location: Location, private router: Router, 
     private userService: UserService,
-    private _sessionService:SessionService, private dialog: MatDialog ) {}
+    private _sessionService:SessionService ) {}
 
   ngOnInit(): void {
     this.userService.getCurrentUser().subscribe(user => {
@@ -45,9 +42,6 @@ export class HeadersComponent implements OnInit {
     });
   }
 
-  openContactModal() {
-    this.dialog.open(ModalcontactComponent);
-  }
   goBack() {
     this.location.back(); }  //Sigue todos los pasos q diste hacia adelante y vuelve atras en el mismo orden
 

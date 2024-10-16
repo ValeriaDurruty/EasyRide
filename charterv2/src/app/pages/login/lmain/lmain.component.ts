@@ -42,15 +42,15 @@ export class LmainComponent {
       const contraseña = this.contraseñaLoginUsuarioRef.nativeElement.value;
       const userCredential = await this.userService.loginUsuario(correo, contraseña);
       const user = userCredential.user;
-      console.log('Usuario autenticado:', user);
+      //console.log('Usuario autenticado:', user);
       if (user && user.email) {
-        console.log('Usuario autenticado:', user);
-        console.log('Email:', user.email);
+       // console.log('Usuario autenticado:', user);
+       // console.log('Email:', user.email);
 
         // Obtener datos del usuario desde la base de datos
         this.user$ = this.userService.getUsuarioPorEmail(user.email);
         this.user$.subscribe(userData => {
-          console.log('Datos del usuario:', userData);
+          //console.log('Datos del usuario:', userData);
           this.userDataService.setUser(userData); // Guardar datos del usuario en el servicio compartido
           
           // Redirigir a la página correspondiente según el rol del

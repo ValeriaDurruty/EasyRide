@@ -9,8 +9,8 @@ import { EmpresaService } from '../../services/empresa.service';
 import { Parada } from '../../interfaces/parada.interface';
 import { Provincia } from '../../interfaces/provincia.interface';
 import { Localidad } from '../../interfaces/localidad.interface';
-import { ModalshComponent } from '../../components/modalsh/modalsh.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-parada',
@@ -26,7 +26,7 @@ export class AddParadaComponent implements OnInit {
   provincias: Provincia[] = [];
   localidades: Localidad[] = [];
   isEditMode: boolean = false;
-  paradaId: number | null = null; // Para identificar si es edición o no
+  paradaId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -43,58 +43,50 @@ export class AddParadaComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.maxLength(30)]],
       provincia: ['', Validators.required],
       localidad: ['', Validators.required],
-      coordenadas: ['', [Validators.required]]
+      coordenadas: ['', [Validators.required, this.validateCoordinates]] // Incluí la validación de coordenadas
     });
   }
 
   ngOnInit(): void {
     this._provinciaService.getProvincias().subscribe(data => {
       this.provincias = data;
-      console.log('Provincias recibidas:', this.provincias);
+      //console.log('Provincias recibidas:', this.provincias);
     });
 
     this.form.get('provincia')?.valueChanges.subscribe((provinciaId: number) => {
       if (provinciaId) {
-        this.getLocalidadesPorProvincia(provinciaId);
+        this.loadLocalidades(provinciaId);
       }
     });
 
-    this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
+    const storedFKEmpresa = sessionStorage.getItem('FK_empresa') || localStorage.getItem('FK_empresa');
+    if (storedFKEmpresa) {
+      this.FK_empresa = +storedFKEmpresa;
+    } else {
+      this.FK_empresa = this._empresaService.getEmpresaId() ?? 0;
+      if (this.FK_empresa !== 0) {
+        sessionStorage.setItem('FK_empresa', this.FK_empresa.toString());
+      }
+    }
 
     if (this.FK_empresa === 0) {
       console.error('FK_Empresa no está disponible.');
-      this.mensaje('No se pudo obtener el ID de la empresa.');
-      return;
     }
 
     this.route.params.subscribe(params => {
-      this.paradaId = +params['id']; // Obtener el ID de la ruta, si está presente
+      this.paradaId = +params['id'];
       if (this.paradaId) {
         this.isEditMode = true;
-        this.loadParada(this.paradaId); // Cargar los datos de la parada para edición
+        this.loadParada(this.paradaId);
       }
     });
   }
 
-  getLocalidadesPorProvincia(provinciaId: number): void {
-    this._localidadService.getLocalidadesPorProvincia(provinciaId).subscribe(
-      data => {
-        this.localidades = data;
-        console.log('Localidades recibidas:', this.localidades);
-
-        // Si estamos en modo edición, establecer el valor de localidad
-        if (this.isEditMode) {
-          const localidadId = this.form.get('localidad')?.value;
-          if (localidadId) {
-            this.form.get('localidad')?.setValue(localidadId);
-          }
-        }
-      },
-      error => {
-        console.error('Error al obtener localidades:', error);
-        this.localidades = [];
-      }
-    );
+  loadLocalidades(provinciaId: number): void {
+    this._localidadService.getLocalidadesPorProvincia(provinciaId).subscribe(localidades => {
+      this.localidades = localidades;
+      console.log('Localidades cargadas:', this.localidades);
+    });
   }
 
   validateCoordinates(control: AbstractControl): { [key: string]: boolean } | null {
@@ -112,27 +104,7 @@ export class AddParadaComponent implements OnInit {
     }
   }
 
-  openModal() {
-    const dialogRef = this.dialog.open(ModalshComponent, {
-      data: {
-        tipoOperacion: 'parada', // o 'viaje' o 'parada'
-        nombre: this.form.get('nombre')?.value,
-        provincia: this.form.get('provincia')?.value,
-        localidad: this.form.get('localidad')?.value,
-        coordenadas: this.form.get('coordenadas')?.value,
-        // Agrega más propiedades según el tipo de operación
-      }
-    });
-  
-    dialogRef.componentInstance.confirm.subscribe((parada) => {
-      console.log('Datos de la parada confirmados:', parada); // Muestra los datos en la consola para verificar
-  
-      // Aquí se llama al método para agregar la empresa
-      this.saveParada(parada);
-    });
-  }
-  
-  saveParada(paradaData:any): void {
+  saveParada(paradaData: any): void {
     if (this.form.invalid) {
       this.mensaje('Por favor, corrige los errores en el formulario');
       return;
@@ -146,7 +118,6 @@ export class AddParadaComponent implements OnInit {
     };
 
     if (this.isEditMode && this.paradaId) {
-      // Llamar al método de edición del servicio
       this._paradaService.updateParada(this.paradaId, parada).subscribe({
         next: () => {
           this.mensaje('Parada actualizada con éxito');
@@ -158,7 +129,6 @@ export class AddParadaComponent implements OnInit {
         }
       });
     } else {
-      // Llamar al método de adición del servicio
       this._paradaService.AddParada(parada).subscribe({
         next: () => {
           this.mensaje('Parada agregada con éxito');
@@ -175,42 +145,37 @@ export class AddParadaComponent implements OnInit {
   loadParada(id: number): void {
     this._paradaService.getParadaById(id).subscribe({
       next: (data) => {
-        // Mostrar los datos recibidos en la consola
-        console.log('Datos recibidos:', data);
+        //console.log('Datos recibidos:', data);
   
-        // Verificar los valores que se van a establecer en el formulario
-        console.log('Provincia recibida:', data.PK_Provincia);
-        console.log('Localidad recibida:', data.FK_Localidad);
-  
-        // Actualizar el formulario con los datos recibidos
+        // Primero, establecemos el valor de la provincia y las coordenadas
+
         this.form.patchValue({
           nombre: data.parada,
           coordenadas: data.coordenadas,
-          provincia: data.PK_Provincia, 
-          localidad: data.FK_Localidad 
+          provincia: data.PK_Provincia
         });
+
+        // Luego, cargamos las localidades asociadas a la provincia seleccionada
+        this._localidadService.getLocalidadesPorProvincia(Number(data.PK_Provincia)).subscribe(localidades => {
+          this.localidades = localidades;
+          console.log('Localidades cargadas:', this.localidades);
   
-        // Mostrar el formulario después de patchValue
-        console.log('Formulario después de patchValue:', this.form.value);
-  
-        // Cargar localidades si la provincia está definida
-        if (data.PK_Provincia) {
-          this.getLocalidadesPorProvincia(data.PK_Provincia);
-        } else {
-          // Si no hay provincia definida, vaciar las localidades
-          this.localidades = [];
-        }
-  
-        // Verificar los valores de provincia y localidad después de actualizar el formulario
-        console.log('Provincia seleccionada:', this.form.get('provincia')?.value);
-        console.log('Localidad seleccionada:', this.form.get('localidad')?.value);
+          // Una vez cargadas las localidades, usamos un pequeño retraso para asegurarnos
+          // de que las localidades estén completamente renderizadas antes de aplicar el valor de localidad.
+          setTimeout(() => {
+            this.form.patchValue({
+              localidad: data.PK_Localidad
+            });
+            console.log('Formulario después de cargar:', this.form.value);
+          }, 100); // Retraso de 100ms para permitir que el DOM se actualice
+        });
+
       },
       error: (err) => {
         console.error('Error al cargar la parada', err);
       }
     });
-  }
-
+  }  
 
   mensaje(mensaje: string): void {
     this.snackBar.open(mensaje, 'Cerrar', {

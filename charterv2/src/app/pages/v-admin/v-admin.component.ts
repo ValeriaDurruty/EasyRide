@@ -57,11 +57,11 @@ export class VAdminComponent implements OnInit {
   getUsuarioCompartido(): void {
     this.userSubscription = this.userDataService.currentUser$.subscribe(user => {
       this.user = user;
-      if (this.user) {
-        console.log('Nombre de usuario:', this.user.nombre);
-        console.log('Apellido de usuario:', this.user.apellido);
-        console.log('Email de usuario:', this.user.email);
-        console.log('Rol de usuario:', this.user.FK_Rol);
+      if (this.user) { //Deberia irse
+        //console.log('Nombre de usuario:', this.user.nombre);
+        //console.log('Apellido de usuario:', this.user.apellido);
+        //console.log('Email de usuario:', this.user.email);
+       // console.log('Rol de usuario:', this.user.FK_Rol);
     }});
   };
 

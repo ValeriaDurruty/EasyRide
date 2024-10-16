@@ -27,7 +27,7 @@ const getUsuarioPorEmail = (req, res) => {
 exports.getUsuarioPorEmail = getUsuarioPorEmail;
 //Listar todos los usuarios
 const getUsuarios = (req, res) => {
-    connection_1.default.query('SELECT * FROM usuario;', (err, data) => {
+    connection_1.default.query('SELECT * FROM usuario ORDER BY apellido ASC;', (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al listar los usuarios:', err);
@@ -89,7 +89,6 @@ const deleteUsuario = (req, res) => {
 exports.deleteUsuario = deleteUsuario;
 //Agrega un usuario
 const postUsuario = (req, res) => {
-    console.log('Request body:', req.body); // Agrega esta línea para ver qué datos está recibiendo el servidor
     const { nombre, apellido, nro_documento, email, contrasenia, FK_Rol, FK_Empresa } = req.body;
     // Generar hash de la contraseña
     bcrypt_1.default.hash(contrasenia, 10, (err, hashedPassword) => {

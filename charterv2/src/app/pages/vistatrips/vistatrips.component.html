@@ -1,10 +1,11 @@
 <div class="page-header clear-filter" filter-color="blue">
-    <div class="page-header-image" style="background-image:url(assets/images/lista-viajes.jpg)">
+    <div class="page-header-image" style="background-image:url(assets/images/lista-viajes.webp)">
     </div>
 <app-headers></app-headers>
 
 <div class="titulo">
     <h1>LISTA DE VIAJES</h1>
+    <h2 class="font-secundaria">Resultados para {{origenSeleccionado}}-{{destinoSeleccionado}} en la fecha {{fechaSeleccionada | date:'dd-MM-yyyy'}}</h2>
 </div>
 <app-cardtrip [viajes]="viajes"></app-cardtrip>
 </div>

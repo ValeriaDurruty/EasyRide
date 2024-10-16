@@ -1,0 +1,43 @@
+.input-group {
+    display: block;
+    align-items: center; /* Alinea verticalmente los elementos al centro */
+  }
+  
+  .input-group .form-control {
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 20px;
+    padding: 8px;
+    width: 350px;
+    box-sizing: border-box; /* Asegura que el padding no afecte el ancho */
+  }
+  
+  input[type="text"].form-control {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #a100db;
+    }
+   
+    .input-group .form-control:focus {
+        border: 1px solid #b325ff;
+        outline: none;
+        box-shadow: 0 0 5px rgba(255, 0, 221, 0.5);
+      }
+      
+      .input-group .form-control:hover {
+        border-color: #bd43ff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      .input-group  .bt-a-servicio {
+        color: #ffffff;
+        font-size: 16px;
+        background-color: rgb(141, 0, 141);
+        border-radius: 5px;
+        margin-left:40px;
+        height: 45px;
+    }
+    
+    .input-group  .bt-a-servicio:hover {
+        background-color:#000000;
+    }
