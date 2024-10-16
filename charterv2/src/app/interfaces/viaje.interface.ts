@@ -8,7 +8,8 @@ export interface Viaje {
   horario_llegada: Time;
   cupo: number;
   precio: number;
-  fecha: Date;
+  fecha_salida: Date;
+  fecha_llegada: Date;
   FK_Charter: number;
   paradas?: ViajeParada[];
   patente?:string;

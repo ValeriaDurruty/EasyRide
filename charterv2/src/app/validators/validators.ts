@@ -55,11 +55,13 @@ export function cuitAsyncValidator(empresaService: EmpresaService, currentEmpres
   };
 }
 
-// Validador personalizado para la fecha
+// Validador personalizado para la fecha (fecha de salida no puede ser anterior a la actual)
 export function fechaNoPasada(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const fecha = new Date(control.value);
     const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); // Eliminar horas, minutos, segundos para solo comparar fechas
+
     if (fecha < hoy) {
       return { fechaPasada: true };
     }
@@ -67,15 +69,36 @@ export function fechaNoPasada(): ValidatorFn {
   };
 }
 
-// Validador personalizado para horarios iguales
-export function horariosDiferentes(control: AbstractControl): { [key: string]: any } | null {
-  const horarioSalida = control.get('horario_salida')?.value;
-  const horarioLlegada = control.get('horario_llegada')?.value;
+// Validador personalizado para fechas y horarios
+export function validarFechasYHorarios(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const fechaSalida = control.get('fecha_salida')?.value;
+    const fechaLlegada = control.get('fecha_llegada')?.value;
+    const horarioSalida = control.get('horario_salida')?.value;
+    const horarioLlegada = control.get('horario_llegada')?.value;
 
-  if (horarioSalida && horarioLlegada && horarioSalida === horarioLlegada) {
-    return { horariosIguales: true };
-  }
-  return null;
+    const errores: any = {};
+
+    // Verifica si las fechas son válidas y fecha_llegada no es anterior a fecha_salida
+    if (fechaSalida && fechaLlegada) {
+      const fechaSalidaDate = new Date(fechaSalida);
+      const fechaLlegadaDate = new Date(fechaLlegada);
+
+      if (fechaLlegadaDate < fechaSalidaDate) {
+        errores.fechaLlegadaInvalida = true;
+      }
+
+      // Si las fechas son iguales, validar que los horarios sean diferentes
+      if (fechaSalidaDate.getTime() === fechaLlegadaDate.getTime()) {
+        if (horarioSalida === horarioLlegada) {
+          errores.horariosIguales = true;
+        }
+      }
+    }
+
+    // Si hay errores, devolver el objeto con ellos, sino devolver null (válido)
+    return Object.keys(errores).length ? errores : null;
+  };
 }
 
 // Validador sincrónico para validar formato de CUIT

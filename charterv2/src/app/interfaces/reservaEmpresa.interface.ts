@@ -5,7 +5,8 @@ import { Reserva } from "./reserva.interface";
 
 export interface ReservaEmpresa {
     PK_Viaje?: number;
-    fecha: Date;
+    fecha_salida: Date;
+    fecha_llegada: Date;
     horario_salida: Time;
     horario_llegada: Time;
     precio: number;

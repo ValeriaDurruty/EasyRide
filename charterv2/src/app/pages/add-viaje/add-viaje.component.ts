@@ -9,7 +9,7 @@ import { Parada } from '../../interfaces/parada.interface';
 import { ViajeParada } from '../../interfaces/viaje.parada';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EmpresaService } from '../../services/empresa.service';
-import { fechaNoPasada, horariosDiferentes } from '../../validators/validators';
+import { fechaNoPasada, validarFechasYHorarios } from '../../validators/validators';
 
 
 //Agrego Validators
@@ -43,12 +43,12 @@ export class AddViajeComponent implements OnInit {
     this.form = this.fb.group({
       horario_salida: ['', [Validators.required]],
       horario_llegada: ['', [Validators.required]],
-      fecha: ['', [Validators.required, fechaNoPasada()]],
+      fecha_salida: ['', [Validators.required, fechaNoPasada()]], // Valida fecha no pasada
+      fecha_llegada: ['', [Validators.required, fechaNoPasada()]], // Valida fecha no pasada
       precio: ['', [Validators.required, Validators.min(1)]],
       cupo: ['', [Validators.min(1)]],
       FK_Charter: ['', [Validators.required]]
-    }, { validators: horariosDiferentes });
-  
+    }, { validators: validarFechasYHorarios() }); // Valida fechas y horarios en conjunto
   }
 
   ngOnInit(): void {
@@ -83,7 +83,8 @@ export class AddViajeComponent implements OnInit {
     const viaje: Viaje = {
       horario_salida: this.form.get('horario_salida')?.value ?? '',
       horario_llegada: this.form.get('horario_llegada')?.value ?? '',
-      fecha: new Date(this.form.get('fecha')?.value ?? ''),
+      fecha_salida: new Date(this.form.get('fecha')?.value ?? ''),
+      fecha_llegada: new Date(this.form.get('fecha')?.value ?? ''),
       precio: +this.form.get('precio')?.value || 0,
       FK_Charter: +this.form.get('FK_Charter')?.value || 0, //Si no anda en donde esta || ponele ??
       cupo: +this.form.get('cupo')?.value || 0,

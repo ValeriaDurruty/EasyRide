@@ -2,7 +2,8 @@
   <div *ngFor="let viaje of viajes" class="card" style="width: 15rem;">
     <div class="card-body">
       <h5 id="viaje-titulo" class="card-title">Empresa: {{ viaje.empresa }}</h5>
-      <p id="viaje-descripcion" class="card-text">Fecha: {{ viaje.fecha }}</p>
+      <p id="viaje-descripcion" class="card-text">Fecha salida: {{ viaje.fecha_salida }}</p>
+      <p id="viaje-descripcion" class="card-text">Fecha llegada: {{ viaje.fecha_llegada }}</p>
     </div>
     <ul class="list-group list-group-flush">
       <!-- Lista del card --> 

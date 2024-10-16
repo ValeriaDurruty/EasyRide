@@ -51,7 +51,8 @@
           <thead class="text-secondary">
             <tr>
               <th>Número Viaje</th>
-              <th>Día</th>
+              <th>Fecha salida</th>
+              <th>Fecha llegada</th>
               <th>Hora Salida</th>
               <th>Hora Llegada</th>
               <th>Paradas</th>
@@ -62,7 +63,8 @@
           <tbody>
             <tr *ngFor="let viaje of listViajesParadas">
               <td>{{ viaje.PK_Viaje }}</td>
-              <td>{{ viaje.fecha }}</td>
+              <td>{{ viaje.fecha_salida }}</td>
+              <td>{{ viaje.fecha_llegada }}</td>
               <td>{{ viaje.horario_salida }}</td>
               <td>{{ viaje.horario_llegada }}</td>
               <td>
@@ -186,7 +188,7 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha }}</p>
+              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }} </p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
               <p>Precio: {{ reserva.precio | currency }}</p>
             </div>
@@ -262,7 +264,7 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha }}</p>
+              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }} </p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
               <p>Precio: {{ reserva.precio | currency }}</p>
             </div>

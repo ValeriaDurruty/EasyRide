@@ -51,7 +51,8 @@ export class ReservarComponent implements OnInit, OnDestroy {
     this.form = this.fb.group({
       horario_salida: [''],
       horario_llegada: [''],
-      fecha: [''],
+      fecha_salida: [''],
+      fecha_llegada: [''],
       precio: [''],
       cupo: [''],
       patente_charter: [''],
@@ -92,19 +93,16 @@ export class ReservarComponent implements OnInit, OnDestroy {
           // Mostrar detalles del viaje recibido
           console.log('Viaje procesado:', viaje);
   
-          let fechaDate: Date;
-          if (typeof viaje.fecha === 'string') {
-            fechaDate = this.convertirCadenaADate(viaje.fecha);
-          } else {
-            fechaDate = new Date(viaje.fecha);
-          }
-          const fechaConvertida = this.convertirFechaAFormatoInput(fechaDate);
+          // Optimizar la conversión de fecha
+          const fechaConvertida_salida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
+          const fechaConvertida_llegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
           
           // Actualizar el formulario con los datos del viaje
           this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
-            fecha: fechaConvertida,
+            fecha_salida: fechaConvertida_salida,
+            fecha_llegada: fechaConvertida_llegada,
             precio: viaje.precio,
             cupo: viaje.cupo,
             empresa_nombre: viaje.empresa,
@@ -170,30 +168,20 @@ export class ReservarComponent implements OnInit, OnDestroy {
     this.selectedCharter = this.charters.find(charter => charter.PK_Charter.toString() === selectedCharterId) || null;
   }
 
-  //FECHA
-  convertirFechaAFormatoInput(fecha: Date): string {
-    const anio = fecha.getFullYear();
-    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son de 0 a 11
-    const dia = String(fecha.getDate()).padStart(2, '0');
+  // Función genérica para convertir fechas (sea Date o string) al formato input (YYYY-MM-DD)
+  convertirCadenaODateAFormatoInput(fecha: string | Date): string {
+    const dateObj = typeof fecha === 'string' ? this.convertirCadenaADate(fecha) : new Date(fecha);
+    const anio = dateObj.getFullYear();
+    const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const dia = String(dateObj.getDate()).padStart(2, '0');
     
-    const fechaConvertida = `${anio}-${mes}-${dia}`;
-    //console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
-    return fechaConvertida;
+    return `${anio}-${mes}-${dia}`;
   }
 
+  // Función para convertir cadenas de fecha (DD-MM-YYYY) a objetos Date
   convertirCadenaADate(fechaStr: string): Date {
-    const partes = fechaStr.split('-');
-    if (partes.length === 3) {
-      const dia = Number(partes[0]);
-      const mes = Number(partes[1]) - 1; // Los meses en JavaScript son de 0 a 11
-      const anio = Number(partes[2]);
-    
-      const fecha = new Date(anio, mes, dia);
-      //console.log(`Fecha convertida a Date: ${fecha}`);
-      return fecha;
-    }
-    //console.error('Formato de fecha incorrecto:', fechaStr);
-    return new Date(); // Retorna una fecha por defecto en caso de error
+    const [dia, mes, anio] = fechaStr.split('-').map(Number);
+    return new Date(anio, mes - 1, dia); // Ajustar el mes (0-indexado en JS)
   }
 
   navegar() {

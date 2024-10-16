@@ -34,7 +34,7 @@
           <thead class="text-secondary">
             <th>Reserva N°</th>
             <th>Estado</th>
-            <th>Fecha</th>
+            <th>Fechas</th>
             <th>Horarios</th>
             <th>Precio</th>
             <th>Empresa</th>
@@ -47,7 +47,7 @@
                 <!-- Campos -->
               <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
               <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-              <td id="fecha">{{ reserva.fecha }}</td>
+              <td id="fechas"> {{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }} </td>
               <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
               <td id="precio">$ {{ reserva.precio }}</td>
               <td id="empresa">{{ reserva.empresa }}</td>
@@ -93,7 +93,7 @@
             <thead class="text-secondary">
               <th>Reserva N°</th>
               <th>Estado</th>
-              <th>Fecha</th>
+              <th>Fechas</th>
               <th>Horarios</th>
               <th>Precio</th>
               <th>Empresa</th>
@@ -105,7 +105,7 @@
                   <!-- Campos -->
                 <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
                 <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-                <td id="fecha">{{ reserva.fecha }}</td>
+                <td id="fechas"> {{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }} </td>
                 <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
                 <td id="precio">$ {{ reserva.precio }}</td>
                 <td id="empresa">{{ reserva.empresa }}</td>

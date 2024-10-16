@@ -9,7 +9,8 @@ export interface ReservaPasajero {
     horario_salida?: Time;
     horario_llegada?: Time;
     precio?: number;
-    fecha?: Date;
+    fecha_salida?: Date;
+    fecha_llegada?: Date;
     patente?: string;
     modelo?: string;
     marca?: string;

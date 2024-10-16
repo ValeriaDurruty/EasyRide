@@ -15,7 +15,8 @@ export const getReservasPasajero = (req: Request, res: Response) => {
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.precio,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre AS modelo,
@@ -66,7 +67,8 @@ export const getReservasPasajero = (req: Request, res: Response) => {
                     v.horario_salida,
                     v.horario_llegada,
                     v.precio,
-                    v.fecha,
+                    v.fecha_salida,
+                    v.fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre,
@@ -106,7 +108,8 @@ export const getReservasPasadasPasajero = (req: Request, res: Response) => {
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.precio,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre AS modelo,
@@ -149,7 +152,7 @@ export const getReservasPasadasPasajero = (req: Request, res: Response) => {
                 INNER JOIN 
                     Provincia pr ON l.FK_Provincia = pr.PK_Provincia
                 WHERE 
-                    u.PK_Usuario = ? AND v.fecha < CURDATE()
+                    u.PK_Usuario = ? AND v.fecha_salida < CURDATE()
                 GROUP BY
                     r.PK_Reserva,
                     r.fecha_creacion,
@@ -158,7 +161,8 @@ export const getReservasPasadasPasajero = (req: Request, res: Response) => {
                     v.horario_salida,
                     v.horario_llegada,
                     v.precio,
-                    v.fecha,
+                    v.fecha_llegada,
+                    v.fecha_salida,
                     c.patente,
                     c.capacidad,
                     m.nombre,
@@ -196,7 +200,8 @@ export const getReservasFuturasPasajero = (req: Request, res: Response) => {
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.precio,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre AS modelo,
@@ -239,7 +244,7 @@ export const getReservasFuturasPasajero = (req: Request, res: Response) => {
                 INNER JOIN 
                     Provincia pr ON l.FK_Provincia = pr.PK_Provincia
                 WHERE 
-                    u.PK_Usuario = ? AND v.fecha >= CURDATE()
+                    u.PK_Usuario = ? AND v.fecha_salida >= CURDATE()
                 GROUP BY
                     r.PK_Reserva,
                     r.fecha_creacion,
@@ -248,7 +253,8 @@ export const getReservasFuturasPasajero = (req: Request, res: Response) => {
                     v.horario_salida,
                     v.horario_llegada,
                     v.precio,
-                    v.fecha,
+                    v.fecha_salida,
+                    v.fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre,
@@ -286,7 +292,8 @@ export const getReservasEmpresa = (req: Request, res: Response) => {
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.precio,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre AS modelo,
@@ -338,7 +345,8 @@ export const getReservasEmpresa = (req: Request, res: Response) => {
                     v.horario_salida,
                     v.horario_llegada,
                     v.precio,
-                    v.fecha,
+                    v.fecha_salida,
+                    v.fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre,
@@ -375,11 +383,11 @@ export const getReservasPasadasEmpresa = (req: Request, res: Response) => {
     const updateQuery = `
         UPDATE Reserva r
         INNER JOIN Viaje v ON r.FK_Viaje = v.PK_Viaje
-        INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter  -- Faltaba este INNER JOIN
+        INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter
         INNER JOIN Empresa e ON c.FK_Empresa = e.PK_Empresa
         SET r.FK_Estado_reserva = 3
         WHERE e.PK_Empresa = ?
-          AND v.fecha < CURDATE()
+          AND v.fecha_salida < CURDATE()
           AND r.FK_Estado_reserva = 1;
     `;
 
@@ -393,7 +401,8 @@ export const getReservasPasadasEmpresa = (req: Request, res: Response) => {
         const selectQuery = `
             SELECT 
                 v.PK_Viaje,
-                DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                 DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                 DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                 v.precio,
@@ -462,10 +471,10 @@ export const getReservasPasadasEmpresa = (req: Request, res: Response) => {
             ) reservas ON reservas.FK_Viaje = v.PK_Viaje
             WHERE 
                 e.PK_Empresa = ? 
-                AND v.fecha < CURDATE()
+                AND v.fecha_salida < CURDATE()
                 AND reservas.reservas IS NOT NULL
             ORDER BY  
-                v.fecha ASC,
+                v.fecha_salida ASC,
                 v.PK_Viaje ASC;
         `;
 
@@ -492,7 +501,8 @@ export const getReservasFuturasEmpresa = (req: Request, res: Response) => {
 
     const query = `SELECT 
                     v.PK_Viaje,
-                    DATE_FORMAT(v.fecha, '%d-%m-%Y') AS fecha,
+                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
                     v.precio,
@@ -561,10 +571,10 @@ export const getReservasFuturasEmpresa = (req: Request, res: Response) => {
                 ) reservas ON reservas.FK_Viaje = v.PK_Viaje
                 WHERE 
                     e.PK_Empresa = ? 
-                    AND v.fecha >= CURDATE()
+                    AND v.fecha_salida >= CURDATE()
                     AND reservas.reservas IS NOT NULL
                 ORDER BY  
-                    v.fecha ASC,
+                    v.fecha_salida ASC,
                     v.PK_Viaje ASC;`;
 
     connection.query(query, PK_Empresa, (err, data) => {
