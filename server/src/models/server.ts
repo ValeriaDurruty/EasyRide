@@ -9,6 +9,7 @@ import routesMarcas from '../routes/marca.routes';
 import routesParadas from '../routes/parada.routes';
 import routesUsuarios from '../routes/user.routes';
 import routesEmpresas from '../routes/empresa.routes';
+import routesNotificaciones from '../routes/notificacion.routes';
 import connection from '../db/connection';
 import cors from 'cors';
 
@@ -51,6 +52,7 @@ class Server {
         this.app.use('/api/paradas', routesParadas);
         this.app.use('/api/usuarios', routesUsuarios);
         this.app.use('/api/empresas', routesEmpresas);
+        this.app.use('/api/notificaciones', routesNotificaciones);
     }
 
     conectarDB() {

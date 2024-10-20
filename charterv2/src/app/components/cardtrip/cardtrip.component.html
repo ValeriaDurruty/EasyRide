@@ -2,31 +2,38 @@
   <div *ngFor="let viaje of viajes" class="card" style="width: 15rem;">
     <div class="card-body">
       <h5 id="viaje-titulo" class="card-title">Empresa: {{ viaje.empresa }}</h5>
-      <p id="viaje-descripcion" class="card-text">Fecha salida: {{ viaje.fecha_salida }}</p>
-      <p id="viaje-descripcion" class="card-text">Fecha llegada: {{ viaje.fecha_llegada }}</p>
+      <p id="viaje-descripcion" class="card-text" *ngIf="viaje.fecha_salida === viaje.fecha_llegada">
+        Fecha: {{ viaje.fecha_salida }}
+      </p>
+      <p id="viaje-descripcion" class="card-text" *ngIf="viaje.fecha_salida !== viaje.fecha_llegada">
+        Fecha salida: <br>{{ viaje.fecha_salida }}
+      </p>
+      <p id="viaje-descripcion1" class="card-text" *ngIf="viaje.fecha_salida !== viaje.fecha_llegada">
+        Fecha llegada: <br>{{ viaje.fecha_llegada }}
+      </p>
     </div>
     <ul class="list-group list-group-flush">
       <!-- Lista del card --> 
-      <li id="viaje-origen" class="list-group-item">Horario Salida: {{ viaje.horario_salida}}</li>
+      <li id="viaje-origen" class="list-group-item">Horario Salida: {{ viaje.horario_salida }}</li>
       <li id="viaje-destino" class="list-group-item">Horario Llegada: {{ viaje.horario_llegada }}</li>
-      <li id="viaje-precio" class="list-group-item">Precio: {{ viaje.precio | currency }}</li>
+      <li id="viaje-precio" class="list-group-item">Precio: {{ viaje.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</li>
 
-    <!-- Mostrar "No hay cupo" si el cupo es 0 -->
+      <!-- Mostrar "No hay cupo" si el cupo es 0 -->
       <li id="viaje-cupo" class="list-group-item">
         <span *ngIf="viaje.cupo > 0">Cupo: {{ viaje.cupo }}</span>
-        <span class="no-place" *ngIf="viaje.cupo === 0">No hay cupo</span>
+        <span class="no-place" *ngIf="viaje.cupo === 0">
+          No hay cupo
+        </span>
       </li>
-      </ul>
-      <div class="card-body button-container">
-      <!-- Deshabilitar el botón si no hay cupo -->
+    </ul>
+    <div class="card-body button-container">
+      <!-- Botón que cambia según la disponibilidad del cupo -->
       <button 
         class="gradient-button" 
-        (click)="reservar(viaje.PK_Viaje || 0)"
-        [class.disabled]="viaje.cupo === 0" 
-        [disabled]="viaje.cupo === 0"
+        (click)="viaje.cupo > 0 ? reservar(viaje.PK_Viaje || 0) : notificarDisponibilidad(viaje.PK_Viaje || 0)"
       >
-        Reservar
+        {{ viaje.cupo > 0 ? 'Reservar' : 'Notificar disponibilidad' }}
       </button>
-      </div>
-      </div>
-      </div>
+    </div>
+  </div>
+</div>

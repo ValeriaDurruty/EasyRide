@@ -72,7 +72,7 @@
                   <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
                 </div>
               </td>
-              <td>${{ viaje.precio }}</td>
+              <td>{{ viaje.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
               <td>
                 <a [routerLink]="['/Editar-viaje', viaje.PK_Viaje]" class="mr-2" matTooltip="Editar viaje">
                   <i class="fas fa-pencil-alt icon-pencil icon-background" aria-label="Editar viaje"></i>
@@ -188,9 +188,9 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }} </p>
+              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }}</p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
-              <p>Precio: {{ reserva.precio | currency }}</p>
+              <p>Precio: {{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</p>
             </div>
             <!-- Segunda columna -->
             <div class="col">
@@ -264,9 +264,9 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }} </p>
+              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }}</p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
-              <p>Precio: {{ reserva.precio | currency }}</p>
+              <p>Precio: {{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</p>
             </div>
             <!-- Segunda columna -->
             <div class="col">

@@ -83,8 +83,8 @@ export class AddViajeComponent implements OnInit {
     const viaje: Viaje = {
       horario_salida: this.form.get('horario_salida')?.value ?? '',
       horario_llegada: this.form.get('horario_llegada')?.value ?? '',
-      fecha_salida: new Date(this.form.get('fecha')?.value ?? ''),
-      fecha_llegada: new Date(this.form.get('fecha')?.value ?? ''),
+      fecha_salida: this.form.get('fecha_salida')?.value ? this.form.get('fecha_salida')?.value : '',
+      fecha_llegada: this.form.get('fecha_llegada')?.value ? this.form.get('fecha_llegada')?.value : '',
       precio: +this.form.get('precio')?.value || 0,
       FK_Charter: +this.form.get('FK_Charter')?.value || 0, //Si no anda en donde esta || ponele ??
       cupo: +this.form.get('cupo')?.value || 0,
@@ -152,7 +152,7 @@ export class AddViajeComponent implements OnInit {
     }
   
     // Enviar el viaje al servicio
-    console.log('Datos a enviar:', viaje);
+    //console.log('Datos a enviar:', viaje);
   
     this._viajeService.addViaje(viaje).subscribe(
       response => {
@@ -185,7 +185,6 @@ export class AddViajeComponent implements OnInit {
   eliminarParada(index: number) {
     this.paradasSeleccionadas.splice(index, 1);
   }
-
   
   mensaje(mensaje:string) {
     this._snackBar.open(mensaje, 'Cerrar', {

@@ -19,7 +19,10 @@
         <i class="fas fa-exclamation-triangle warning-icon"></i> El horario de llegada es obligatorio.
       </small>
       <small class="text-danger" *ngIf="form.hasError('horariosIguales') && form.get('horario_salida')?.touched && form.get('horario_llegada')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i> Los horarios de salida y llegada no pueden ser iguales si las fechas coinciden.
+        <i class="fas fa-exclamation-triangle warning-icon"></i> Los horarios de salida y llegada no pueden ser iguales si las fechas de llegada y salida coinciden.
+      </small>
+      <small class="text-danger" *ngIf="form.hasError('horarioLlegadaInvalido') && form.get('horario_salida')?.touched && form.get('horario_llegada')?.touched">
+        <i class="fas fa-exclamation-triangle warning-icon"></i> El horario de llegada no puede ser anterior al de salida.
       </small>
 
       <p><strong>Fecha de salida:</strong></p>
@@ -28,7 +31,7 @@
         <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida es obligatoria.
       </small>
       <small class="text-danger" *ngIf="form.get('fecha_salida')?.hasError('fechaPasada') && form.get('fecha_salida')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida no puede ser anterior a la fecha actual.
+        <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida no puede ser anterior o igual a la fecha actual.
       </small>
 
       <p><strong>Fecha de llegada:</strong></p>

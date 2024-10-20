@@ -116,7 +116,7 @@ export class UserService {
     }
   }  
 
-  //Lo nuevo
+  // Redirección después de iniciar sesión
   private redirectUrl: string | null = null;
 
   setRedirectUrl(url: string) {

@@ -14,6 +14,7 @@ const marca_routes_1 = __importDefault(require("../routes/marca.routes"));
 const parada_routes_1 = __importDefault(require("../routes/parada.routes"));
 const user_routes_1 = __importDefault(require("../routes/user.routes"));
 const empresa_routes_1 = __importDefault(require("../routes/empresa.routes"));
+const notificacion_routes_1 = __importDefault(require("../routes/notificacion.routes"));
 const connection_1 = __importDefault(require("../db/connection"));
 const cors_1 = __importDefault(require("cors"));
 class Server {
@@ -46,6 +47,7 @@ class Server {
         this.app.use('/api/paradas', parada_routes_1.default);
         this.app.use('/api/usuarios', user_routes_1.default);
         this.app.use('/api/empresas', empresa_routes_1.default);
+        this.app.use('/api/notificaciones', notificacion_routes_1.default);
     }
     conectarDB() {
         //Conexión a la base de datos

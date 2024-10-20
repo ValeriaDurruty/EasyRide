@@ -6,7 +6,7 @@
     <h2>Información de Viaje</h2>
     <!--Comienza el form--> 
     <form [formGroup]="form" class="servicio-details" (ngSubmit)="addViaje()">    
-      
+      <!-- Campo Horario de salida--> 
       <p><strong>Horario de salida:</strong></p>
       <input id="horario_salida" type="time" formControlName="horario_salida" class="form-control">
       <small class="text-danger" *ngIf="form.get('horario_salida')?.hasError('required') && form.get('horario_salida')?.touched">
@@ -19,7 +19,10 @@
         <i class="fas fa-exclamation-triangle warning-icon"></i> El horario de llegada es obligatorio.
       </small>
       <small class="text-danger" *ngIf="form.hasError('horariosIguales') && form.get('horario_salida')?.touched && form.get('horario_llegada')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i> Los horarios de salida y llegada no pueden ser iguales si las fechas coinciden.
+        <i class="fas fa-exclamation-triangle warning-icon"></i> Los horarios de salida y llegada no pueden ser iguales si las fechas de llegada y salida coinciden.
+      </small>
+      <small class="text-danger" *ngIf="form.hasError('horarioLlegadaInvalido') && form.get('horario_salida')?.touched && form.get('horario_llegada')?.touched">
+        <i class="fas fa-exclamation-triangle warning-icon"></i> El horario de llegada no puede ser anterior al de salida.
       </small>
 
       <p><strong>Fecha de salida:</strong></p>
@@ -28,7 +31,7 @@
         <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida es obligatoria.
       </small>
       <small class="text-danger" *ngIf="form.get('fecha_salida')?.hasError('fechaPasada') && form.get('fecha_salida')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida no puede ser anterior a la fecha actual.
+        <i class="fas fa-exclamation-triangle warning-icon"></i> La fecha de salida no puede ser anterior o igual a la fecha actual.
       </small>
 
       <p><strong>Fecha de llegada:</strong></p>
@@ -43,11 +46,11 @@
       <p><strong>Precio:</strong></p>
       <input id="precio" type="number" formControlName="precio" class="form-control" placeholder="Ingrese Precio">
       <small class="text-danger" *ngIf="form.get('precio')?.hasError('required') && form.get('precio')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i>
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
         El precio es obligatorio.
       </small>
       <small class="text-danger" *ngIf="form.get('precio')?.hasError('min') && form.get('precio')?.touched">
-        <i class="fas fa-exclamation-triangle warning-icon"></i>
+        <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
         El precio debe ser igual o mayor a 1.
       </small>
 
@@ -78,7 +81,7 @@
         </option>
       </select>
      <small class="text-danger" *ngIf="form.get('FK_Charter')?.hasError('required') && form.get('FK_Charter')?.touched">
-      <i class="fas fa-exclamation-triangle warning-icon"></i>
+      <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
       Debes seleccionar un charter.
       </small>
       <div class="bt-container">

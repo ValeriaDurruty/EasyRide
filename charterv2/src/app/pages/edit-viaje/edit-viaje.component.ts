@@ -53,7 +53,7 @@ export class EditViajeComponent implements OnInit {
       cupo: ['', [Validators.min(1)]],
       FK_Charter: ['', [Validators.required]]
     }, { validators: validarFechasYHorarios() }); // Valida fechas y horarios en conjunto
-  }
+  } 
 
 
   //NO ME CAMBIEN EL ORDEN DE COMO SE CARGA
@@ -114,7 +114,7 @@ export class EditViajeComponent implements OnInit {
     });
   }
   
-  //OBTENER VIAJE POR ID
+//OBTENER EL VIAJE. PORFA NO ME LO TOQUEN
   obtenerViajeXid(id: number): void {
     //this.loading = true; // Activa el estado de carga
     this._viajeService.getViajeXid(id).subscribe(
@@ -126,11 +126,11 @@ export class EditViajeComponent implements OnInit {
 
           this.idViaje = viaje.PK_Viaje ?? 0;
           
-        // Optimizar la conversión de fecha
-        const fechaConvertida_salida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
-        const fechaConvertida_llegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
+          // Optimizar la conversión de fecha
+          const fechaConvertida_salida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
+          const fechaConvertida_llegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
 
-        this.form.patchValue({
+          this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
             fecha_salida: fechaConvertida_salida,
@@ -276,7 +276,7 @@ export class EditViajeComponent implements OnInit {
     const selectedCharterId = (event.target as HTMLSelectElement).value;
     this.selectedCharter = this.charters.find(charter => charter.PK_Charter.toString() === selectedCharterId) || null;
   }
-  
+
   // Función genérica para convertir fechas (sea Date o string) al formato input (YYYY-MM-DD)
   convertirCadenaODateAFormatoInput(fecha: string | Date): string {
     const dateObj = typeof fecha === 'string' ? this.convertirCadenaADate(fecha) : new Date(fecha);
@@ -292,6 +292,7 @@ export class EditViajeComponent implements OnInit {
     const [dia, mes, anio] = fechaStr.split('-').map(Number);
     return new Date(anio, mes - 1, dia); // Ajustar el mes (0-indexado en JS)
   }
+
 
    //MENSAJES DE NOTIFICACION
  

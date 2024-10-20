@@ -16,7 +16,7 @@
 
 /* Estilos para desplegables  */
 
-#origen {
+select {
     width: 100%;
     padding: 0.5rem;
     font-size: 1rem;
@@ -26,7 +26,7 @@
     color: #910fab;
   }
 
-  #origen:focus{
+  select:focus{
     color: #c713eb;
   }
 
@@ -123,4 +123,23 @@
     .search-box input[type="date"] {
         width: calc(100% - 10px); /* Reducimos el ancho de los campos de entrada para darles más espacio */
     }
+}
+
+/* Fila flex para provincia y localidad */
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem; /* Espacio entre los selectores */
+}
+
+/* Hace que cada elemento de la fila ocupe la misma cantidad de espacio */
+.search-box {
+  flex: 1;
+}
+
+/* Estilo responsivo para pantallas pequeñas */
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column; /* Para pantallas pequeñas, organizamos los elementos en una columna */
+  }
 }

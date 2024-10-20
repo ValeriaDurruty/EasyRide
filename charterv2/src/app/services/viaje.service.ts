@@ -45,7 +45,7 @@ export class ViajeService {
       return this.http.put(`${this.myAppUrl}${this.myApiUrl}${viajeId}`, viaje);
     }
 
-    getBusquedaViajes(body: { fecha: string; origen: number; destino: number }): Observable<Viaje[]> {
+    getBusquedaViajes(body: { fecha_salida: string; origen: number; destino: number }): Observable<Viaje[]> {
       return this.http.post<Viaje[]>(`${this.myAppUrl}${this.myApiUrl}buscar`, body);
     }
 }

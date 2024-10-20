@@ -56,7 +56,7 @@ export const getParadasxLocalidad = (req: Request, res: Response) => {
             return res.status(500).json({ error: 'Error al listar las paradas' });
         } else {
             if (data.length === 0) {
-                return res.json('No hay paradas cargadas');
+                return res.json('No hay paradas cargadas para esta localidad');
             } else {
                 res.json(data);
             }

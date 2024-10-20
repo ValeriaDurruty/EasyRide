@@ -47,9 +47,9 @@
                 <!-- Campos -->
               <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
               <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-              <td id="fechas"> {{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }} </td>
+              <td id="fecha">{{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }}</td>
               <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
-              <td id="precio">$ {{ reserva.precio }}</td>
+              <td id="precio">{{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
               <td id="empresa">{{ reserva.empresa }}</td>
               <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
               <td id="paradas">
@@ -105,9 +105,9 @@
                   <!-- Campos -->
                 <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
                 <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-                <td id="fechas"> {{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }} </td>
+                <td id="fecha">{{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }}</td>
                 <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
-                <td id="precio">$ {{ reserva.precio }}</td>
+                <td id="precio">{{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
                 <td id="empresa">{{ reserva.empresa }}</td>
                 <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
                 <td id="paradas">

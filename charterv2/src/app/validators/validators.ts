@@ -79,7 +79,7 @@ export function validarFechasYHorarios(): ValidatorFn {
 
     const errores: any = {};
 
-    // Verifica si las fechas son válidas y fecha_llegada no es anterior a fecha_salida
+    // Verifica si las fechas son válidas y si la fecha de llegada no es anterior a la de salida
     if (fechaSalida && fechaLlegada) {
       const fechaSalidaDate = new Date(fechaSalida);
       const fechaLlegadaDate = new Date(fechaLlegada);
@@ -88,10 +88,24 @@ export function validarFechasYHorarios(): ValidatorFn {
         errores.fechaLlegadaInvalida = true;
       }
 
-      // Si las fechas son iguales, validar que los horarios sean diferentes
+      // Si las fechas son iguales, validar los horarios
       if (fechaSalidaDate.getTime() === fechaLlegadaDate.getTime()) {
-        if (horarioSalida === horarioLlegada) {
-          errores.horariosIguales = true;
+        if (horarioSalida && horarioLlegada) {
+          const [horasSalida, minutosSalida] = horarioSalida.split(':').map(Number);
+          const [horasLlegada, minutosLlegada] = horarioLlegada.split(':').map(Number);
+
+          const totalMinutosSalida = horasSalida * 60 + minutosSalida;
+          const totalMinutosLlegada = horasLlegada * 60 + minutosLlegada;
+
+          // Validar que los horarios no sean iguales
+          if (totalMinutosSalida === totalMinutosLlegada) {
+            errores.horariosIguales = true;
+          }
+
+          // Validar que el horario de llegada no sea anterior al de salida
+          if (totalMinutosLlegada < totalMinutosSalida) {
+            errores.horarioLlegadaInvalido = true;
+          }
         }
       }
     }

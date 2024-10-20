@@ -155,7 +155,7 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
             INNER JOIN 
                 Provincia pr ON l.FK_Provincia = pr.PK_Provincia 
             WHERE 
-                v.fecha = ? 
+                v.fecha_salida = ? 
                 AND EXISTS (
                     SELECT 1 
                     FROM Viaje_Parada vp_origen 
@@ -195,7 +195,7 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
                 vp.orden;
                             `;
 
-        connection.query(query, [body.fecha, body.origen, body.origen, body.destino], (err, data) => {
+        connection.query(query, [body.fecha_salida, body.origen, body.origen, body.destino], (err, data) => {
         if(err) {
             // Registrar el error en la consola
             console.error('Error al realizar la búsqueda:', err);
@@ -205,8 +205,8 @@ export const getBusquedaViajes = (req: Request, res: Response) => {
             if (data.length === 0) {
                 return res.json('No hay viajes cargados');
             } else {
+
                 res.json(data);
-                console.log(data);
             }
         }
     });
@@ -383,7 +383,7 @@ export const addViaje = (req: Request, res: Response) => {
 
         // Inserta el viaje
         connection.query(
-            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?)`,
+            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?, ?)`,
             [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter],
             (err, result) => {
                 if (err) {
@@ -450,7 +450,7 @@ export const putViajes = (req: Request, res: Response) => {
         // Actualiza el viaje
         connection.query(
             `UPDATE Viaje 
-             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha = ?, FK_Charter = ?
+             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?
              WHERE PK_Viaje = ?`,
             [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, PK_Viaje],
             (err, result) => {

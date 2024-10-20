@@ -58,7 +58,7 @@ const getParadasxLocalidad = (req, res) => {
         }
         else {
             if (data.length === 0) {
-                return res.json('No hay paradas cargadas');
+                return res.json('No hay paradas cargadas para esta localidad');
             }
             else {
                 res.json(data);

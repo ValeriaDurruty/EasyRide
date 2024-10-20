@@ -156,7 +156,7 @@ const getBusquedaViajes = (req, res) => {
             INNER JOIN 
                 Provincia pr ON l.FK_Provincia = pr.PK_Provincia 
             WHERE 
-                v.fecha = ? 
+                v.fecha_salida = ? 
                 AND EXISTS (
                     SELECT 1 
                     FROM Viaje_Parada vp_origen 
@@ -195,7 +195,7 @@ const getBusquedaViajes = (req, res) => {
                 v.PK_Viaje, 
                 vp.orden;
                             `;
-    connection_1.default.query(query, [body.fecha, body.origen, body.origen, body.destino], (err, data) => {
+    connection_1.default.query(query, [body.fecha_salida, body.origen, body.origen, body.destino], (err, data) => {
         if (err) {
             // Registrar el error en la consola
             console.error('Error al realizar la búsqueda:', err);
@@ -208,7 +208,6 @@ const getBusquedaViajes = (req, res) => {
             }
             else {
                 res.json(data);
-                console.log(data);
             }
         }
     });
@@ -373,7 +372,7 @@ const addViaje = (req, res) => {
             return res.status(500).json({ error: 'Error al iniciar la transacción' });
         }
         // Inserta el viaje
-        connection_1.default.query(`INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?)`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter], (err, result) => {
+        connection_1.default.query(`INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?, ?)`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter], (err, result) => {
             if (err) {
                 // Rollback en caso de error
                 return connection_1.default.rollback(() => {
@@ -425,7 +424,7 @@ const putViajes = (req, res) => {
         }
         // Actualiza el viaje
         connection_1.default.query(`UPDATE Viaje 
-             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha = ?, FK_Charter = ?
+             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?
              WHERE PK_Viaje = ?`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, PK_Viaje], (err, result) => {
             if (err) {
                 return connection_1.default.rollback(() => {

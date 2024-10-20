@@ -12,6 +12,7 @@ import { ReservaService } from '../../services/reserva.service';
 import { SessionService } from '../../services/session.service';
 import { Subscription } from 'rxjs';
 import { Location } from '@angular/common';
+import { cp } from 'fs';
 
 @Component({
   selector: 'app-reservar',
@@ -91,18 +92,19 @@ export class ReservarComponent implements OnInit, OnDestroy {
           const viaje: Viaje = response[0];
   
           // Mostrar detalles del viaje recibido
-          console.log('Viaje procesado:', viaje);
-  
-          // Optimizar la conversión de fecha
-          const fechaConvertida_salida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
-          const fechaConvertida_llegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
+          //console.log('Viaje procesado:', viaje);
+
+          // Convertir fechas al formato adecuado
+          const fechaSalida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
+          const fechaLlegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
+
           
           // Actualizar el formulario con los datos del viaje
           this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
-            fecha_salida: fechaConvertida_salida,
-            fecha_llegada: fechaConvertida_llegada,
+            fecha_salida: fechaSalida,  // Formato YYYY-MM-DD
+            fecha_llegada: fechaLlegada,  // Formato YYYY-MM-DD
             precio: viaje.precio,
             cupo: viaje.cupo,
             empresa_nombre: viaje.empresa,
@@ -116,7 +118,7 @@ export class ReservarComponent implements OnInit, OnDestroy {
             this.paradasSeleccionadas = this.parseParadas(viaje.paradas);
   
             // Log de las paradas procesadas
-            console.log('Paradas procesadas:', this.paradasSeleccionadas);
+            //console.log('Paradas procesadas:', this.paradasSeleccionadas);
           } else {
             console.log('No se encontraron paradas en el viaje.');
             this.paradasSeleccionadas = [];
@@ -153,7 +155,7 @@ export class ReservarComponent implements OnInit, OnDestroy {
           FK_Viaje: 0 // Asigna un valor adecuado para FK_Viaje si lo tienes
         };
   
-        console.log('Parada procesada:', paradaData); // Log de cada parada procesada
+        //console.log('Parada procesada:', paradaData); // Log de cada parada procesada
         return paradaData;
       }
   
@@ -168,20 +170,21 @@ export class ReservarComponent implements OnInit, OnDestroy {
     this.selectedCharter = this.charters.find(charter => charter.PK_Charter.toString() === selectedCharterId) || null;
   }
 
-  // Función genérica para convertir fechas (sea Date o string) al formato input (YYYY-MM-DD)
   convertirCadenaODateAFormatoInput(fecha: string | Date): string {
-    const dateObj = typeof fecha === 'string' ? this.convertirCadenaADate(fecha) : new Date(fecha);
+    if (typeof fecha === 'string') {
+        const [dia, mes, anio] = fecha.split('-'); // Separar los componentes de la fecha
+        //console.log(`Convirtiendo fecha de cadena: ${fecha} a formato YYYY-MM-DD`);
+        return `${anio}-${mes}-${dia}`; // Convertir de DD-MM-YYYY a YYYY-MM-DD
+    }
+
+    // Si ya es un objeto Date, formatear adecuadamente
+    const dateObj = new Date(fecha);
     const anio = dateObj.getFullYear();
     const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
     const dia = String(dateObj.getDate()).padStart(2, '0');
-    
-    return `${anio}-${mes}-${dia}`;
-  }
 
-  // Función para convertir cadenas de fecha (DD-MM-YYYY) a objetos Date
-  convertirCadenaADate(fechaStr: string): Date {
-    const [dia, mes, anio] = fechaStr.split('-').map(Number);
-    return new Date(anio, mes - 1, dia); // Ajustar el mes (0-indexado en JS)
+    //console.log(`Convirtiendo objeto Date: ${fecha} a formato YYYY-MM-DD`);
+    return `${anio}-${mes}-${dia}`;
   }
 
   navegar() {

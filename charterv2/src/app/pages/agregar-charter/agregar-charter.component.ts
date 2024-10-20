@@ -66,7 +66,7 @@ export class AgregarCharterComponent implements OnInit {
 
     // Detectar cambios en la selección de marca
     this.form.get('marca')?.valueChanges.subscribe((marcaId: number) => {
-      console.log(marcaId);
+      //console.log(marcaId);
       this.cargarModelosPorMarca(marcaId);
     });
   }
@@ -81,7 +81,7 @@ export class AgregarCharterComponent implements OnInit {
 
   cargarModelosPorMarca(marcaId: number): void {
     this._modeloService.getModelosXMarca(marcaId).subscribe(data => {
-      console.log(marcaId);
+      //console.log(marcaId);
       
       if (Array.isArray(data) && data.length > 0) {
         this.modelos = data; // Asignar los modelos si existen

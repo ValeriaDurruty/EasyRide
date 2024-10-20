@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cancelarReserva = exports.addReserva = exports.getReservasFuturasEmpresa = exports.getReservasPasadasEmpresa = exports.getReservasEmpresa = exports.getReservasFuturasPasajero = exports.getReservasPasadasPasajero = exports.getReservasPasajero = void 0;
 const connection_1 = __importDefault(require("../db/connection"));
+const email_1 = require("../utils/email");
 //Listar todas las reservas de un pasajero
 const getReservasPasajero = (req, res) => {
     const { PK_Usuario } = req.params;
@@ -160,8 +161,8 @@ const getReservasPasadasPasajero = (req, res) => {
                     v.horario_salida,
                     v.horario_llegada,
                     v.precio,
-                    v.fecha_llegada,
                     v.fecha_salida,
+                    v.fecha_llegada,
                     c.patente,
                     c.capacidad,
                     m.nombre,
@@ -376,7 +377,7 @@ const getReservasPasadasEmpresa = (req, res) => {
     const updateQuery = `
         UPDATE Reserva r
         INNER JOIN Viaje v ON r.FK_Viaje = v.PK_Viaje
-        INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter
+        INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter  -- Faltaba este INNER JOIN
         INNER JOIN Empresa e ON c.FK_Empresa = e.PK_Empresa
         SET r.FK_Estado_reserva = 3
         WHERE e.PK_Empresa = ?
@@ -654,7 +655,7 @@ const addReserva = (req, res) => {
     });
 };
 exports.addReserva = addReserva;
-//Cancelar una reserva
+// Cancelar una reserva
 const cancelarReserva = (req, res) => {
     const { PK_Reserva } = req.params;
     if (!PK_Reserva) {
@@ -697,23 +698,100 @@ const cancelarReserva = (req, res) => {
                 }
                 // Incrementar el cupo del viaje en 1
                 const updateCupoQuery = 'UPDATE Viaje SET cupo = cupo + 1 WHERE PK_Viaje = ?';
-                connection_1.default.query(updateCupoQuery, [PK_Viaje], (err, result) => {
+                connection_1.default.query(updateCupoQuery, [PK_Viaje], (err) => {
                     if (err) {
                         console.error('Error al actualizar el cupo disponible:', err);
                         return connection_1.default.rollback(() => {
                             res.status(500).json({ error: 'Error al actualizar el cupo disponible' });
                         });
                     }
-                    // Confirmar la transacción si todo fue exitoso
-                    connection_1.default.commit((err) => {
+                    // Buscar las notificaciones para el viaje cancelado
+                    const getNotificacionQuery = `
+                        SELECT u.PK_Usuario, u.email, u.nombre, u.apellido 
+                        FROM notificacion n
+                        INNER JOIN Usuario u ON n.FK_Usuario = u.PK_Usuario
+                        WHERE n.FK_Viaje = ? AND n.enviada = 0`;
+                    connection_1.default.query(getNotificacionQuery, [PK_Viaje], (err, notificaciones) => {
                         if (err) {
-                            console.error('Error al confirmar la transacción:', err);
+                            console.error('Error al obtener notificaciones:', err);
                             return connection_1.default.rollback(() => {
-                                res.status(500).json({ error: 'Error al confirmar la transacción' });
+                                res.status(500).json({ error: 'Error al obtener notificaciones' });
                             });
                         }
-                        // Responder con éxito
-                        res.status(200).json({ message: 'Reserva cancelada y cupo actualizado exitosamente' });
+                        if (notificaciones.length === 0) {
+                            // No hay notificaciones para este viaje
+                            return finalizarCancelacion(res, PK_Reserva, PK_Viaje);
+                        }
+                        // Variable para contar los correos enviados
+                        let emailsEnviados = 0;
+                        // Ahora obtenemos los detalles del viaje para incluirlos en el correo
+                        const getViajeDetallesQuery = `
+                            SELECT 
+                                v.PK_Viaje, 
+                                DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                                DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
+                                DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
+                                DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada,
+                                v.precio, v.cupo,
+                                e.razon_social AS empresa,
+                                GROUP_CONCAT(p.nombre SEPARATOR ', ') AS paradas 
+                            FROM Viaje v 
+                            INNER JOIN Charter c ON v.FK_Charter = c.PK_Charter 
+                            INNER JOIN Empresa e ON c.FK_Empresa = e.PK_Empresa 
+                            INNER JOIN Viaje_Parada vp ON v.PK_Viaje = vp.FK_Viaje 
+                            INNER JOIN Parada p ON vp.FK_Parada = p.PK_Parada
+                            WHERE v.PK_Viaje = ?
+                            GROUP BY v.PK_Viaje`;
+                        connection_1.default.query(getViajeDetallesQuery, [PK_Viaje], (err, viajeDetalles) => {
+                            if (err) {
+                                console.error('Error al obtener detalles del viaje:', err);
+                                return connection_1.default.rollback(() => {
+                                    res.status(500).json({ error: 'Error al obtener detalles del viaje' });
+                                });
+                            }
+                            const viaje = viajeDetalles[0];
+                            // Enviar correos a todos los usuarios notificados
+                            notificaciones.forEach((usuario) => {
+                                const asunto = `Un lugar disponible en el viaje de ${viaje.empresa}`;
+                                const mensaje = `
+                                    Estimado/a ${usuario.nombre} ${usuario.apellido},
+
+                                    Se ha liberado un lugar en el viaje ${viaje.PK_Viaje} que tiene las siguientes características:
+
+                                    Fecha de salida: ${viaje.fecha_salida}
+                                    Fecha de llegada: ${viaje.fecha_llegada}
+                                    Horario de salida: ${viaje.horario_salida}
+                                    Horario de llegada: ${viaje.horario_llegada}
+                                    Paradas: ${viaje.paradas}
+                                    Precio: $ ${viaje.precio} 
+
+                                    ¡Aprovecha esta oportunidad y reserva ahora!
+
+                                    Saludos,
+                                    El equipo de reservas de Easy Ride
+                                `;
+                                // Enviar el correo al usuario
+                                (0, email_1.enviarCorreo)(usuario.email, asunto, mensaje, (err) => {
+                                    if (err) {
+                                        console.error('Error al enviar el correo:', err);
+                                    }
+                                    else {
+                                        emailsEnviados++;
+                                        // Actualizar la notificación como enviada
+                                        const updateNotificacionQuery = 'UPDATE notificacion SET enviada = 1 WHERE FK_Usuario = ? AND FK_Viaje = ?';
+                                        connection_1.default.query(updateNotificacionQuery, [usuario.PK_Usuario, PK_Viaje], (err) => {
+                                            if (err) {
+                                                console.error('Error al actualizar la notificación:', err);
+                                            }
+                                        });
+                                    }
+                                    // Verificar si ya se enviaron correos a todos
+                                    if (emailsEnviados === notificaciones.length) {
+                                        finalizarCancelacion(res, PK_Reserva, PK_Viaje);
+                                    }
+                                });
+                            });
+                        });
                     });
                 });
             });
@@ -721,3 +799,16 @@ const cancelarReserva = (req, res) => {
     });
 };
 exports.cancelarReserva = cancelarReserva;
+// Función para finalizar la cancelación de la reserva
+const finalizarCancelacion = (res, PK_Reserva, PK_Viaje) => {
+    // Aquí puedes realizar cualquier otra acción necesaria antes de enviar la respuesta final.
+    // Por ejemplo, puedes hacer un commit si has realizado cambios en la base de datos.
+    connection_1.default.commit((err) => {
+        if (err) {
+            console.error('Error al confirmar la transacción:', err);
+            return res.status(500).json({ error: 'Error al confirmar la transacción' });
+        }
+        // Responder con éxito
+        res.status(200).json({ message: 'Reserva cancelada, cupo actualizado y correos enviados exitosamente' });
+    });
+};
