@@ -1,70 +1,56 @@
-<form [formGroup]="form" (ngSubmit)="buscarViajes()" #searchForm="ngForm">
+<style>
+  .separator {
+    border-bottom: 1px solid white; /* Cambia 'white' por el color que prefieras */
+    margin: 10px 0; /* Espacio arriba y abajo de la línea */
+  }
+</style>
+
+<form (ngSubmit)="buscarViajes()" #searchForm="ngForm">
   <div class="search-container">
     <div class="titulo1">Elegi tu viaje</div>
-
-    <!-- Fila de Origen -->
-    <div class="row">
-      <div class="search-box">
-        <p>Provincia de Origen:</p>
-        <select id="provincia-origen" formControlName="provinciaOrigen" class="form-control" (change)="onSelectProvincia('origen')">
-          <option [ngValue]="null" disabled>Selecciona una provincia</option>
-          <option *ngFor="let provincia of provinciasOrigen" [value]="provincia.PK_Provincia">{{ provincia.nombre }}</option>
-        </select>
-      </div>
-
-      <div class="search-box">
-        <p>Localidad de Origen:</p>
-        <select id="localidad-origen" formControlName="localidadOrigen" class="form-control" (change)="onSelectLocalidad('origen')">
-          <option [ngValue]="null" disabled>Selecciona una localidad</option>
-          <option *ngFor="let localidad of localidadesOrigen" [value]="localidad.PK_Localidad">{{ localidad.nombre }}</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Selector de Parada de Origen -->
+    <p class="p-titulos">Origen:</p>
     <div class="search-box">
-      <p>Parada de Origen:</p>
-      <select id="parada-origen" formControlName="paradaOrigen" class="form-control">
-        <option [ngValue]="null" disabled>Selecciona una parada</option>
+      <select id="provincia" name="search-origen-provincia" [(ngModel)]="selectedOrigenProvincia" (change)="cargarLocalidades(selectedOrigenProvincia)" required>
+        <option [ngValue]="0" disabled>Selecciona una provincia</option>
+        <option *ngFor="let provincia of provinciasOrigen" [value]="provincia.PK_Provincia">{{ provincia.nombre }}</option>
+      </select>
+
+      <select id="localidad" name="search-origen-localidad" [(ngModel)]="selectedOrigenLocalidad" (change)="cargarParadas(selectedOrigenLocalidad)" required>
+        <option [ngValue]="0" disabled>Selecciona una localidad</option>
+        <option *ngFor="let localidad of localidadesOrigen" [value]="localidad.PK_Localidad">{{ localidad.nombre }}</option>
+      </select>
+
+      <select id="origen" name="search-origen" [(ngModel)]="selectedOrigen" required>
+        <option [ngValue]="null" disabled>Selecciona un origen</option>
         <option *ngFor="let parada of paradasOrigen" [value]="parada.parada">{{ parada.parada }}</option>
       </select>
     </div>
+    <div class="separator"></div> <!-- Línea blanca debajo de origen -->
 
-    <!-- Fila de Destino -->
-    <div class="row">
-      <div class="search-box">
-        <p>Provincia de Destino:</p>
-        <select id="provincia-destino" formControlName="provinciaDestino" class="form-control" (change)="onSelectProvincia('destino')">
-          <option [ngValue]="null" disabled>Selecciona una provincia</option>
-          <option *ngFor="let provincia of provinciasDestino" [value]="provincia.PK_Provincia">{{ provincia.nombre }}</option>
-        </select>
-      </div>
-
-      <div class="search-box">
-        <p>Localidad de Destino:</p>
-        <select id="localidad-destino" formControlName="localidadDestino" class="form-control" (change)="onSelectLocalidad('destino')">
-          <option [ngValue]="null" disabled>Selecciona una localidad</option>
-          <option *ngFor="let localidad of localidadesDestino" [value]="localidad.PK_Localidad">{{ localidad.nombre }}</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Selector de Parada de Destino -->
+    <p>Destino:</p>
     <div class="search-box">
-      <p>Parada de Destino:</p>
-      <select id="parada-destino" formControlName="paradaDestino" class="form-control">
-        <option [ngValue]="null" disabled>Selecciona una parada</option>
+      <select id="destino-provincia" name="search-destino-provincia" [(ngModel)]="selectedDestinoProvincia" (change)="cargarLocalidadesDestino(selectedDestinoProvincia)" required>
+        <option [ngValue]="0" disabled>Selecciona una provincia</option>
+        <option *ngFor="let provincia of provinciasDestino" [value]="provincia.PK_Provincia">{{ provincia.nombre }}</option>
+      </select>
+
+      <select id="destino-localidad" name="search-destino-localidad" [(ngModel)]="selectedDestinoLocalidad" (change)="cargarParadasDestino(selectedDestinoLocalidad)" required>
+        <option [ngValue]="0" disabled>Selecciona una localidad</option>
+        <option *ngFor="let localidad of localidadesDestino" [value]="localidad.PK_Localidad">{{ localidad.nombre }}</option>
+      </select>
+
+      <select id="destino" name="search-destino" [(ngModel)]="selectedDestino" required>
+        <option [ngValue]="null" disabled>Selecciona un destino</option>
         <option *ngFor="let parada of paradasDestino" [value]="parada.parada">{{ parada.parada }}</option>
       </select>
     </div>
+    <div class="separator"></div> <!-- Línea blanca debajo de destino -->
 
-    <!-- Selector de Fecha -->
+    <label for="date">Fecha:</label>
     <div class="search-box">
-      <label for="date">Fecha:</label>
-      <input type="date" id="fecha_salida" formControlName="fecha" class="form-control" required>
+      <input type="date" id="fecha_salida" name="search-fecha" [(ngModel)]="selectedFecha" required>
     </div>
 
-    <!-- Botón Buscar -->
-    <button id="bt-buscar-destino" class="gradient-button" type="submit" [disabled]="form.invalid">Buscar</button>
+    <button id="bt-buscar-destino" class="gradient-button" type="submit">Buscar</button>
   </div>
 </form>

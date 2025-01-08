@@ -10,6 +10,7 @@
     max-height:800px; /* Altura máxima del contenedor */
     overflow-y: auto;  /* Habilita el desplazamiento vertical */
     padding: 15px;     /* Espacio interior del contenedor */
+    /* backdrop-filter: blur(8px); */
   }
 
 
@@ -84,6 +85,17 @@
   color: rgb(255, 0, 0); /* Color para el ícono de basura */
 }
 
+.margen{
+  margin-top: 5px;
+}
+
+input[type="radio"] {
+  transform: scale(1.8);
+  margin-right: 4px; 
+  margin-left: 8px;
+  accent-color:rgb(141, 0, 141);
+}
+
 #desplegable-charter{
     padding: 8px;
     font-size: 14px;
@@ -117,9 +129,15 @@
     color: #000000;
   }
 
+
+  h4{
+    font-size: 20px !important;
+  }
+
   input[type="time"].form-control, 
   input[type="date"].form-control,
-  input[type="number"].form-control {
+  input[type="number"].form-control,
+  input[type="text"] {
     background-color: #ffffff;
     color: #000000;
     border: 1px solid #a100db;

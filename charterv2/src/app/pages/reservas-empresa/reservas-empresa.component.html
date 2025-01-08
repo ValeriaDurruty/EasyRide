@@ -36,8 +36,7 @@
           <thead class="text-secondary">
             <tr *ngFor="let reserva of listReservasFut">
               <th>Viaje N° {{ reserva.PK_Viaje }}</th>
-              <th>Fecha salida: {{ reserva.fecha_salida }}</th>
-              <th>Fecha llegada: {{ reserva.fecha_llegada }}</th>
+              <th>Fecha: {{ reserva.fecha_salida }}</th>
               <th>Hs. Salida: {{ reserva.horario_salida }}</th>
               <th>Hs. Llegada: {{ reserva.horario_llegada }}</th>
               <th>Precio: {{ reserva.precio | currency }}</th>
@@ -79,8 +78,7 @@
             <thead class="text-secondary">
               <tr *ngFor="let reserva of listReservasPas">
                 <th>Viaje N° {{ reserva.PK_Viaje }}</th>
-                <th>Fecha salida: {{ reserva.fecha_salida }}</th>
-                <th>Fecha llegada: {{ reserva.fecha_llegada }}</th>
+                <th>Fecha: {{ reserva.fecha_salida }}</th>
                 <th>Hs. Salida: {{ reserva.horario_salida }}</th>
                 <th>Hs. Llegada: {{ reserva.horario_llegada }}</th>
                 <th>Precio: {{ reserva.precio | currency }}</th>

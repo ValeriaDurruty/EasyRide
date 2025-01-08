@@ -19,4 +19,5 @@ router.get('/empresa-pas/:PK_Empresa', reserva_controller_1.getReservasPasadasEm
 router.post('/', reserva_controller_1.addReserva);
 // Ruta para cancelar una reserva
 router.put('/:PK_Reserva', reserva_controller_1.cancelarReserva);
+router.patch('/pago/:PK_Reserva', reserva_controller_1.actualizarPagadoReserva);
 exports.default = router;

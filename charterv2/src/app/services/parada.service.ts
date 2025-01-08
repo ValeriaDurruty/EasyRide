@@ -43,8 +43,8 @@ export class ParadaService {
       return this.http.get<Parada[]>(`${this.myAppUrl}${this.myApiUrl}/empresa/${fk_empresa}`);
     }
 
-    getParadasxLocalidad(fk_localidad: number): Observable<Parada[]> {
-      return this.http.get<Parada[]>(`${this.myAppUrl}${this.myApiUrl}/localidad/${fk_localidad}`);
+    getParadasXLocalidad(localidadId:number): Observable<Parada[]> {
+      return this.http.get<Parada[]>(`${this.myAppUrl}${this.myApiUrl}/localidad/${localidadId}`);
     }
     
     eliminarParadaViaje(viajeId: number, paradaId: number): Observable<any> {

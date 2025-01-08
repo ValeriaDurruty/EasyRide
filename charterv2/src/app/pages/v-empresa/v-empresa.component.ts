@@ -43,7 +43,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
   idEmpresa: number = 0;
   listParadas: Parada[] = [];
   fecha: Date = new Date(); // Definición de la propiedad fecha
-
+  pagado:boolean= false;
   listReservasFut:ReservaEmpresa[]=[];
   listReservasPas:ReservaEmpresa[]=[];
   reservas: any[] = [];
@@ -198,27 +198,34 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
 
-  //La podemos sacar,la otra anda para todo
-  /*parseParadas(paradasStr: string): ViajeParada[] {
-    return paradasStr.split(';').map(paradaStr => {
-      const matches = paradaStr.match(/PK_Viaje_parada: (\d+), PK_Parada: (\d+), Orden: (\d+), Parada: ([^,]+), Localidad: ([^,]+), Provincia: ([^;]+)/);
-      if (matches) {
-        return {
-          PK_Viaje_Parada: parseInt(matches[1], 10),
-          FK_Parada: parseInt(matches[2], 10),
-          orden: parseInt(matches[3], 10),
-          parada: matches[4],
-        };
+  togglePago(reservaItem: any): void {
+    const nuevoEstadoPago = !reservaItem.estado_pago; // Cambiar el valor del estado de pago
+    this._reservaService.actualizarEstadoPago(reservaItem.PK_Reserva, nuevoEstadoPago)
+      .subscribe({
+        next: (response) => {
+          console.log('Estado de pago actualizado correctamente:', response);
+          reservaItem.estado_pago = nuevoEstadoPago; // Actualiza el valor localmente
+  
+          // Después de actualizar el estado de pago, recarga las reservas
+          this.loadReservas(); // Recarga las reservas con los datos más recientes
+        },
+        error: (err) => {
+          console.error('Error al actualizar el estado de pago:', err);
+        }
+      });
+  }
+  
+  loadReservas() {
+    this._reservaService.getReservasFuturasEmpresa(this.idEmpresa).subscribe({
+      next: (data) => {
+      },
+      error: (err) => {
+        console.error('Error al cargar las reservas:', err);
       }
-      return null;
-    }).filter(parada => parada !== null) as ViajeParada[];
-  }*/
+    });
+  }
   
-
-
-
 
   confirmDelete(id: number): void {
     this._dialog.confirm('¿Seguro que quieres eliminar?').subscribe(result => {
@@ -304,7 +311,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
             return {
               ...reservaEmpresa,
               paradas: typeof reservaEmpresa.paradas === 'string' ? this.parseParadas(reservaEmpresa.paradas) : [],
-              reservas: typeof reservaEmpresa.reservas === 'string' ? this.parseReservas(reservaEmpresa.reservas) : [],
+              reservas: typeof reservaEmpresa.reservas === 'string' ? this.parseReservas2(reservaEmpresa.reservas) : [],
             };
           });
         } else if (typeof data === 'string') {
@@ -353,7 +360,7 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
   }
   
 
-  parseReservas(reservasString: string): Reserva[] {
+  parseReservas2(reservasString: string): Reserva[] {
     return reservasString.split(';').map(reservaStr => {
       reservaStr = reservaStr.trim(); // Eliminar espacios en blanco al inicio y al final
       if (reservaStr) {
@@ -385,6 +392,45 @@ export class VEmpresaComponent implements OnInit, OnDestroy {
       return null;
     }).filter(reserva => reserva !== null) as Reserva[];
   }
+
+  parseReservas(reservasString: string): Reserva[] {
+    return reservasString.split(';').map(reservaStr => {
+      reservaStr = reservaStr.trim();
+      if (reservaStr) {
+        const matches = reservaStr.match(
+          /PK_Usuario: (\d+), Nombre: ([^,]+), Apellido: ([^,]+), PK_Reserva: (\d+), Fecha Creación: ([^,]+), Estado Reserva: ([^,]+), Estado Pago: ([^;]+)/ // Expresión regular actualizada
+        );
+  
+        if (matches) {
+          const fechaCreacionStr = matches[5];
+          const fechaCreacion = this.convertirFecha(fechaCreacionStr);
+  
+          if (isNaN(fechaCreacion.getTime())) {
+            console.error('Fecha inválida:', fechaCreacionStr);
+          }
+  
+          // Convertir "estado_pago" de "Pagado" o "No Pagado" a booleano
+          const estadoPago = matches[7] === 'Pagado';
+  
+          return {
+            FK_Usuario: parseInt(matches[1], 10),
+            nombre: matches[2],
+            apellido: matches[3],
+            PK_Reserva: parseInt(matches[4], 10),
+            fecha_creacion: fechaCreacion,
+            estado_reserva: matches[6],
+            estado_pago: estadoPago // Asignar el valor booleano
+          } as Reserva;
+        } else {
+          console.error('No se pudo parsear la reserva:', reservaStr);
+        }
+      }
+      return null;
+    }).filter(reserva => reserva !== null) as Reserva[];
+  }
+  
+
+
 
   convertirFecha(fechaStr: string): Date {
     // Convierte la fecha en formato DD-MM-YYYY a YYYY-MM-DD

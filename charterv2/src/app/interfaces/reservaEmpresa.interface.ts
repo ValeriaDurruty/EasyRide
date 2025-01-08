@@ -15,4 +15,5 @@ export interface ReservaEmpresa {
     marca: string;
     paradas?: ViajeParada[];
     reservas?: Reserva[];
+    estado_pago: boolean;
   };

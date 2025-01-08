@@ -1,7 +1,6 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { registerLocaleData } from '@angular/common';
-import localeEsAR from '@angular/common/locales/es-AR'; // Importa la localización para Argentina
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -47,8 +46,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ModalcontactEmpresaComponent } from './components/modal-contact-empresa/modal-contact-empresa.component';
 import { ModalshComponent } from './components/modalsh/modalsh.component';
 import { MapComponentComponent } from './components/map-component/map-component.component';
-
-registerLocaleData(localeEsAR); // Registra la localización para Argentina
+import { ModalPagoComponent } from './components/modal-pago/modal-pago.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +83,8 @@ registerLocaleData(localeEsAR); // Registra la localización para Argentina
     AddParadaComponent,
     ModalcontactEmpresaComponent,
     ModalshComponent,
-    MapComponentComponent
+    MapComponentComponent,
+    ModalPagoComponent
   ],
   imports: [
     BrowserModule,
@@ -109,8 +108,7 @@ registerLocaleData(localeEsAR); // Registra la localización para Argentina
     provideClientHydration(),
     provideAnimationsAsync(),
     provideFirebaseApp(() => initializeApp({"projectId":"easyride-3306a","appId":"1:409674269171:web:1e7f4a1e68c7c9fb32d286","storageBucket":"easyride-3306a.appspot.com","apiKey":"AIzaSyBmf5LQe1yqF_QQduzPo_BvaRhCdX3gHX4","authDomain":"easyride-3306a.firebaseapp.com","messagingSenderId":"409674269171","measurementId":"G-2ZPNGCK20M"})),
-    provideAuth(() => getAuth()),
-    { provide: LOCALE_ID, useValue: 'es-AR' } // Proveedor de localización
+    provideAuth(() => getAuth())
   ],
   bootstrap: [AppComponent]
 })

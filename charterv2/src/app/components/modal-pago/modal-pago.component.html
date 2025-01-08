@@ -1,0 +1,51 @@
+<div class="PagoModal">
+    <button (click)="onClose($event)" class="close-btn">&#x2715;</button> 
+  
+    <h2 class="title">Información de Pago</h2>
+  
+    <div >
+        <h3>Medios de pago</h3>
+        <div class="div-enlace">
+          <i class="fas fa-money-bill-wave"></i>
+          <p>
+            <strong>Efectivo: </strong>
+            <span>
+              Pagar al conductor al momento de abordar
+            </span>
+          </p>
+        </div>
+        <div class="div-enlace">
+          <i class="fas fa-credit-card"></i>
+          <p>
+            <strong>Enlace de pago: </strong>
+            <!-- Si hay enlace de pago, mostrarlo; de lo contrario, mostrar mensaje -->
+            <span *ngIf="!data.viaje[0].link_pago; else enlaceDisponible">
+              No hay enlace de pago disponible
+            </span>
+            <ng-template #enlaceDisponible>
+              <a [href]="data.viaje[0].link_pago" target="_blank">  Ir al enlace de pago</a>
+            </ng-template>
+          </p>
+        </div>
+        <div class="div-transferencia">
+        <i class="fas fa-university"></i>
+        <strong> Transferencia:</strong>
+              <div >
+                <p><strong>Alias: </strong>  {{ data.alias }}
+                    <button  class="btn-copiar" (click)="copiarAlias(data.alias)" title="Copiar Alias">
+                        <i class="fas fa-clipboard"></i>
+                      </button></p>                  
+                <p><strong>Razón Social: </strong>  {{ data.razon_social }}</p>
+              </div>
+        </div>
+    <div>
+      <p>Una vez realizado el pago, deberá enviar el comprobante de pago junto al número de reserva al siguiente email:</p>
+      <p><strong></strong><i class="fas fa-envelope"></i>
+        <a [href]="crearEnlaceEmail()" target="_blank">
+          {{ data.email }}
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+  

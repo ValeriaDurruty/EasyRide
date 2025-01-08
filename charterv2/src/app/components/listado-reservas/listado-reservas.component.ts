@@ -35,18 +35,19 @@ export class ListadoReservasComponent implements OnChanges{
         this.selectedReservaData = viajeData.reservas
           .filter((reserva: any) => reserva.estado_reserva !== 'Cancelado') // Excluye reservas canceladas
           .map((reserva: any) => {
-            // Convertir la fecha a formato "día-mes-año"
             const fechaCreacion = new Date(reserva.fecha_creacion);
             const formattedDate = `${fechaCreacion.getDate().toString().padStart(2, '0')}-${(fechaCreacion.getMonth() + 1).toString().padStart(2, '0')}-${fechaCreacion.getFullYear()}`;
-  
+                      
             return {
               PK_Reserva: reserva.PK_Reserva,
               nombre: reserva.nombre,
               apellido: reserva.apellido,
               estado: reserva.estado_reserva,
-              fecha_creacion: formattedDate // Añadir la fecha formateada
+              fecha_creacion: formattedDate,
+              estado_pago: reserva.estado_pago // Verifica que se asigna correctamente
             };
           });
+          
   
         console.log('Datos filtrados para mostrar:', this.selectedReservaData); // Log de los datos procesados
       } else {

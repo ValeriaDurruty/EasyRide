@@ -51,7 +51,8 @@ export class EditViajeComponent implements OnInit {
       fecha_llegada: ['', [Validators.required, fechaNoPasada()]], // Valida fecha no pasada
       precio: ['', [Validators.required, Validators.min(1)]],
       cupo: ['', [Validators.min(1)]],
-      FK_Charter: ['', [Validators.required]]
+      FK_Charter: ['', [Validators.required]],
+      link_pago:[''],
     }, { validators: validarFechasYHorarios() }); // Valida fechas y horarios en conjunto
   } 
 
@@ -126,17 +127,31 @@ export class EditViajeComponent implements OnInit {
 
           this.idViaje = viaje.PK_Viaje ?? 0;
           
-          // Optimizar la conversión de fecha
-          const fechaConvertida_salida = this.convertirCadenaODateAFormatoInput(viaje.fecha_salida);
-          const fechaConvertida_llegada = this.convertirCadenaODateAFormatoInput(viaje.fecha_llegada);
+          let fechaSalida: Date;
+          if (typeof viaje.fecha_salida === 'string') {
+            fechaSalida = this.convertirCadenaADate(viaje.fecha_salida);
+          } else {
+            fechaSalida = new Date(viaje.fecha_salida);
+          }
 
+          let fechaLlegada: Date;
+          if (typeof viaje.fecha_llegada === 'string') {
+            fechaLlegada = this.convertirCadenaADate(viaje.fecha_llegada);
+          } else {
+            fechaLlegada = new Date(viaje.fecha_llegada);
+          }
+
+          const fechaSalidaConvertida = this.convertirFechaAFormatoInput(fechaSalida);
+          const fechaLlegadaConvertida = this.convertirFechaAFormatoInput(fechaLlegada);  
+               // Actualiza los campos del form con la info recibida
           this.form.patchValue({
             horario_salida: viaje.horario_salida,
             horario_llegada: viaje.horario_llegada,
-            fecha_salida: fechaConvertida_salida,
-            fecha_llegada: fechaConvertida_llegada,
+            fecha_salida:fechaSalidaConvertida,
+            fecha_llegada:fechaLlegadaConvertida,
             precio: viaje.precio,
-            FK_Charter: viaje.FK_Charter
+            FK_Charter: viaje.FK_Charter,
+            link_pago:viaje.link_pago
           });
           if (typeof viaje.paradas === 'string') {
             this.paradasSeleccionadas = this.parseParadas(viaje.paradas);
@@ -178,7 +193,7 @@ export class EditViajeComponent implements OnInit {
         horario_salida: this.form.get('horario_salida')?.value ?? '',
         horario_llegada: this.form.get('horario_llegada')?.value ?? '',
         fecha_salida: new Date(this.form.get('fecha_salida')?.value ?? ''),
-        fecha_llegada: new Date(this.form.get('fecha_llegada')?.value ?? ''),
+        fecha_llegada:new Date(this.form.get('fecha_llegada')?.value ?? ''),
         precio: +this.form.get('precio')?.value || 0,
         FK_Charter: +this.form.get('FK_Charter')?.value || 0,
         cupo: +this.form.get('cupo')?.value || 0,
@@ -187,7 +202,8 @@ export class EditViajeComponent implements OnInit {
           orden: parada.orden,
           FK_Parada: parada.FK_Parada,
           FK_Viaje: this.idViaje // Asegúrate de que FK_Viaje esté correctamente asignado
-        }))
+        })),
+        link_pago:this.form.get('link_pago')?.value,
       };
   
     // Validación de charter
@@ -277,20 +293,30 @@ export class EditViajeComponent implements OnInit {
     this.selectedCharter = this.charters.find(charter => charter.PK_Charter.toString() === selectedCharterId) || null;
   }
 
-  // Función genérica para convertir fechas (sea Date o string) al formato input (YYYY-MM-DD)
-  convertirCadenaODateAFormatoInput(fecha: string | Date): string {
-    const dateObj = typeof fecha === 'string' ? this.convertirCadenaADate(fecha) : new Date(fecha);
-    const anio = dateObj.getFullYear();
-    const mes = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const dia = String(dateObj.getDate()).padStart(2, '0');
+  //FECHA
+  convertirFechaAFormatoInput(fecha: Date): string {
+    const anio = fecha.getFullYear();
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript son de 0 a 11
+    const dia = String(fecha.getDate()).padStart(2, '0');
     
-    return `${anio}-${mes}-${dia}`;
+    const fechaConvertida = `${anio}-${mes}-${dia}`;
+   // console.log(`Fecha convertida a formato input: ${fechaConvertida}`);
+    return fechaConvertida;
   }
 
-  // Función para convertir cadenas de fecha (DD-MM-YYYY) a objetos Date
   convertirCadenaADate(fechaStr: string): Date {
-    const [dia, mes, anio] = fechaStr.split('-').map(Number);
-    return new Date(anio, mes - 1, dia); // Ajustar el mes (0-indexado en JS)
+    const partes = fechaStr.split('-');
+    if (partes.length === 3) {
+      const dia = Number(partes[0]);
+      const mes = Number(partes[1]) - 1; // Los meses en JavaScript son de 0 a 11
+      const anio = Number(partes[2]);
+    
+      const fecha = new Date(anio, mes, dia);
+      //console.log(`Fecha convertida a Date: ${fecha}`);
+      return fecha;
+    }
+    console.error('Formato de fecha incorrecto:', fechaStr);
+    return new Date(); // Retorna una fecha por defecto en caso de error
   }
 
 

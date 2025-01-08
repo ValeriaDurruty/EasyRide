@@ -222,3 +222,29 @@ mat-panel-title {
   border-radius: 30px;
   color: #FFFFFF !important;
 }
+
+.btn-pagado{
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.pagado {
+  background: rgb(9, 189, 9);
+    border-radius: 5px;
+    color: white;
+    border-color:rgb(9, 189, 9);   
+}
+
+.no-pagado {
+    background: red;
+    border-radius: 5px;
+    color: white;
+    border-color: red;
+}
+
+th{
+  text-align: center;
+}
+td{
+  text-align: center;
+}

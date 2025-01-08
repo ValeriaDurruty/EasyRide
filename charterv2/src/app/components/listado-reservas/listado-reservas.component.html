@@ -10,7 +10,8 @@
                     <h1>EasyRide</h1>
                     <div class="details">
                         <h2>Viaje N°: {{ reservaData[0]?.PK_Viaje }}</h2>
-                        <h2>Fecha: {{ reservaData[0]?.fecha_salida }} - {{ reservaData[0]?.fecha_llegada }}</h2>
+                        <h2>Fecha Salida: {{ reservaData[0]?.fecha_salida}}</h2>
+                        <h2>Fecha Llegada: {{reservaData[0]?.fecha_llegada}}</h2>
                         <h2>Horario: {{ reservaData[0]?.horario_salida }} - {{ reservaData[0]?.horario_llegada }}</h2>
                         <h2>Patente: {{ reservaData[0]?.patente }}</h2>
                         <h2>{{ reservaData[0]?.paradas[0]?.parada }} -- {{ reservaData[0]?.paradas[reservaData[0]?.paradas.length - 1]?.parada }}</h2>
@@ -24,6 +25,7 @@
                         <th>Creación</th>
                         <th>Nombre</th>
                         <th>Apellido</th>
+                        <th>Estado Pago</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,6 +34,17 @@
                             <td>{{ item.fecha_creacion }}</td>
                             <td>{{ item.nombre }}</td>
                             <td>{{ item.apellido }}</td>
+                            <td>
+                                <span
+                                [ngClass]="{
+                                  'pagado': item.estado_pago === true,
+                                  'sin-pagar': item.estado_pago !== true
+                                }">
+                                {{ item.estado_pago === true ? 'Pagado' : 'Sin Pagar' }}
+                              </span>
+                              
+
+                            </td>
                     </tr>
                 </tbody>
             </table>

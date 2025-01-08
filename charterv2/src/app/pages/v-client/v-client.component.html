@@ -34,7 +34,7 @@
           <thead class="text-secondary">
             <th>Reserva N°</th>
             <th>Estado</th>
-            <th>Fechas</th>
+            <th>Fecha Salida</th>
             <th>Horarios</th>
             <th>Precio</th>
             <th>Empresa</th>
@@ -47,9 +47,9 @@
                 <!-- Campos -->
               <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
               <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-              <td id="fecha">{{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }}</td>
+              <td id="fecha">{{ reserva.fecha_salida }}</td>
               <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
-              <td id="precio">{{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
+              <td id="precio">$ {{ reserva.precio }}</td>
               <td id="empresa">{{ reserva.empresa }}</td>
               <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
               <td id="paradas">
@@ -74,6 +74,16 @@
                   <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="mostrarTicket(reserva.PK_Reserva ?? 0)" class="ticket-link" matTooltip="Ticket reserva">
                       <i class="fas fa-ticket-alt" ></i>
                   </a>
+                  <a *ngIf="reserva.estado_pago !== 'Pagado' && reserva.estado_reserva !== 'Cancelado'" 
+                    (click)="mostrarInfoPago(reserva.PK_Reserva ?? 0)" 
+                    class="pago-link" 
+                    matTooltip="Pago reserva">
+                    <i class="fas fa-credit-card"></i>
+                  </a>
+
+                  <i *ngIf="reserva.estado_pago === 'Pagado'" 
+                    class="fas fa-check-circle"
+                    matTooltip="Pago registrado"></i>
                   <!-- Información de la empresa -->
                   <a *ngIf="reserva.estado_reserva !== 'Cancelado'" (click)="mostrarInfoEmpresa(reserva.PK_Reserva ?? 0)" class="info-link" matTooltip="Contacto empresa">
                     <i class="fas fa-info-circle"></i>
@@ -93,7 +103,7 @@
             <thead class="text-secondary">
               <th>Reserva N°</th>
               <th>Estado</th>
-              <th>Fechas</th>
+              <th>Fecha</th>
               <th>Horarios</th>
               <th>Precio</th>
               <th>Empresa</th>
@@ -105,9 +115,9 @@
                   <!-- Campos -->
                 <td id="PK_Reserva">{{ reserva.PK_Reserva }}</td>
                 <td id="estado_reserva">{{ reserva.estado_reserva }}</td>
-                <td id="fecha">{{ reserva.fecha_salida }} <br> {{ reserva.fecha_llegada }}</td>
+                <td id="fecha">{{ reserva.fecha_salida }}</td>
                 <td id="horarios">{{ reserva.horario_salida }} <br>{{ reserva.horario_llegada }}</td>
-                <td id="precio">{{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
+                <td id="precio">$ {{ reserva.precio }}</td>
                 <td id="empresa">{{ reserva.empresa }}</td>
                 <td id="vehiculo">Patente: {{ reserva.patente }} <br> {{ reserva.modelo }} <br> {{ reserva.marca }}</td>
                 <td id="paradas">

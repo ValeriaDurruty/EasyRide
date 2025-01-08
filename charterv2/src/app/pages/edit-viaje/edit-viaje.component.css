@@ -70,6 +70,11 @@
     background-color: #000000;
 }
 
+
+.margen{
+  margin-top: 5px;
+}
+
 #desplegable-charter{
     padding: 8px;
     font-size: 14px;
@@ -117,7 +122,8 @@
   }
   input[type="time"].form-control, 
   input[type="date"].form-control,
-  input[type="number"].form-control {
+  input[type="number"].form-control ,
+   input[type="text"]{
     background-color: #ffffff;
     color: #000000;
     border: 1px solid #a100db;
@@ -134,6 +140,10 @@
   /*Cerrar del Mensaje de exito*/
   .custom-snackbar .mat-button-wrapper {
     color: rgb(255, 22, 255);              /* Color del texto del botón */
+  }
+
+  h4{
+    font-size: 20px !important;
   }
 
   .icon-background {

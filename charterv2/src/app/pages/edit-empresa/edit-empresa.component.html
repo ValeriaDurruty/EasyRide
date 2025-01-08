@@ -67,7 +67,19 @@
           El teléfono debe contener entre 9 y 10 dígitos.
         </small>
       </p>
+      <!-- Campo Alias -->
+      <p><strong>Alias</strong>
+        <input id="alias" class="form-control" type="text" placeholder="Alias" formControlName="alias">
 
+        <small class="tooltip-container text-danger" *ngIf="form.get('alias')?.hasError('required') && form.get('alias')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El alias es requerido.
+        </small>
+        <small class="tooltip-container text-danger" *ngIf="form.get('alias')?.hasError('pattern') && form.get('alias')?.touched">
+          <i class="fas fa-exclamation-triangle warning-icon"></i> <!-- Ícono de advertencia -->
+          El alias debe contener entre 6 y 20 caracteres alfanuméricos.
+        </small>
+      </p>
      
 
       <!-- Botones guardar y cancelar -->

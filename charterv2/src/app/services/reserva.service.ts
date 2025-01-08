@@ -58,5 +58,12 @@ export class ReservaService {
     cancelarReserva(id: number) : Observable<any> {
         return this.http.put<Reserva>(this.myAppUrl + this.myApiUrl + id, null);
     }
+    
+    actualizarEstadoPago(idReserva: number, nuevoEstadoPago: boolean): Observable<any> {
+        const url = `${this.myAppUrl}${this.myApiUrl}pago/${idReserva}`;
+        console.log('URL de la solicitud:', url);  // Muestra la URL completa
+        return this.http.patch(url, { pagado: nuevoEstadoPago });
+    }
+    
 
 }

@@ -51,8 +51,8 @@
           <thead class="text-secondary">
             <tr>
               <th>Número Viaje</th>
-              <th>Fecha salida</th>
-              <th>Fecha llegada</th>
+              <th>Fecha Salida</th>
+              <th>Fecha Llegada</th>
               <th>Hora Salida</th>
               <th>Hora Llegada</th>
               <th>Paradas</th>
@@ -64,7 +64,7 @@
             <tr *ngFor="let viaje of listViajesParadas">
               <td>{{ viaje.PK_Viaje }}</td>
               <td>{{ viaje.fecha_salida }}</td>
-              <td>{{ viaje.fecha_llegada }}</td>
+              <td>{{viaje.fecha_llegada}}</td>
               <td>{{ viaje.horario_salida }}</td>
               <td>{{ viaje.horario_llegada }}</td>
               <td>
@@ -72,12 +72,14 @@
                   <p>Orden: {{ parada.orden }} - Parada: {{ parada.parada }}</p>
                 </div>
               </td>
-              <td>{{ viaje.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</td>
+              <td>${{ viaje.precio }}</td>
               <td>
                 <a [routerLink]="['/Editar-viaje', viaje.PK_Viaje]" class="mr-2" matTooltip="Editar viaje">
                   <i class="fas fa-pencil-alt icon-pencil icon-background" aria-label="Editar viaje"></i>
                 </a>
-                <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDeleteViaje(viaje.PK_Viaje ?? 0)" aria-label="Eliminar viaje" matTooltip="Eliminar viaje"></i>
+                <a>
+                  <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDeleteViaje(viaje.PK_Viaje ?? 0)" aria-label="Eliminar viaje" matTooltip="Eliminar viaje"></i>
+                </a>
               </td>
             </tr>
             <!-- Mensaje cuando no hay viajes -->
@@ -120,7 +122,9 @@
                   <a [routerLink]="['/Editar-charter',charter.PK_Charter]"   class="mr-2" matTooltip="Editar charter">
                     <i class="fas fa-pencil-alt icon-pencil icon-background" ></i> <!-- Icono de lápiz -->
                   </a>
-                  <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDelete(charter.PK_Charter || 0)" matTooltip="Eliminar charter"></i> <!-- Icono de tacho de basura -->
+                  <a>
+                    <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDelete(charter.PK_Charter || 0)" matTooltip="Eliminar charter"></i> <!-- Icono de tacho de basura -->
+                  </a>
               </td>
             </tr>
             <!-- Mensaje cuando no hay charters -->
@@ -161,7 +165,7 @@
                     <a [routerLink]="['/Agregar-parada',parada.PK_Parada]"   class="mr-2" matTooltip="Editar parada">
                       <i class="fas fa-pencil-alt icon-pencil icon-background" ></i> <!-- Icono de lápiz -->
                     </a>
-                    <i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDeleteParada(parada.PK_Parada || 0)" matTooltip="Eliminar parada"></i>
+                    <a><i class="fas fa-trash-alt icon-trash icon-background" (click)="confirmDeleteParada(parada.PK_Parada || 0)" matTooltip="Eliminar parada"></i></a>
                   </td>
               </tr>
             <!-- Mensaje cuando no hay paradas -->
@@ -188,9 +192,10 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }}</p>
+              <p>Fecha Salida: {{ reserva.fecha_salida }} </p>
+              <p>Fecha Llegada: {{reserva.fecha_llegada}}</p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
-              <p>Precio: {{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</p>
+              <p>Precio: {{ reserva.precio | currency }}</p>
             </div>
             <!-- Segunda columna -->
             <div class="col">
@@ -219,6 +224,7 @@
                   <th>Nombre</th>
                   <th>Apellido</th>
                   <th>Estado</th>
+                  <th>Estado Pago</th>
                 </tr>
               </thead>
               <tbody>
@@ -232,6 +238,17 @@
                         'estado-rojo': reservaItem.estado_reserva === 'Cancelado'
                       }">
                     {{ reservaItem.estado_reserva }}
+                  </td>
+                  <td>    
+                    <button
+                    class="btn-pagado"
+                    (click)="togglePago(reservaItem)"
+                    [ngClass]="{
+                      'pagado': reservaItem.estado_pago,
+                      'no-pagado': !reservaItem.estado_pago
+                    }">
+                    {{ reservaItem.estado_pago ? 'Pagado' : 'No pagado' }}
+                  </button>
                   </td>
                 </tr>
                 <!-- Mensaje cuando no hay reservas -->
@@ -264,9 +281,10 @@
           <div class="row">
             <!-- Primera columna -->
             <div class="col">
-              <p>Fecha: {{ reserva.fecha_salida }} - {{ reserva.fecha_llegada }}</p>
+              <p>Fecha Salida: {{ reserva.fecha_salida }}</p>
+              <p>Fecha Llegada:{{reserva.fecha_llegada}}</p>
               <p>Horario: {{ reserva.horario_salida }} - {{ reserva.horario_llegada }}</p>
-              <p>Precio: {{ reserva.precio | currency:'ARS':'symbol':'1.0-0':'es-AR' }}</p>
+              <p>Precio: {{ reserva.precio | currency }}</p>
             </div>
             <!-- Segunda columna -->
             <div class="col">

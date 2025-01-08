@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { addReserva, cancelarReserva, getReservasEmpresa, getReservasFuturasEmpresa, getReservasFuturasPasajero, getReservasPasadasEmpresa, getReservasPasadasPasajero, getReservasPasajero } from '../controllers/reserva.controller';
+import { actualizarPagadoReserva, addReserva, cancelarReserva, getReservasEmpresa, getReservasFuturasEmpresa, getReservasFuturasPasajero, getReservasPasadasEmpresa, getReservasPasadasPasajero, getReservasPasajero } from '../controllers/reserva.controller';
 
 const router = Router();
 
@@ -26,5 +26,7 @@ router.post('/', addReserva);
 
 // Ruta para cancelar una reserva
 router.put('/:PK_Reserva', cancelarReserva);
+
+router.patch('/pago/:PK_Reserva', actualizarPagadoReserva);
 
 export default router;

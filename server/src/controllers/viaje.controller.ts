@@ -224,11 +224,13 @@ export const getViajesXid = (req: Request, res: Response) => {
                 v.precio, 
                 DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
                 DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada, 
+                v.link_pago,
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social AS empresa, 
                 m.nombre AS modelo, 
                 ma.nombre AS marca, 
+            
                 GROUP_CONCAT(
                     CONCAT(
                         'PK_Viaje_parada: ', vp.PK_Viaje_Parada, 
@@ -366,8 +368,8 @@ export const deleteViajes = (req: Request, res: Response) => {
 //Agrega un viaje
 export const addViaje = (req: Request, res: Response) => {
 
-    const { horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
-    //console.log(req.body);
+    const { horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas,link_pago } = req.body;
+    console.log(req.body);
 
     // Verifica que al menos se proporcionen dos paradas
     if (!Array.isArray(paradas) || paradas.length < 2) {
@@ -383,8 +385,8 @@ export const addViaje = (req: Request, res: Response) => {
 
         // Inserta el viaje
         connection.query(
-            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?, ?)`,
-            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter],
+            `INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter,link_pago) VALUES (?, ?, ?, ?, ?,?,?)`,
+            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, link_pago ],
             (err, result) => {
                 if (err) {
                     // Rollback en caso de error
@@ -433,7 +435,7 @@ export const addViaje = (req: Request, res: Response) => {
 
 //Modificar un viaje en particular
 export const putViajes = (req: Request, res: Response) => {
-    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
+    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter,link_pago, paradas } = req.body;
 
     // Verifica que al menos se proporcionen dos paradas
     if (!Array.isArray(paradas) || paradas.length < 2) {
@@ -450,9 +452,9 @@ export const putViajes = (req: Request, res: Response) => {
         // Actualiza el viaje
         connection.query(
             `UPDATE Viaje 
-             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?
+             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?, link_pago = ?
              WHERE PK_Viaje = ?`,
-            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, PK_Viaje],
+            [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter,link_pago, PK_Viaje],
             (err, result) => {
                 if (err) {
                     return connection.rollback(() => {

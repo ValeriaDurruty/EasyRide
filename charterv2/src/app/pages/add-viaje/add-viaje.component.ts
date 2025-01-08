@@ -47,7 +47,9 @@ export class AddViajeComponent implements OnInit {
       fecha_llegada: ['', [Validators.required, fechaNoPasada()]], // Valida fecha no pasada
       precio: ['', [Validators.required, Validators.min(1)]],
       cupo: ['', [Validators.min(1)]],
-      FK_Charter: ['', [Validators.required]]
+      FK_Charter: ['', [Validators.required]],
+      fechaLlegadaIgual: ['', [Validators.required]],
+      link_pago:[''],
     }, { validators: validarFechasYHorarios() }); // Valida fechas y horarios en conjunto
   }
 
@@ -79,12 +81,23 @@ export class AddViajeComponent implements OnInit {
     );
   }
 
+  onFechaLlegadaChange(): void {
+    const seleccion = this.form.get('fechaLlegadaIgual')?.value;
+  
+    if (seleccion === 'no') {
+      this.form.get('fecha_llegada')?.setValue(''); // Limpia el campo de fecha de llegada
+    } else if (seleccion === 'si') {
+      const fechaSalida = this.form.get('fecha_salida')?.value;
+      this.form.get('fecha_llegada')?.setValue(fechaSalida); // Establece la fecha de llegada igual a la de salida
+    }
+  }
+
   addViaje() {
     const viaje: Viaje = {
       horario_salida: this.form.get('horario_salida')?.value ?? '',
       horario_llegada: this.form.get('horario_llegada')?.value ?? '',
-      fecha_salida: this.form.get('fecha_salida')?.value ? this.form.get('fecha_salida')?.value : '',
-      fecha_llegada: this.form.get('fecha_llegada')?.value ? this.form.get('fecha_llegada')?.value : '',
+      fecha_salida: new Date(this.form.get('fecha_salida')?.value ?? ''),
+      fecha_llegada:new Date (this.form.get('fecha_llegada')?.value ?? ''),
       precio: +this.form.get('precio')?.value || 0,
       FK_Charter: +this.form.get('FK_Charter')?.value || 0, //Si no anda en donde esta || ponele ??
       cupo: +this.form.get('cupo')?.value || 0,
@@ -93,53 +106,10 @@ export class AddViajeComponent implements OnInit {
           orden: this.paradasSeleccionadas.length + 1,
           FK_Viaje: 0,
           FK_Parada: parada.FK_Parada
-      }))
+      })),
+      link_pago: this.form.get('link_pago')?.value,
   };
 
-    // Validación de horarios
-    /*if (!viaje.horario_salida || !viaje.horario_llegada) {
-      this._snackBar.open('Por favor, completa ambos horarios', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de fecha
-    if (!viaje.fecha || isNaN(viaje.fecha.getTime()) || viaje.fecha.getTime() < Date.now()) {
-      this._snackBar.open('Por favor, ingresa una fecha válida', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de precios
-    if (isNaN(viaje.precio) || viaje.precio <= 0) {
-      this._snackBar.open('Por favor, ingresa un precio válido', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }
-
-    // Validación de número de paradas
-    if (this.paradasSeleccionadas.length < 2) {
-      this._snackBar.open('El viaje debe tener al menos dos paradas', 'Cerrar', {
-        duration: 5000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['custom-snackbar']
-      });
-      return;
-    }*/
-  
     // Validación de charter
     if (!viaje.FK_Charter) { // Cambiado de `=== 0` a `!viaje.FK_charter` para manejar `null` y `0`
       this._snackBar.open('Por favor, selecciona un charter', 'Cerrar', {
@@ -152,7 +122,7 @@ export class AddViajeComponent implements OnInit {
     }
   
     // Enviar el viaje al servicio
-    //console.log('Datos a enviar:', viaje);
+    console.log('Datos a enviar:', viaje);
   
     this._viajeService.addViaje(viaje).subscribe(
       response => {
@@ -185,6 +155,7 @@ export class AddViajeComponent implements OnInit {
   eliminarParada(index: number) {
     this.paradasSeleccionadas.splice(index, 1);
   }
+
   
   mensaje(mensaje:string) {
     this._snackBar.open(mensaje, 'Cerrar', {

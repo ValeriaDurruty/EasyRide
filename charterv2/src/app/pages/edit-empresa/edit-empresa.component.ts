@@ -25,7 +25,8 @@ export class EditEmpresaComponent implements OnInit{
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
       cuit: ['', [Validators.required, cuitValidator],[cuitAsyncValidator(this._empresaService)]], // Pasar la ID actual para no validar contra sí misma  
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9,10}$')]], // Patrón para 9 dígitos
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]]
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]],
+      alias:['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,20}$')]]
     });
   }
 
@@ -46,7 +47,8 @@ export class EditEmpresaComponent implements OnInit{
         razon_social: empresa.razon_social,
         cuit: empresa.cuit,
         telefono: empresa.telefono,
-        email: empresa.email
+        email: empresa.email,
+        alias:empresa.alias
       });
     });
   }
@@ -62,7 +64,8 @@ export class EditEmpresaComponent implements OnInit{
       razon_social: this.form.value.razon_social,
       cuit: this.form.value.cuit,
       telefono: this.form.value.telefono,
-      email: this.form.value.email
+      email: this.form.value.email,
+      alias:this.form.value.alias
     };
   
     this._empresaService.editEmpresa(this.empresaId!, empresa).subscribe({

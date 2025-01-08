@@ -26,6 +26,8 @@
     position: absolute;
     top: 10px;
     right: 20px;
+    /* left: 650px;
+    position: relative; */
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
@@ -115,4 +117,18 @@ button {
 
 button:hover {
     background-color: #8d009d; /* Color de fondo verde más oscuro al pasar el ratón */
+}
+
+.pagado{
+    color: green;
+}
+
+.sin-pagar{
+    color: red;
+}
+
+@media (max-width:1000px) {
+    .modal-content{
+        overflow-x: auto;
+    }
 }

@@ -2,3 +2,8 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Aplica el cursor de tipo mano a enlaces, botones y elementos interactivos */
+a, button, [role="button"], .menu-item {
+    cursor: pointer;
+  } 

@@ -11,4 +11,5 @@ export interface Reserva {
     apellido?: string;
     empresa?:string;
     horario_salida?:Time;
+    estado_pago?:boolean;
   };

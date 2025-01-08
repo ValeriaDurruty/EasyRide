@@ -123,3 +123,13 @@
     border-radius: 30px;
     color: #FFFFFF !important;
   }
+
+  .fa-credit-card{
+    color: blue;
+    font-size: 20px;
+  }
+
+  .fa-check-circle{
+    color: green;
+    font-size: 20px;
+  }

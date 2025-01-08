@@ -9,12 +9,14 @@ export interface ReservaPasajero {
     horario_salida?: Time;
     horario_llegada?: Time;
     precio?: number;
-    fecha_salida?: Date;
-    fecha_llegada?: Date;
+    fecha?: Date;
+    fecha_salida?:Date;
     patente?: string;
     modelo?: string;
     marca?: string;
     PK_Empresa?: number;
+    PK_Viaje?:number;
     empresa?: string;
     paradas?: ViajeParada[];
+    estado_pago?:string;
   };

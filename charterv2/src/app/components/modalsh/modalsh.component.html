@@ -53,9 +53,9 @@
     <div *ngIf="data.tipoOperacion === 'resultados'">
       <h2>Resultados de Búsqueda</h2>
       <ul class="list-group">
-        <li class="list-group-item" *ngFor="let result of data.results" (click)="onSelectLocation(result)">
+        <a><li class="list-group-item" *ngFor="let result of data.results" (click)="onSelectLocation(result)">
           {{ result.display_name }} <!-- Muestra el nombre o dirección -->
-        </li>
+        </li></a>
       </ul>
     </div>
   </div> <!-- Fin del contenedor de scroll -->

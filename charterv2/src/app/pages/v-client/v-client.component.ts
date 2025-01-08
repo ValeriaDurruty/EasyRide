@@ -12,6 +12,9 @@ import { ViajeParada } from '../../interfaces/viaje.parada';
 import { Parada } from '../../interfaces/parada.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalcontactEmpresaComponent } from '../../components/modal-contact-empresa/modal-contact-empresa.component';
+import { ModalPagoComponent } from '../../components/modal-pago/modal-pago.component';
+import { ViajeService } from '../../services/viaje.service';
+import { Viaje } from '../../interfaces/viaje.interface';
 
 @Component({
   selector: 'app-v-client',
@@ -31,7 +34,8 @@ export class VClientComponent implements OnInit {
   selectedReserva: any = null; 
   showModal: boolean = false;  // Controla la visibilidad del modal
   selectedTicketData: any = null; // Datos del ticket seleccionado
-
+  selectedEmpresaData: any = null; // Datos de la empresa seleccionada
+  selectedPagoData: any = null;
   private reservasSubscription: Subscription | null = null;
   private userSubscription: Subscription | null = null;
   private logoutSubscription: Subscription | null = null;
@@ -41,6 +45,7 @@ export class VClientComponent implements OnInit {
     private _reservaService: ReservaService,
     private _empresaService: EmpresaService,
     private _dialog: ConfirmationService,
+    private _viajeService:ViajeService,
     private router: Router,
     private route: ActivatedRoute,
     private _snackBar: MatSnackBar,
@@ -75,7 +80,7 @@ export class VClientComponent implements OnInit {
     this.loading = true;
     this._reservaService.getReservasFuturasPasajero(PK_Usuario).subscribe(
       data => {
-       // console.log('Datos recibidos:', data);
+        console.log('Datos recibidos:', data);
         // Verifica que `data` sea un array
         if (Array.isArray(data)) {
           this.listReservasFuturas = data.map(reserva => ({
@@ -222,8 +227,65 @@ export class VClientComponent implements OnInit {
     }
 }
 
+mostrarInfoPago(idReserva: number): void {
+  const reserva = this.listReservasFuturas.find(res => res.PK_Reserva === idReserva);
 
-  selectedEmpresaData: any = null; // Datos de la empresa seleccionada
+  if (!reserva) {
+    this.mensaje('No se encontró la reserva seleccionada.');
+    return;
+  }
+
+  if (reserva.estado_reserva === 'Cancelado') {
+    this.mensaje('No se puede abrir la información de pago. La reserva está cancelada.');
+    return;
+  }
+
+  // Obtener el ID de la empresa y del viaje
+  const idEmpresa = reserva.PK_Empresa;
+  const idViaje = reserva.PK_Viaje;
+
+  // Primero obtenemos la información de la empresa
+  this._empresaService.getEmpresa(idEmpresa ?? 0).subscribe(
+    empresa => {
+      console.log('Datos de la empresa:', empresa);
+
+      // Después obtenemos la información del viaje
+      this._viajeService.getViajeXid(idViaje ?? 0).subscribe(
+        viaje => {
+          // Asegúrate de que 'viaje' es un array y accede al primer objeto
+
+          console.log('Datos del viaje:', viaje);
+         
+
+          // Aquí estamos preparando los datos que se enviarán al modal
+          const modalData = {
+            razon_social: empresa.razon_social,
+            email: empresa.email,
+            alias:empresa.alias,  
+            viaje:viaje,
+            idReserva: idReserva,
+          };
+
+          // Muestra los datos que se enviarán al modal
+          console.log('Datos a enviar al modal:', modalData);
+
+          // Ahora que tenemos ambos datos, abrimos el modal
+          this.dialog.open(ModalPagoComponent, {
+            data: modalData
+          });
+        },
+        error => {
+          console.error('Error al obtener los datos del viaje:', error);
+          this.mensaje('Error al obtener la información del viaje');
+        }
+      );
+    },
+    error => {
+      console.error('Error al obtener los datos de la empresa:', error);
+      this.mensaje('Error al obtener la información de la empresa');
+    }
+  );
+}
 
   mostrarInfoEmpresa(idReserva: number) {
     //console.log('Buscando ticket con ID:', idReserva);

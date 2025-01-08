@@ -224,11 +224,13 @@ const getViajesXid = (req, res) => {
                 v.precio, 
                 DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
                 DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada, 
+                v.link_pago,
                 c.patente, 
                 c.FK_Empresa, 
                 e.razon_social AS empresa, 
                 m.nombre AS modelo, 
                 ma.nombre AS marca, 
+            
                 GROUP_CONCAT(
                     CONCAT(
                         'PK_Viaje_parada: ', vp.PK_Viaje_Parada, 
@@ -359,8 +361,8 @@ const deleteViajes = (req, res) => {
 exports.deleteViajes = deleteViajes;
 //Agrega un viaje
 const addViaje = (req, res) => {
-    const { horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
-    //console.log(req.body);
+    const { horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas, link_pago } = req.body;
+    console.log(req.body);
     // Verifica que al menos se proporcionen dos paradas
     if (!Array.isArray(paradas) || paradas.length < 2) {
         return res.status(400).json({ error: 'Se deben proporcionar al menos dos paradas.' });
@@ -372,7 +374,7 @@ const addViaje = (req, res) => {
             return res.status(500).json({ error: 'Error al iniciar la transacción' });
         }
         // Inserta el viaje
-        connection_1.default.query(`INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter) VALUES (?, ?, ?, ?, ?, ?)`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter], (err, result) => {
+        connection_1.default.query(`INSERT INTO viaje (horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter,link_pago) VALUES (?, ?, ?, ?, ?,?,?)`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, link_pago], (err, result) => {
             if (err) {
                 // Rollback en caso de error
                 return connection_1.default.rollback(() => {
@@ -411,7 +413,7 @@ const addViaje = (req, res) => {
 exports.addViaje = addViaje;
 //Modificar un viaje en particular
 const putViajes = (req, res) => {
-    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, paradas } = req.body;
+    const { PK_Viaje, horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, link_pago, paradas } = req.body;
     // Verifica que al menos se proporcionen dos paradas
     if (!Array.isArray(paradas) || paradas.length < 2) {
         return res.status(400).json({ error: 'Se deben proporcionar al menos dos paradas.' });
@@ -424,8 +426,8 @@ const putViajes = (req, res) => {
         }
         // Actualiza el viaje
         connection_1.default.query(`UPDATE Viaje 
-             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?
-             WHERE PK_Viaje = ?`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, PK_Viaje], (err, result) => {
+             SET horario_salida = ?, horario_llegada = ?, precio = ?, fecha_salida = ?, fecha_llegada = ?, FK_Charter = ?, link_pago = ?
+             WHERE PK_Viaje = ?`, [horario_salida, horario_llegada, precio, fecha_salida, fecha_llegada, FK_Charter, link_pago, PK_Viaje], (err, result) => {
             if (err) {
                 return connection_1.default.rollback(() => {
                     console.error('Error al actualizar el viaje:', err);

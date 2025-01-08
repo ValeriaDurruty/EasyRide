@@ -25,7 +25,8 @@ export class AddEmpresaComponent implements OnInit {
       razon_social: ['', [Validators.required, Validators.maxLength(30)]],
       cuit:['', [Validators.required, cuitValidator], [cuitAsyncValidator(this._empresaService)]], // Ajusta según el largo del CUIT
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{9,10}$')]], // Patrón para 9 dígitos
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]]
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]],
+      alias:['', [Validators.required, Validators.pattern('^[a-zA-Z0-9]{6,20}$')]]
     });
   }
   ngOnInit(): void {
@@ -51,7 +52,8 @@ export class AddEmpresaComponent implements OnInit {
       razon_social: this.form.value.razon_social,
       cuit: cuitValue,
       telefono: this.form.value.telefono,
-      email: this.form.value.email
+      email: this.form.value.email,
+      alias:this.form.value.alias
     };
     console.log(empresa);
 

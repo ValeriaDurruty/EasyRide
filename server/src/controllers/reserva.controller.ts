@@ -196,6 +196,7 @@ export const getReservasFuturasPasajero = (req: Request, res: Response) => {
     const query = `SELECT 
                     r.PK_Reserva,
                     r.fecha_creacion,
+                    CASE WHEN r.pagado = 1 THEN 'Pagado' ELSE 'No Pagado' END AS estado_pago,
                     esr.nombre AS estado_reserva,
                     v.PK_Viaje,
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
@@ -289,6 +290,7 @@ export const getReservasEmpresa = (req: Request, res: Response) => {
                     r.PK_Reserva,
                     r.fecha_creacion,
                     esr.nombre AS estado_reserva,
+                    r.pagado,
                     v.PK_Viaje,
                     DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
                     DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
@@ -497,89 +499,89 @@ export const getReservasPasadasEmpresa = (req: Request, res: Response) => {
 
 // Listar todas las reservas futuras de una empresa
 export const getReservasFuturasEmpresa = (req: Request, res: Response) => {
-
     const { PK_Empresa } = req.params;
 
     const query = `SELECT 
-                    v.PK_Viaje,
-                    DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
-                    DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
-                    DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
-                    DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
-                    v.precio,
-                    c.patente,
-                    m.nombre AS modelo,
-                    ma.nombre AS marca,
-                    paradas.paradas,
-                    reservas.reservas
-                FROM 
-                    Viaje v
+                v.PK_Viaje,
+                DATE_FORMAT(v.fecha_salida, '%d-%m-%Y') AS fecha_salida,
+                DATE_FORMAT(v.fecha_llegada, '%d-%m-%Y') AS fecha_llegada,
+                DATE_FORMAT(v.horario_salida, '%H:%i') AS horario_salida, 
+                DATE_FORMAT(v.horario_llegada, '%H:%i') AS horario_llegada, 
+                v.precio,
+                c.patente,
+                m.nombre AS modelo,
+                ma.nombre AS marca,
+                paradas.paradas,
+                reservas.reservas
+            FROM 
+                Viaje v
+            INNER JOIN 
+                Charter c ON v.FK_Charter = c.PK_Charter
+            INNER JOIN 
+                Empresa e ON c.FK_Empresa = e.PK_Empresa
+            INNER JOIN 
+                Modelo m ON c.FK_Modelo = m.PK_Modelo
+            INNER JOIN 
+                Marca ma ON m.FK_Marca = ma.PK_Marca
+            LEFT JOIN (
+                SELECT
+                    vp.FK_Viaje,
+                    GROUP_CONCAT(
+                        CONCAT(
+                            'Orden: ', vp.orden, 
+                            ', Parada: ', p.nombre, 
+                            ', Localidad: ', l.nombre, 
+                            ', Provincia: ', pr.nombre
+                        )
+                        ORDER BY vp.orden
+                        SEPARATOR '; '
+                    ) AS paradas
+                FROM
+                    Viaje_Parada vp
                 INNER JOIN 
-                    Charter c ON v.FK_Charter = c.PK_Charter
+                    Parada p ON vp.FK_Parada = p.PK_Parada
                 INNER JOIN 
-                    Empresa e ON c.FK_Empresa = e.PK_Empresa
+                    Localidad l ON p.FK_Localidad = l.PK_Localidad
                 INNER JOIN 
-                    Modelo m ON c.FK_Modelo = m.PK_Modelo
+                    Provincia pr ON l.FK_Provincia = pr.PK_Provincia
+                GROUP BY
+                    vp.FK_Viaje
+            ) paradas ON paradas.FK_Viaje = v.PK_Viaje
+            LEFT JOIN (
+                SELECT
+                    r.FK_Viaje,
+                    GROUP_CONCAT(
+                        CONCAT(
+                            'PK_Usuario: ', u.PK_Usuario, 
+                            ', Nombre: ', u.nombre, 
+                            ', Apellido: ', u.apellido, 
+                            ', PK_Reserva: ', r.PK_Reserva, 
+                            ', Fecha Creación: ', DATE_FORMAT(r.fecha_creacion, '%d-%m-%Y'), 
+                            ', Estado Reserva: ', esr.nombre,
+                            ', Estado Pago: ', CASE WHEN r.pagado = 1 THEN 'Pagado' ELSE 'No Pagado' END
+                        )
+                        ORDER BY r.PK_Reserva
+                        SEPARATOR '; '
+                    ) AS reservas
+                FROM
+                    Reserva r
                 INNER JOIN 
-                    Marca ma ON m.FK_Marca = ma.PK_Marca
-                LEFT JOIN (
-                    SELECT
-                        vp.FK_Viaje,
-                        GROUP_CONCAT(
-                            CONCAT(
-                                'Orden: ', vp.orden, 
-                                ', Parada: ', p.nombre, 
-                                ', Localidad: ', l.nombre, 
-                                ', Provincia: ', pr.nombre
-                            )
-                            ORDER BY vp.orden
-                            SEPARATOR '; '
-                        ) AS paradas
-                    FROM
-                        Viaje_Parada vp
-                    INNER JOIN 
-                        Parada p ON vp.FK_Parada = p.PK_Parada
-                    INNER JOIN 
-                        Localidad l ON p.FK_Localidad = l.PK_Localidad
-                    INNER JOIN 
-                        Provincia pr ON l.FK_Provincia = pr.PK_Provincia
-                    GROUP BY
-                        vp.FK_Viaje
-                ) paradas ON paradas.FK_Viaje = v.PK_Viaje
-                LEFT JOIN (
-                    SELECT
-                        r.FK_Viaje,
-                        GROUP_CONCAT(
-                            CONCAT(
-                                'PK_Usuario: ', u.PK_Usuario, 
-                                ', Nombre: ', u.nombre, 
-                                ', Apellido: ', u.apellido, 
-                                ', PK_Reserva: ', r.PK_Reserva, 
-                                ', Fecha Creación: ', DATE_FORMAT(r.fecha_creacion, '%d-%m-%Y'), 
-                                ', Estado Reserva: ', esr.nombre
-                            )
-                            ORDER BY r.PK_Reserva
-                            SEPARATOR '; '
-                        ) AS reservas
-                    FROM
-                        Reserva r
-                    INNER JOIN 
-                        Usuario u ON r.FK_Usuario = u.PK_Usuario
-                    INNER JOIN 
-                        Estado_reserva esr ON r.FK_Estado_reserva = esr.PK_Estado_reserva
-                    GROUP BY
-                        r.FK_Viaje
-                ) reservas ON reservas.FK_Viaje = v.PK_Viaje
-                WHERE 
-                    e.PK_Empresa = ? 
-                    AND v.fecha_salida >= CURDATE()
-                    AND reservas.reservas IS NOT NULL
-                ORDER BY  
-                    v.fecha_salida ASC,
-                    v.PK_Viaje ASC;`;
+                    Usuario u ON r.FK_Usuario = u.PK_Usuario
+                INNER JOIN 
+                    Estado_reserva esr ON r.FK_Estado_reserva = esr.PK_Estado_reserva
+                GROUP BY
+                    r.FK_Viaje
+            ) reservas ON reservas.FK_Viaje = v.PK_Viaje
+            WHERE 
+                e.PK_Empresa = ? 
+                AND v.fecha_salida >= CURDATE()
+                AND reservas.reservas IS NOT NULL
+            ORDER BY  
+                v.fecha_salida ASC,
+                v.PK_Viaje ASC;`;
 
     connection.query(query, PK_Empresa, (err, data) => {
-        if(err) {
+        if (err) {
             console.error('Error al listar las reservas futuras:', err);
             return res.status(500).json({ error: 'Error al listar las reservas futuras' });
         } else {
@@ -590,7 +592,8 @@ export const getReservasFuturasEmpresa = (req: Request, res: Response) => {
             }
         }
     });
-}
+};
+
 
 
 // Agregar una reserva
@@ -650,11 +653,11 @@ export const addReserva = (req: Request, res: Response) => {
 
                 // Crear la consulta SQL para insertar la nueva reserva
                 const insertReservaQuery = `INSERT INTO Reserva 
-                                            (FK_Usuario, FK_Viaje, FK_Estado_reserva, fecha_creacion)
-                                            VALUES (?, ?, ?, ?);`;
+                                            (FK_Usuario, FK_Viaje, FK_Estado_reserva, fecha_creacion, pagado)
+                                            VALUES (?, ?, ?, ?, ?);`;
 
                 // Ejecutar la consulta para insertar la nueva reserva
-                connection.query(insertReservaQuery, [PK_Usuario, PK_Viaje, 1, fecha_creacion], (err, result) => {
+                connection.query(insertReservaQuery, [PK_Usuario, PK_Viaje, 1, fecha_creacion, 0], (err, result) => {
                     if (err) {
                         console.error('Error al agregar la reserva:', err);
                         return connection.rollback(() => {
@@ -806,20 +809,16 @@ export const cancelarReserva = (req: Request, res: Response) => {
                             notificaciones.forEach((usuario: Usuario) => {
                                 const asunto = `Un lugar disponible en el viaje de ${viaje.empresa}`;
                                 const mensaje = `
-                                    Estimado/a ${usuario.nombre} ${usuario.apellido},
-
-                                    Se ha liberado un lugar en el viaje ${viaje.PK_Viaje} que tiene las siguientes características:
-
-                                    Fecha de salida: ${viaje.fecha_salida}
-                                    Fecha de llegada: ${viaje.fecha_llegada}
-                                    Horario de salida: ${viaje.horario_salida}
-                                    Horario de llegada: ${viaje.horario_llegada}
-                                    Paradas: ${viaje.paradas}
-                                    Precio: $ ${viaje.precio} 
-
-                                    ¡Aprovecha esta oportunidad y reserva ahora!
-
-                                    Saludos,
+                                    Estimado/a ${usuario.nombre} ${usuario.apellido},<br><br>
+                                    Se ha liberado un lugar en el viaje ${viaje.PK_Viaje} que tiene las siguientes características:<br><br>
+                                    <strong>Fecha de salida:</strong> ${viaje.fecha_salida}<br>
+                                    <strong>Fecha de llegada:</strong> ${viaje.fecha_llegada}<br>
+                                    <strong>Horario de salida:</strong> ${viaje.horario_salida}<br>
+                                    <strong>Horario de llegada:</strong> ${viaje.horario_llegada}<br>
+                                    <strong>Paradas:</strong> ${viaje.paradas}<br>
+                                    <strong>Precio:</strong> $${viaje.precio}<br><br>
+                                    ¡Aprovecha esta oportunidad y reserva ahora!<br><br>
+                                    Saludos,<br>
                                     El equipo de reservas de Easy Ride
                                 `;
 
@@ -866,5 +865,33 @@ const finalizarCancelacion = (res: Response, PK_Reserva: string, PK_Viaje: strin
 
         // Responder con éxito
         res.status(200).json({ message: 'Reserva cancelada, cupo actualizado y correos enviados exitosamente' });
+    });
+};
+
+export const actualizarPagadoReserva = (req:Request, res:Response) => {
+    const { PK_Reserva } = req.params;
+
+    if (!PK_Reserva) {
+        return res.status(400).json({ error: 'PK_Reserva es requerido' });
+    }
+
+    // La lógica para alternar el estado de pago
+    const updatePagadoQuery = `
+        UPDATE Reserva 
+        SET pagado = CASE WHEN pagado = 0 THEN 1 ELSE 0 END 
+        WHERE PK_Reserva = ?
+    `;
+
+    connection.query(updatePagadoQuery, [PK_Reserva], (err, result) => {
+        if (err) {
+            console.error('Error al actualizar el estado de pago:', err);
+            return res.status(500).json({ error: 'Error al actualizar el estado de pago' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Reserva no encontrada' });
+        }
+
+        return res.status(200).json({ message: 'Estado de pago actualizado con éxito' });
     });
 };

@@ -3,5 +3,6 @@ export interface Empresa {
     razon_social: string;
     cuit: number;
     email: string;
-    telefono: number
+    telefono: number,
+    alias?:string;
 };
