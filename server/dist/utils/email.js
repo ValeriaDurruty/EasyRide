@@ -12,7 +12,7 @@ const transporter = nodemailer_1.default.createTransport({
     secure: true, // Usa SSL/TLS directamente para conectarte
     auth: {
         user: 'easyride24team@gmail.com',
-        pass: 'dqji ksgl dsrm emiw'
+        pass: ''
     },
     tls: {
         rejectUnauthorized: false // Ignora la verificación de certificados en entornos locales
